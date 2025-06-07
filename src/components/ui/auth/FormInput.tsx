@@ -1,16 +1,22 @@
 import React from 'react';
-import { motion, Variants, Transition, Target, TargetAndTransition } from 'framer-motion';
+import {
+  motion,
+  Variants,
+  Transition,
+  Target,
+  TargetAndTransition,
+} from 'framer-motion';
 
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  id: string; // For the input element
+  id: string;
   icon?: React.ReactElement<{ size?: string | number }>;
 
   // Props for the motion.div wrapper
   wrapperClassName?: string;
   wrapperStyle?: React.CSSProperties;
   initial?: Target | boolean;
-  animate?: TargetAndTransition; 
+  animate?: TargetAndTransition;
   variants?: Variants;
   transition?: Transition;
 }
@@ -36,7 +42,10 @@ const FormInput: React.FC<FormInputProps> = ({
       variants={variants}
       transition={transition}
     >
-      <label htmlFor={id} className="block text-xs font-medium text-neutral-400 dark:text-neutral-500 mb-1.5">
+      <label
+        htmlFor={id}
+        className="block text-xs font-medium text-neutral-400 dark:text-neutral-500 mb-1.5"
+      >
         {label}
       </label>
       <div className="relative">

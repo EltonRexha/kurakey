@@ -7,10 +7,7 @@ interface AuthLayoutProps {
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f1923] p-4 selection:bg-cyan-500/30 selection:text-cyan-300">
-      {/* Optional: Add some game-like background elements here if desired, e.g., subtle patterns or shapes */}
-      <main className="z-10 w-full">
-        {children}
-      </main>
+      <main className="z-10 w-full">{children}</main>
       <footer className="fixed bottom-6 text-center w-full text-neutral-500 dark:text-neutral-600 text-xs">
         Kurakey Digital Rooms © {new Date().getFullYear()}
       </footer>

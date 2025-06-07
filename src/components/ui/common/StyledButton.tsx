@@ -1,6 +1,7 @@
 import React from 'react';
 
-interface StyledButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface StyledButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   fullWidth?: boolean;
 }
@@ -23,16 +24,15 @@ const StyledButton: React.FC<StyledButtonProps> = ({
     hover:shadow-[0_0_10px_#008cff,0_0_30px_#008cff,0_0_60px_#008cff]
     focus:text-white focus:bg-[#008cff] focus:border-[#008cff]
     focus:shadow-[0_0_10px_#008cff,0_0_30px_#008cff,0_0_60px_#008cff]
-    /* The text-shadow from the original CSS (text-shadow: 0 0 5px #ffffff, ...) 
-       is complex for pure Tailwind and has been omitted.
-       It may require custom CSS or a plugin for an exact match. */
   `;
 
   const widthClass = fullWidth ? 'w-full' : 'inline-block';
 
   return (
     <button
-      className={`${baseClasses} ${hoverFocusClasses} ${widthClass} ${className}`.trim().replace(/\s+/g, ' ')}
+      className={`${baseClasses} ${hoverFocusClasses} ${widthClass} ${className}`
+        .trim()
+        .replace(/\s+/g, ' ')}
       {...props}
     >
       {children}

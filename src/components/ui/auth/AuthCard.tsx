@@ -1,13 +1,17 @@
 import React from 'react';
-import AnimatedLogo from './AnimatedLogo'; // Assuming AnimatedLogo.tsx is in the same directory
+import AnimatedLogo from './AnimatedLogo';
 
 interface AuthCardProps {
-  title?: string; // Title is now optional as logo might be primary focus
+  title?: string;
   children: React.ReactNode;
   footerContent?: React.ReactNode;
 }
 
-const AuthCard: React.FC<AuthCardProps> = ({ title, children, footerContent }) => {
+const AuthCard: React.FC<AuthCardProps> = ({
+  title,
+  children,
+  footerContent,
+}) => {
   return (
     <div className="bg-[#1a2c38] border border-[#2c3e50] shadow-2xl shadow-black/50 rounded-xl w-full max-w-lg mx-auto overflow-hidden">
       <div className="p-8 sm:p-10">

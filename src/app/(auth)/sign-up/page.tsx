@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -23,21 +23,21 @@ export default function SignUpPage() {
     setError(null);
     setIsLoading(true);
     console.log('Signup attempt with:', { name, email, password });
-    // Simulate API call for demonstration
-    // In a real app, you would call your backend API for user registration here
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsLoading(false);
-    // alert('Signup functionality not implemented on frontend yet.');
   };
 
   return (
     <AuthLayout>
-      <AuthCard 
+      <AuthCard
         title="Register"
         footerContent={
           <p className="text-center text-sm text-neutral-400 dark:text-neutral-500">
             Already have an account?{' '}
-            <Link href="/log-in" className="font-semibold text-[#55f279] hover:text-[#4acf6b] hover:underline">
+            <Link
+              href="/log-in"
+              className="font-semibold text-[#55f279] hover:text-[#4acf6b] hover:underline"
+            >
               Log In
             </Link>
           </p>
@@ -49,7 +49,12 @@ export default function SignUpPage() {
             label="Username"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, type: "spring", stiffness: 100, damping: 12 }}
+            transition={{
+              delay: 0.1,
+              type: 'spring',
+              stiffness: 100,
+              damping: 12,
+            }}
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -62,7 +67,12 @@ export default function SignUpPage() {
             label="Email Address"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 12 }}
+            transition={{
+              delay: 0.2,
+              type: 'spring',
+              stiffness: 100,
+              damping: 12,
+            }}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -76,7 +86,12 @@ export default function SignUpPage() {
             label="Password"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, type: "spring", stiffness: 100, damping: 12 }}
+            transition={{
+              delay: 0.3,
+              type: 'spring',
+              stiffness: 100,
+              damping: 12,
+            }}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -90,7 +105,12 @@ export default function SignUpPage() {
             label="Confirm Password"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, type: "spring", stiffness: 100, damping: 12 }}
+            transition={{
+              delay: 0.4,
+              type: 'spring',
+              stiffness: 100,
+              damping: 12,
+            }}
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -100,12 +120,10 @@ export default function SignUpPage() {
             icon={<Lock />}
           />
 
-          {error && (
-            <p className="text-sm text-red-500 dark:text-red-400 text-center">{error}</p>
-          )}
+          {error && <div className="text-red-500 text-sm">{error}</div>}
 
           <StyledButton type="submit" fullWidth disabled={isLoading}>
-            {isLoading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT'}
+            {isLoading ? 'SIGNING UP...' : 'SIGN UP'}
           </StyledButton>
         </form>
       </AuthCard>
