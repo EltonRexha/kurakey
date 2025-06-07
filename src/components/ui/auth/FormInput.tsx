@@ -23,7 +23,7 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const FormInput: React.FC<FormInputProps> = ({
   label,
-  id, // for input
+  id, 
   icon,
   wrapperClassName,
   wrapperStyle,
