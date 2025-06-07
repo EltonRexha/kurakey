@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserSchema } from '@/schemas/userSchema';
 import { useMutation } from '@tanstack/react-query';
-import { createUser } from '../../../../../libs/api/user';
+import { createUser } from '../../../../../../libs/api/user';
 import { signIn } from 'next-auth/react';
 import { useToastContext } from '@/context/ToastContext';
 
@@ -112,6 +112,7 @@ const SignupForm = () => {
           {...register('password')}
           placeholder="Create a password"
           autoComplete="new-password"
+          type="password"
           required
           icon={<Lock />}
         />
@@ -137,6 +138,7 @@ const SignupForm = () => {
           {...register('confirmPassword')}
           placeholder="Confirm your password"
           autoComplete="new-password"
+          type="password"
           required
           icon={<Lock />}
         />
