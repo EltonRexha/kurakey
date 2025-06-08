@@ -16,7 +16,7 @@ export default async function middleware(req: NextRequest) {
   if (!token) {
     const isGuestRoute = guestRoutes.some((route) => pathname.includes(route));
     if (!isGuestRoute) {
-      return NextResponse.redirect(new URL('/login', req.url));
+      return NextResponse.redirect(new URL('/log-in', req.url));
     }
     return NextResponse.next();
   }

@@ -35,7 +35,7 @@ const FormInput: React.FC<FormInputProps> = ({
 }) => {
   return (
     <motion.div
-      className={`mb-5 last:mb-0 ${wrapperClassName || ''}`.trim()}
+      className={`${wrapperClassName || ''}`.trim()}
       style={wrapperStyle}
       initial={initial}
       animate={animate}

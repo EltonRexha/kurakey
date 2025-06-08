@@ -11,16 +11,30 @@ export async function POST(request: Request) {
     return NextResponse.json(body.error, { status: 400 });
   }
 
-  const { email, name, password, image } = body.data;
+  const { email, firstName, lastName, username, password, image } = body.data;
 
-  //If user exists
-  const user = await prisma.user.findUnique({
+  //If user with this email exists
+  const userWithEmail = await prisma.user.findUnique({
     where: {
       email,
     },
   });
 
-  if (user) {
+  if (userWithEmail) {
+    return NextResponse.json(
+      { message: 'user with this email already exists' },
+      { status: 400 }
+    );
+  }
+
+  //if user with this username exists
+  const userWithUsername = await prisma.user.findUnique({
+    where: {
+      username,
+    },
+  });
+
+  if (userWithUsername) {
     return NextResponse.json(
       { message: 'user with this email already exists' },
       { status: 400 }
@@ -32,7 +46,9 @@ export async function POST(request: Request) {
   const createdUser = await prisma.user.create({
     data: {
       email,
-      name,
+      firstName,
+      lastName,
+      username,
       password: hashedPassword,
       image,
     },
