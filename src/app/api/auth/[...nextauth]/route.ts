@@ -5,6 +5,8 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import prisma from '../../../../../prisma/prisma';
 
+//OAuth profile is only set once and after the user has prompted their username it is set to false
+
 declare module 'next-auth' {
   interface Session {
     user: {
@@ -83,7 +85,10 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account, profile }) {
+      console.log('NEW JWT');
+
       if (account && profile) {
+        console.log('its OAuth');
         const existingUser = await prisma.user.findUnique({
           where: { email: profile.email ?? '' },
         });
@@ -121,6 +126,7 @@ export const authOptions: NextAuthOptions = {
           picture: user.image || undefined,
           userId: user.id,
           username: user.username,
+          oauthProfile: false,
         };
       }
 
@@ -140,6 +146,8 @@ export const authOptions: NextAuthOptions = {
       if (token.oauthProfile) {
         session.oauthProfile = token.oauthProfile;
       }
+
+      console.log(session);
 
       return session;
     },

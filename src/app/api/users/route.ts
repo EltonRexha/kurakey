@@ -64,3 +64,49 @@ export async function POST(request: Request) {
     }
   );
 }
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+
+  const id = searchParams.get('id');
+  const username = searchParams.get('username');
+  const email = searchParams.get('email');
+  const page = Number(searchParams.get('page')) || 1;
+  const limit = Number(searchParams.get('limit')) || 10;
+  const skip = (page - 1) * limit;
+
+  const whereClause = {
+    OR: [
+      ...(id ? [{ id }] : []),
+      ...(username ? [{ username: { contains: username } }] : []),
+      ...(email ? [{ email: { contains: email } }] : []),
+    ],
+  };
+
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where: whereClause,
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        image: true,
+      },
+      skip,
+      take: limit,
+    }),
+    prisma.user.count({ where: whereClause }),
+  ]);
+
+  return NextResponse.json({
+    users,
+    pagination: {
+      total,
+      pages: Math.ceil(total / limit),
+      currentPage: page,
+      limit,
+    },
+  });
+}
