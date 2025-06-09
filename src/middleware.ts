@@ -7,7 +7,12 @@ const guestRoutes = ['/log-in', '/sign-up'];
 
 export default async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
   const pathname = req.nextUrl.pathname;
+
+  if (token?.oauthProfile && pathname !== '/') {
+    return NextResponse.redirect(new URL('/finish-auth', req.url));
+  }
 
   if (pathname === '/') {
     return NextResponse.next();

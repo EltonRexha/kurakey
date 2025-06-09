@@ -1,13 +1,38 @@
 import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { PrismaAdapter } from '@auth/prisma-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import prisma from '../../../../../prisma/prisma';
 
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+      email: string;
+      image: string | null;
+      name: string;
+      username: string;
+      firstName: string;
+      lastName: string;
+    };
+    oauthProfile?: boolean;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    userId?: string;
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    picture?: string;
+    oauthProfile: boolean;
+  }
+}
+
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
@@ -56,6 +81,70 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, account, profile }) {
+      if (account && profile) {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: profile.email ?? '' },
+        });
+
+        if (!existingUser) {
+          token.oauthProfile = true;
+        } else {
+          //OAuth but its login
+          token = {
+            ...token,
+            firstName: existingUser.firstName,
+            lastName: existingUser.lastName,
+            email: existingUser.email,
+            name: `${existingUser.firstName} ${existingUser.lastName}`,
+            picture: existingUser.image || undefined,
+            userId: existingUser.id,
+            username: existingUser.username,
+          };
+        }
+      } else {
+        const user = await prisma.user.findUnique({
+          where: { email: token.email ?? '' },
+        });
+
+        if (!user) {
+          return token;
+        }
+
+        token = {
+          ...token,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          name: `${user.firstName}  ${user.lastName}`,
+          picture: user.image || undefined,
+          userId: user.id,
+          username: user.username,
+        };
+      }
+
+      return token;
+    },
+    session: async ({ session, token }) => {
+      if (session.user && token) {
+        session.user.id = token.userId!;
+        session.user.username = token.username!;
+        session.user.firstName = token.firstName!;
+        session.user.lastName = token.lastName!;
+        session.user.image = token.picture ?? null;
+        session.user.name =
+          token.name ?? `${token.firstName} ${token.lastName}`;
+      }
+
+      if (token.oauthProfile) {
+        session.oauthProfile = token.oauthProfile;
+      }
+
+      return session;
+    },
+  },
+
   pages: {
     signIn: '/log-in',
   },
