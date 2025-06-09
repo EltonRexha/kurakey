@@ -1,12 +1,12 @@
 'use client';
 import React from 'react';
-import { StyledButton } from '@/components/ui/common';
+import { GlowingButton } from '@/components/ui/common';
 import { FaGoogle } from 'react-icons/fa';
 import { signIn } from 'next-auth/react';
 
 const GoogleSignInButton = () => {
   return (
-    <StyledButton
+    <GlowingButton
       type="button"
       fullWidth
       onClick={() => {
@@ -17,7 +17,7 @@ const GoogleSignInButton = () => {
         <FaGoogle className="text-xl" />
         Continue with Google
       </div>
-    </StyledButton>
+    </GlowingButton>
   );
 };
 

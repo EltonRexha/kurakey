@@ -1,6 +1,6 @@
 'use client';
 import { FormInput, GoogleSignInButton, OrDivider } from '@/components/ui/auth';
-import { StyledButton } from '@/components/ui/common';
+import { GlowingButton } from '@/components/ui/common';
 import { useToastContext } from '@/context/ToastContext';
 import LoginSchema from '@/schemas/loginSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -93,9 +93,9 @@ const LoginForm = () => {
           Email or password are incorrect
         </p>
       )}{' '}
-      <StyledButton type="submit" fullWidth>
+      <GlowingButton type="submit" fullWidth>
         LOG IN
-      </StyledButton>
+      </GlowingButton>
       <OrDivider />
       <GoogleSignInButton />
     </form>

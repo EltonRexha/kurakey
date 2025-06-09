@@ -4,6 +4,7 @@ import { getToken } from 'next-auth/jwt';
 
 const userRoutes = ['/home'];
 const guestRoutes = ['/log-in', '/sign-up'];
+const OAuthRoutes = ['/finish-auth'];
 
 export default async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -11,6 +12,10 @@ export default async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   if (token?.oauthProfile && pathname !== '/') {
+    const isOAuthRoute = OAuthRoutes.some((route) => pathname.includes(route));
+    if (isOAuthRoute) {
+      return NextResponse.next();
+    }
     return NextResponse.redirect(new URL('/finish-auth', req.url));
   }
 

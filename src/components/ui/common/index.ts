@@ -1,3 +1,3 @@
-export { default as StyledButton } from './StyledButton';
+export { default as GlowingButton } from './GlowingButton';
 export { Toast } from './Toast';
 export { ToastContainer } from './ToastContainer';

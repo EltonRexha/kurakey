@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { StyledButton } from '@/components/ui/common';
+import { GlowingButton } from '@/components/ui/common';
 import { User, Mail, Lock } from 'lucide-react';
 import { FormInput, GoogleSignInButton, OrDivider } from '@/components/ui/auth';
 import { useForm } from 'react-hook-form';
@@ -196,9 +196,9 @@ const SignupForm = () => {
         )}
       </div>
       {error && <p className="mt-1 text-sm text-[#ff5f5f]">{error}</p>}{' '}
-      <StyledButton type="submit" fullWidth disabled={isSubmitting}>
+      <GlowingButton type="submit" fullWidth disabled={isSubmitting}>
         {isSubmitting ? 'SIGNING UP...' : 'SIGN UP'}
-      </StyledButton>
+      </GlowingButton>
       <OrDivider />
       <GoogleSignInButton />
     </form>

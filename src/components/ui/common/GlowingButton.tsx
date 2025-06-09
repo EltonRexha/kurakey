@@ -1,12 +1,12 @@
 import React from 'react';
 
-interface StyledButtonProps
+interface GlowingButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   fullWidth?: boolean;
 }
 
-const StyledButton: React.FC<StyledButtonProps> = ({
+const GlowingButton: React.FC<GlowingButtonProps> = ({
   children,
   fullWidth = false,
   className = '',
@@ -40,4 +40,4 @@ const StyledButton: React.FC<StyledButtonProps> = ({
   );
 };
 
-export default StyledButton;
+export default GlowingButton;
