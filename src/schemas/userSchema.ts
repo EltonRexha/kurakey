@@ -25,7 +25,8 @@ export const UserSchema = z
       .string()
       .max(20, 'Last name is too long')
       .min(3, 'Last name is too short')
-      .regex(/^[a-zA-Z]+$/, 'Last name can only contain letters'),
+      .regex(/^[a-zA-Z]+$/, 'Last name can only contain letters')
+      .optional(),
     username: z
       .string()
       .min(6, 'Username must be at least 6 characters long')

@@ -93,6 +93,7 @@ const SignupForm = () => {
             placeholder="Last Name"
             autoComplete="lastName"
             icon={<User />}
+            required={false}
             {...register('lastName')}
           />
           {errors.lastName && (
