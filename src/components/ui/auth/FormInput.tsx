@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import {
   motion,
   Variants,
@@ -23,7 +24,7 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const FormInput: React.FC<FormInputProps> = ({
   label,
-  id, 
+  id,
   icon,
   wrapperClassName,
   wrapperStyle,
@@ -31,8 +32,12 @@ const FormInput: React.FC<FormInputProps> = ({
   animate,
   variants,
   transition,
-  ...inputElementProps // These are purely for the <input> element
+  type,
+  ...inputElementProps
 }) => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const isPassword = type === 'password';
+
   return (
     <motion.div
       className={`${wrapperClassName || ''}`.trim()}
@@ -50,12 +55,26 @@ const FormInput: React.FC<FormInputProps> = ({
       </label>
       <div className="relative">
         {icon && (
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500 dark:text-neutral-600">
+          <div
+            className={`absolute inset-y-0 left-0 pl-3.5 flex items-center ${
+              isPassword ? 'cursor-pointer' : 'pointer-events-none'
+            } text-neutral-500 dark:text-neutral-600`}
+            onMouseDown={
+              isPassword ? () => setIsPasswordVisible(true) : undefined
+            }
+            onMouseUp={
+              isPassword ? () => setIsPasswordVisible(false) : undefined
+            }
+            onMouseLeave={
+              isPassword ? () => setIsPasswordVisible(false) : undefined
+            }
+          >
             {icon && React.cloneElement(icon, { size: 20 })}
           </div>
         )}
         <input
           id={id}
+          type={isPassword && isPasswordVisible ? 'text' : type}
           className={`
             block w-full px-4 py-3 
             ${icon ? 'pl-11' : 'pl-4'}

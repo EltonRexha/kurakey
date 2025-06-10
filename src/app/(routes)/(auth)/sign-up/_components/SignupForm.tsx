@@ -38,6 +38,8 @@ const SignupForm = () => {
       signIn('credentials', {
         email,
         password,
+        callbackUrl: '/home',
+        redirect: true,
       });
       addToast('Successfully created account', 'success');
     },
@@ -70,9 +72,9 @@ const SignupForm = () => {
             icon={<User />}
             {...register('firstName')}
           />
-          {errors.lastName && (
+          {errors.firstName && (
             <p className="my-2 text-sm text-[#ff5f5f]">
-              {errors.lastName.message}
+              {errors.firstName.message}
             </p>
           )}
         </div>
@@ -89,13 +91,13 @@ const SignupForm = () => {
               damping: 12,
             }}
             placeholder="Last Name"
-            autoComplete="firstName"
+            autoComplete="lastName"
             icon={<User />}
             {...register('lastName')}
           />
-          {errors.firstName && (
+          {errors.lastName && (
             <p className="my-2 text-sm text-[#ff5f5f]">
-              {errors.firstName.message}
+              {errors.lastName.message}
             </p>
           )}
         </div>

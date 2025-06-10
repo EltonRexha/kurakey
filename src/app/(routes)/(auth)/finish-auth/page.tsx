@@ -45,11 +45,13 @@ export default function FinishAuthPage() {
         return Promise.reject('data is empty');
       }
 
+      console.log(session.data.user);
+
       return createOAuthUser({
         email: session.data?.user.email,
         firstName: session.data.user.name.split(' ')[0],
         lastName: session.data.user.name.split(' ')[1],
-        image: session.data.user.lastName,
+        image: session.data.user.lastName || undefined,
         username: username,
       });
     },
@@ -57,7 +59,7 @@ export default function FinishAuthPage() {
       setError(e.response.data.message);
     },
     onSuccess: async () => {
-      await session.update();
+      await fetch('/api/auth/session');
       router.push('/home');
     },
   });

@@ -18,14 +18,13 @@ export const UserSchema = z
     firstName: z
       .string()
       .nonempty('First Name is required')
-      .max(20)
-      .min(3)
+      .max(20, 'First name is too long')
+      .min(3, 'First name is too short')
       .regex(/^[a-zA-Z]+$/, 'First name can only contain letters'),
     lastName: z
       .string()
-      .nonempty('Last Name is required')
-      .max(20)
-      .min(3)
+      .max(20, 'Last name is too long')
+      .min(3, 'Last name is too short')
       .regex(/^[a-zA-Z]+$/, 'Last name can only contain letters'),
     username: z
       .string()

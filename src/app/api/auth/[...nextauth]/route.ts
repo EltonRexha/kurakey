@@ -16,7 +16,7 @@ declare module 'next-auth' {
       name: string;
       username: string;
       firstName: string;
-      lastName: string;
+      lastName?: string | null;
     };
     oauthProfile?: boolean;
   }
@@ -27,7 +27,7 @@ declare module 'next-auth/jwt' {
     userId?: string;
     username?: string;
     firstName?: string;
-    lastName?: string;
+    lastName?: string | null;
     email?: string;
     picture?: string;
     oauthProfile: boolean;
