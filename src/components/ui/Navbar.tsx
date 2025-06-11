@@ -1,9 +1,10 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaGithub, FaTwitter, FaDiscord } from 'react-icons/fa';
+import { FaDiscord } from 'react-icons/fa';
 import HorizontalCarousel from './common/HorizontalCarousel';
-import Card from './common/Card';
+import XLogo from './common/XLogo';
+import Card from './common/CarouselCard';
 
 const Navbar = () => {
   const navItems = [
@@ -11,17 +12,12 @@ const Navbar = () => {
     { label: 'Buy', href: '/buy' },
     { label: 'Rooms', href: '/rooms' },
   ];
-
   const sampleCards = [
-    { title: 'Desert Eagle', image: '/cases/deagle.jpg', price: '$299.99' },
-    { title: 'AK-47', image: '/cases/ak47.jpg', price: '$599.99' },
-    { title: 'M4A4', image: '/cases/m4a4.jpg', price: '$499.99' },
-    { title: 'AWP', image: '/cases/awp.jpg', price: '$899.99' },
-    {
-      title: 'Butterfly Knife',
-      image: '/cases/butterfly.jpg',
-      price: '$1299.99',
-    },
+    { title: 'Room1', image: '/example.jpg' },
+    { title: 'Room2', image: '/example.jpg' },
+    { title: 'Room3', image: '/example.jpg' },
+    { title: 'Room4', image: '/example.jpg' },
+    { title: 'Room5', image: '/example.jpg' },
   ];
 
   return (
@@ -29,7 +25,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
+          <Link href="/home" className="flex-shrink-0">
             {' '}
             <Image
               src="/logo.png"
@@ -46,7 +42,7 @@ const Navbar = () => {
               <Link
                 key={item.label}
                 href={item.href}
-                className="relative text-neutral-400 hover:text-[#008cff] transition-colors group"
+                className="relative font-semibold text-neutral-300 hover:text-[#008cff] transition-colors group"
               >
                 {item.label}
                 <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-[#008cff] to-[#11142d] transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100 group-hover:shadow-[0_0_10px_#008cff,0_0_20px_#191838]"></span>
@@ -61,13 +57,7 @@ const Navbar = () => {
                 href="#"
                 className="text-neutral-500 hover:text-[#008cff] transition-colors"
               >
-                <FaGithub className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="text-neutral-500 hover:text-[#008cff] transition-colors"
-              >
-                <FaTwitter className="w-5 h-5" />
+                <XLogo className="w-4 h-4" />
               </a>
               <a
                 href="#"
@@ -76,12 +66,6 @@ const Navbar = () => {
                 <FaDiscord className="w-5 h-5" />
               </a>
             </div>
-            <Link
-              href="/log-in"
-              className="bg-transparent border border-[#008cff] text-[#008cff] hover:bg-gradient-to-r hover:from-[#008cff] hover:to-[#764ba2] hover:border-transparent hover:text-white px-4 py-2 rounded-lg transition-all hover:shadow-[0_0_10px_#008cff,0_0_30px_#764ba2]"
-            >
-              Sign In
-            </Link>
           </div>
         </div>
 
@@ -89,12 +73,7 @@ const Navbar = () => {
         <div className="py-2">
           <HorizontalCarousel>
             {sampleCards.map((card, index) => (
-              <Card
-                key={index}
-                title={card.title}
-                image={card.image}
-                price={card.price}
-              />
+              <Card key={index} title={card.title} image={card.image} />
             ))}
           </HorizontalCarousel>
         </div>

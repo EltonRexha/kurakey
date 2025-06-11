@@ -2,7 +2,6 @@ import LogoutBtn from '@/components/LogoutBtn';
 import { getServerSession } from 'next-auth';
 import React from 'react';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import Image from 'next/image';
 
 const page = async () => {
   const session = await getServerSession(authOptions);
