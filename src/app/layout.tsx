@@ -5,6 +5,7 @@ import { ToastProvider } from '@/context/ToastContext';
 import ReactQuery from '../../libs/QueryClient';
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
+import Navbar from '@/components/ui/Navbar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,7 +29,9 @@ export default function RootLayout({
       >
         <SessionProvider>
           <ReactQuery>
-            <ToastProvider>{children}</ToastProvider>
+            <ToastProvider>
+              <main>{children}</main>
+            </ToastProvider>
           </ReactQuery>
         </SessionProvider>
       </body>

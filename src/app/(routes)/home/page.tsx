@@ -15,23 +15,6 @@ const page = async () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Welcome!</h1>
-      <div className="space-y-2">
-        <p>Email: {user.email}</p>
-        <p>Name: {user.name}</p>
-        <p>First Name: {user.firstName}</p>
-        <p>Last Name: {user.lastName}</p>
-        <p>Username: {user.username}</p>
-        {user.image && (
-          <div className="mt-4">
-            <p>Profile Image:</p>
-            <Image
-              src={user.image}
-              alt="Profile"
-              className="w-20 h-20 rounded-full"
-            />
-          </div>
-        )}
-      </div>{' '}
      
       <div className="mt-4">
         <LogoutBtn />

@@ -1,1 +1,61 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #606060;
+}
+
+/* Swiper styles */
+.swiper {
+  overflow: hidden !important;
+}
+
+.swiper-wrapper {
+  transition-timing-function: linear !important;
+  will-change: transform;
+}
+
+/* Swiper Custom Styles */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #55f279 !important;
+  background: rgba(26, 44, 56, 0.5);
+  padding: 2rem;
+  border-radius: 50%;
+  transform: scale(0.7);
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: rgba(26, 44, 56, 0.8);
+}
+
+.swiper-button-disabled {
+  opacity: 0.35 !important;
+  pointer-events: none !important;
+}
