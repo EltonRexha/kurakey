@@ -25,7 +25,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-[#1a2c38] border-b border-[#2c3e50] py-3">
+    <nav className="bg-[#191838] border-b border-[#11142d] py-3">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -49,7 +49,7 @@ const Navbar = () => {
                 className="relative text-neutral-400 hover:text-[#008cff] transition-colors group"
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-[#008cff] to-[#764ba2] transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100 group-hover:shadow-[0_0_10px_#008cff,0_0_20px_#764ba2]"></span>
+                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-[#008cff] to-[#11142d] transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100 group-hover:shadow-[0_0_10px_#008cff,0_0_20px_#191838]"></span>
               </Link>
             ))}
           </div>

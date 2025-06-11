@@ -49,7 +49,7 @@ const FormInput: React.FC<FormInputProps> = ({
     >
       <label
         htmlFor={id}
-        className="block text-xs font-medium text-neutral-400 dark:text-neutral-500 mb-1.5"
+        className="block text-xs font-medium text-neutral-400 mb-1.5"
       >
         {label}
       </label>
@@ -58,7 +58,7 @@ const FormInput: React.FC<FormInputProps> = ({
           <div
             className={`absolute inset-y-0 left-0 pl-3.5 flex items-center ${
               isPassword ? 'cursor-pointer' : 'pointer-events-none'
-            } text-neutral-500 dark:text-neutral-600`}
+            } text-neutral-500`}
             onMouseDown={
               isPassword ? () => setIsPasswordVisible(true) : undefined
             }
@@ -78,14 +78,14 @@ const FormInput: React.FC<FormInputProps> = ({
           className={`
             block w-full px-4 py-3 
             ${icon ? 'pl-11' : 'pl-4'}
-            text-neutral-100 dark:text-neutral-200 
-            bg-[#203443] dark:bg-[#203443] 
-            border border-[#2c3e50] dark:border-[#2c3e50] 
+            text-neutral-100
+            bg-[#11142d]
+            border border-[#080c1c]
             rounded-lg 
-            focus:ring-1 focus:ring-[#55f279] dark:focus:ring-[#55f279] 
-            focus:border-[#55f279] dark:focus:border-[#55f279] 
+            focus:ring-1 focus:ring-[#008cff]
+            focus:border-[#008cff]
             focus:outline-none 
-            placeholder-neutral-500 dark:placeholder-neutral-400 
+            placeholder-neutral-500
             transition-colors duration-150 ease-in-out
             text-sm
           `}

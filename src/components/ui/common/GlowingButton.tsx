@@ -20,9 +20,9 @@ const GlowingButton: React.FC<GlowingButtonProps> = ({
   `;
 
   const hoverFocusClasses = `
-    hover:text-white hover:bg-[#008cff] hover:border-[#008cff]
+    hover:text-white hover:bg-gradient-to-r from-[#008cff] to-[#00d4ff] hover:border-[#008cff]
     hover:shadow-[0_0_10px_#008cff,0_0_30px_#008cff,0_0_60px_#008cff]
-    focus:text-white focus:bg-[#008cff] focus:border-[#008cff]
+    focus:text-white focus:bg-gradient-to-r from-[#008cff] to-[#00d4ff] focus:border-[#008cff]
     focus:shadow-[0_0_10px_#008cff,0_0_30px_#008cff,0_0_60px_#008cff]
   `;
 

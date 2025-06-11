@@ -13,7 +13,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
   footerContent,
 }) => {
   return (
-    <div className="bg-[#1a2c38] border border-[#2c3e50] shadow-2xl shadow-black/50 rounded-xl w-full max-w-lg mx-auto overflow-hidden">
+    <div className="bg-[#191838] border border-[#11142d] shadow-2xl shadow-black/50 rounded-xl w-full max-w-lg mx-auto overflow-hidden">
       <div className="p-8 sm:p-10">
         <AnimatedLogo />
         {title && (
@@ -24,7 +24,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
         {children}
       </div>
       {footerContent && (
-        <div className="bg-[#14222e] px-8 py-5 border-t border-[#2c3e50]">
+        <div className="bg-[#11142d] px-8 py-5 border-t border-[#080c1c]">
           {footerContent}
         </div>
       )}
