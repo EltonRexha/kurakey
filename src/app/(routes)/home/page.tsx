@@ -2,6 +2,7 @@ import LogoutBtn from '@/components/LogoutBtn';
 import { getServerSession } from 'next-auth';
 import React from 'react';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import Image from 'next/image';
 
 const page = async () => {
   const session = await getServerSession(authOptions);
@@ -23,7 +24,7 @@ const page = async () => {
         {user.image && (
           <div className="mt-4">
             <p>Profile Image:</p>
-            <img
+            <Image
               src={user.image}
               alt="Profile"
               className="w-20 h-20 rounded-full"

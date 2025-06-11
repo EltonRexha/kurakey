@@ -10,7 +10,10 @@ const GoogleSignInButton = () => {
       type="button"
       fullWidth
       onClick={() => {
-        signIn('google');
+        signIn('google', {
+          redirect: true,
+          callbackUrl: '/home',
+        });
       }}
     >
       <div className="flex items-center justify-center gap-2">
