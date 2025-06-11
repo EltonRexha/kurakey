@@ -45,13 +45,11 @@ export default function FinishAuthPage() {
         return Promise.reject('data is empty');
       }
 
-      console.log(session.data.user);
-
       return createOAuthUser({
         email: session.data?.user.email,
         firstName: session.data.user.name.split(' ')[0],
         lastName: session.data.user.name.split(' ')[1],
-        image: session.data.user.lastName || undefined,
+        image: session.data.user.image || undefined,
         username: username,
       });
     },

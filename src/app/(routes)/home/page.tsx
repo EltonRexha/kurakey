@@ -10,8 +10,6 @@ const page = async () => {
   if (!user) {
     return <h1>Something went wrong</h1>;
   }
-  console.log('Full session:', session);
-  console.log('User data:', user);
 
   return (
     <div className="p-4">
@@ -32,7 +30,8 @@ const page = async () => {
             />
           </div>
         )}
-      </div>
+      </div>{' '}
+     
       <div className="mt-4">
         <LogoutBtn />
       </div>

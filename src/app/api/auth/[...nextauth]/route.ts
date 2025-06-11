@@ -85,10 +85,8 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account, profile }) {
-      console.log('NEW JWT');
 
       if (account && profile) {
-        console.log('its OAuth');
         const existingUser = await prisma.user.findUnique({
           where: { email: profile.email ?? '' },
         });
@@ -146,8 +144,6 @@ export const authOptions: NextAuthOptions = {
       if (token.oauthProfile) {
         session.oauthProfile = token.oauthProfile;
       }
-
-      console.log(session);
 
       return session;
     },
