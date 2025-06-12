@@ -8,8 +8,8 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession();
   return (
-    <div>
-      <Navbar profileImageUrl={session?.user.image}/>
+    <div className="bg-[#080c1c] min-h-screen">
+      <Navbar profileImageUrl={session?.user.image} />
       <div>{children}</div>
     </div>
   );
