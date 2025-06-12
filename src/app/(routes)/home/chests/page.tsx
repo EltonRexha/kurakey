@@ -20,7 +20,7 @@ const page = async () => {
   const chestTypes = await getChestTypes();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-4">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-neutral-100">
         Regular Cases
       </h1>
