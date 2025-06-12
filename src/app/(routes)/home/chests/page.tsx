@@ -53,7 +53,7 @@ const page = async () => {
                   />
                 </div>
                 <div className="mt-4">
-                  <GlowingButton className="w-full">Buy Case</GlowingButton>
+                  <GlowingButton className="w-full">View Case</GlowingButton>
                 </div>
               </div>
             </div>

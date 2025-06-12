@@ -40,7 +40,7 @@ const Navbar = async () => {
                 className="h-14 w-auto"
               />
             </Link>
-            <div className="flex items-center space-x-4">
+            <div className=" items-center space-x-4 hidden sm:flex">
               <a
                 href="#"
                 className="text-neutral-500 hover:text-[#008cff] transition-colors"
