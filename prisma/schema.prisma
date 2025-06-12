@@ -72,17 +72,24 @@ model UserRoom {
   wantedInTrades  Trade[]  @relation("tradeReceiverRooms")
 }
 
+model ChestType {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  price  Int
+  Chests Chest[]
+}
+
 model Chest {
   id              String    @id @default(cuid())
-  type            ChestType
+  type            ChestType @relation(fields: [chestTypeId], references: [id])
   User            User      @relation(fields: [userId], references: [id])
   userId          String
-  price           Int
   opened          Boolean   @default(false)
   offeredInTrades Trade[]   @relation("tradeSenderChests")
   wantedInTrades  Trade[]   @relation("tradeReceiverChests")
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  chestTypeId     String
 }
 
 model Trade {
@@ -183,12 +190,12 @@ enum CoinTransactionType {
   OPEN_CHEST
 }
 
-enum ChestType {
-  STARTER
-  ADVANCED
-  ELITE
-  MYTHIC
-}
+// enum ChestType {
+//   STARTER
+//   ADVANCED
+//   ELITE
+//   MYTHIC
+// }
 
 enum Rarity {
   UNCOMMON
