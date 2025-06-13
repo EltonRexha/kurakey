@@ -25,7 +25,7 @@ async function main() {
   console.log('🌱 Starting to seed chest types and drop rates...');
 
   // Chest odds data from screenshot
-  const chestDropRates: Record<string, {rarity: Rarity, chance: number}[]> = {
+  const chestDropRates: Record<string, { rarity: Rarity; chance: number }[]> = {
     Starter: [
       { rarity: 'COMMON', chance: 70 },
       { rarity: 'UNCOMMON', chance: 20 },
@@ -88,6 +88,82 @@ async function main() {
   }
 
   console.log('✅ Chest types and drop rates seeded successfully!');
+
+  // --- BundleType seeding ---
+  console.log('🌱 Seeding bundle types...');
+
+  // Fetch chest type records for connect
+  const starterChest = await prisma.chestType.findUnique({
+    where: { name: 'Starter' },
+  });
+  const advancedChest = await prisma.chestType.findUnique({
+    where: { name: 'Advanced' },
+  });
+  const eliteChest = await prisma.chestType.findUnique({
+    where: { name: 'Elite' },
+  });
+  const mythicChest = await prisma.chestType.findUnique({
+    where: { name: 'Mythic' },
+  });
+
+  if (!starterChest || !advancedChest || !eliteChest || !mythicChest) {
+    throw new Error('One or more required chest types not found.');
+  }
+
+  const bundleTypes = [
+    {
+      name: 'Starter Bundle',
+      price: 5,
+      coinAmount: 500,
+      chestTypeIds: [starterChest.id],
+    },
+    {
+      name: 'Pro Bundle',
+      price: 10,
+      coinAmount: 1400,
+      chestTypeIds: [starterChest.id, advancedChest.id],
+    },
+    {
+      name: 'Elite Bundle',
+      price: 20,
+      coinAmount: 3200,
+      chestTypeIds: [advancedChest.id, eliteChest.id],
+    },
+    {
+      name: 'Mythic Bundle',
+      price: 50,
+      coinAmount: 9000,
+      chestTypeIds: [
+        starterChest.id,
+        advancedChest.id,
+        eliteChest.id,
+        mythicChest.id,
+      ],
+    },
+  ];
+
+  for (const bundle of bundleTypes) {
+    await prisma.bundleType.upsert({
+      where: { name: bundle.name },
+      update: {
+        price: bundle.price,
+        coinAmount: bundle.coinAmount,
+        chestTypes: {
+          set: bundle.chestTypeIds.map((id) => ({ id })),
+        },
+      },
+      create: {
+        name: bundle.name,
+        price: bundle.price,
+        coinAmount: bundle.coinAmount,
+        chestTypes: {
+          connect: bundle.chestTypeIds.map((id) => ({ id })),
+        },
+      },
+    });
+  }
+
+  console.log('✅ Bundle types seeded successfully!');
 }
 
 main()

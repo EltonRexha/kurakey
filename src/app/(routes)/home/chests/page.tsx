@@ -53,6 +53,43 @@ const page = async () => {
     SECRET: '#f472b6',
   };
 
+  // Mocked bundles data
+  const bundles = [
+    {
+      id: 'bundle1',
+      name: 'Starter Bundle',
+      price: 4.99,
+      image: '/assets/images/bundles/blueBundle.png',
+      coinAmount: 500,
+      chests: [
+        { type: 'Starter', amount: 3 },
+        { type: 'Advanced', amount: 1 },
+      ],
+    },
+    {
+      id: 'bundle2',
+      name: 'Elite Bundle',
+      price: 14.99,
+      image: '/assets/images/bundles/greenBundle.png',
+      coinAmount: 2000,
+      chests: [
+        { type: 'Elite', amount: 2 },
+        { type: 'Advanced', amount: 2 },
+      ],
+    },
+    {
+      id: 'bundle3',
+      name: 'Mythic Bundle',
+      price: 29.99,
+      image: '/assets/images/bundles/orangeBundle.png',
+      coinAmount: 5000,
+      chests: [
+        { type: 'Mythic', amount: 1 },
+        { type: 'Elite', amount: 3 },
+      ],
+    },
+  ];
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-neutral-100">
@@ -122,6 +159,57 @@ const page = async () => {
             </div>
           );
         })}
+      </div>
+      {/* Bundles Section */}
+      <h2 className="text-2xl font-bold mb-6 mt-12 text-neutral-100">
+        Bundles
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
+        {bundles.map((bundle) => (
+          <div key={bundle.id} className="flex flex-col items-stretch">
+            <div className="group relative flex-1 flex flex-col">
+              <div className="bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
+                <div className="relative h-48 w-full flex items-center justify-center bg-[#23224a]">
+                  <img
+                    src={bundle.image}
+                    alt={bundle.name}
+                    className="object-contain h-32 w-auto mx-auto"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold text-neutral-100 mb-2">
+                    {bundle.name}
+                  </h3>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-emerald-500 font-medium text-lg">
+                      ${bundle.price}
+                    </span>
+                  </div>
+                  <button className="w-full py-2 rounded bg-[#008cff] text-white font-bold shadow transition hover:bg-[#005fa3]">
+                    Buy
+                  </button>
+                </div>
+              </div>
+            </div>
+            {/* Bundle contents row */}
+            <div className="flex flex-row flex-wrap justify-start gap-2 mt-2 px-2 rounded-lg bg-[#18173a] border border-[#23224a] shadow-inner py-2">
+              {bundle.chests.map((chest) => (
+                <div
+                  key={chest.type}
+                  className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded bg-[#23224a] text-[#008cff]"
+                >
+                  <span>{chest.amount}x</span>
+                  <span>{chest.type}</span>
+                </div>
+              ))}
+              <div className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded bg-[#23224a] text-amber-400">
+                <span>{bundle.coinAmount}</span>
+                <span>Coins</span>
+              </div>
+            </div>
+          </div>
+        ))}
+        {/* End bundles map */}
       </div>
     </div>
   );
