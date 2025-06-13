@@ -1,4 +1,4 @@
-import { PrismaClient } from '../src/generated/prisma';
+import { PrismaClient, Rarity } from '../src/generated/prisma';
 
 const prisma = new PrismaClient();
 
@@ -25,7 +25,7 @@ async function main() {
   console.log('🌱 Starting to seed chest types and drop rates...');
 
   // Chest odds data from screenshot
-  const chestDropRates = {
+  const chestDropRates: Record<string, {rarity: Rarity, chance: number}[]> = {
     Starter: [
       { rarity: 'COMMON', chance: 70 },
       { rarity: 'UNCOMMON', chance: 20 },
