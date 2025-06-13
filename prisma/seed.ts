@@ -115,52 +115,71 @@ async function main() {
       name: 'Starter Bundle',
       price: 5,
       coinAmount: 500,
-      chestTypeIds: [starterChest.id],
+      chests: [{ chestTypeId: starterChest.id, amount: 1 }],
     },
     {
       name: 'Pro Bundle',
       price: 10,
       coinAmount: 1400,
-      chestTypeIds: [starterChest.id, advancedChest.id],
+      chests: [
+        { chestTypeId: starterChest.id, amount: 1 },
+        { chestTypeId: advancedChest.id, amount: 1 },
+      ],
     },
     {
       name: 'Elite Bundle',
       price: 20,
       coinAmount: 3200,
-      chestTypeIds: [advancedChest.id, eliteChest.id],
+      chests: [
+        { chestTypeId: advancedChest.id, amount: 1 },
+        { chestTypeId: eliteChest.id, amount: 1 },
+      ],
     },
     {
       name: 'Mythic Bundle',
       price: 50,
       coinAmount: 9000,
-      chestTypeIds: [
-        starterChest.id,
-        advancedChest.id,
-        eliteChest.id,
-        mythicChest.id,
+      chests: [
+        { chestTypeId: starterChest.id, amount: 2 },
+        { chestTypeId: advancedChest.id, amount: 2 },
+        { chestTypeId: eliteChest.id, amount: 2 },
+        { chestTypeId: mythicChest.id, amount: 1 },
       ],
     },
   ];
 
   for (const bundle of bundleTypes) {
-    await prisma.bundleType.upsert({
+    // Upsert the bundle type
+    const createdBundleType = await prisma.bundleType.upsert({
       where: { name: bundle.name },
       update: {
         price: bundle.price,
         coinAmount: bundle.coinAmount,
-        chestTypes: {
-          set: bundle.chestTypeIds.map((id) => ({ id })),
-        },
       },
       create: {
         name: bundle.name,
         price: bundle.price,
         coinAmount: bundle.coinAmount,
-        chestTypes: {
-          connect: bundle.chestTypeIds.map((id) => ({ id })),
-        },
       },
     });
+
+    // Upsert the chest connections with amounts
+    for (const chest of bundle.chests) {
+      await prisma.bundleTypeChestType.upsert({
+        where: {
+          bundleTypeId_chestTypeId: {
+            bundleTypeId: createdBundleType.id,
+            chestTypeId: chest.chestTypeId,
+          },
+        },
+        update: { amount: chest.amount },
+        create: {
+          bundleTypeId: createdBundleType.id,
+          chestTypeId: chest.chestTypeId,
+          amount: chest.amount,
+        },
+      });
+    }
   }
 
   console.log('✅ Bundle types seeded successfully!');

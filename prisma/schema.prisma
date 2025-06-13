@@ -74,12 +74,12 @@ model UserRoom {
 }
 
 model ChestType {
-  id            String          @id @default(cuid())
-  name          String          @unique
-  price         Int
-  Chests        Chest[]
-  ChestDropRate ChestDropRate[]
-  bundleTypes   BundleType[]
+  id                  String                @id @default(cuid())
+  name                String                @unique
+  price               Int
+  Chests              Chest[]
+  ChestDropRate       ChestDropRate[]
+  BundleTypeChestType BundleTypeChestType[]
 }
 
 model ChestDropRate {
@@ -106,12 +106,24 @@ model Chest {
 }
 
 model BundleType {
-  id         String      @id @default(cuid())
-  name       String      @unique
-  price      Float // Price in real dollars
-  coinAmount Int
-  chestTypes ChestType[]
-  Bundle     Bundle[]
+  id                  String                @id @default(cuid())
+  name                String                @unique
+  price               Float // Price in real dollars
+  coinAmount          Int
+  Bundle              Bundle[]
+  BundleTypeChestType BundleTypeChestType[]
+}
+
+model BundleTypeChestType {
+  id String @id @default(cuid())
+
+  Bundle       BundleType @relation(fields: [bundleTypeId], references: [id])
+  bundleTypeId String
+  ChestType    ChestType  @relation(fields: [chestTypeId], references: [id])
+  chestTypeId  String
+  amount       Int //amount of chests being stored
+
+  @@unique([bundleTypeId, chestTypeId])
 }
 
 model Bundle {

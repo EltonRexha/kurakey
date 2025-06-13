@@ -6,6 +6,8 @@ import { ChestDropRatesResponse } from '../../../../../libs/api/chests';
 import coinIcon from '@/assets/images/icons/coin.png';
 import { ChestType } from '@/generated/prisma';
 import prisma from '../../../../../prisma/prisma';
+import { getBundleImage } from '@/utils/getBundleImage';
+import ShineButton from '@/components/ui/common/ShineButton';
 
 async function getChestTypes() {
   try {
@@ -17,8 +19,28 @@ async function getChestTypes() {
   }
 }
 
+async function getBundleTypes() {
+  try {
+    // Include chestTypes for each bundle type
+    const bundleTypes = await prisma.bundleType.findMany({
+      include: {
+        BundleTypeChestType: {
+          include: {
+            ChestType: true,
+          },
+        },
+      },
+    });
+    return bundleTypes;
+  } catch (error) {
+    console.error('Error fetching bundle types:', error);
+    return [];
+  }
+}
+
 const page = async () => {
   const chestTypes = await getChestTypes();
+  const bundleTypes = await getBundleTypes();
 
   // Fetch drop rates from API using fetch (server-side)
   const res = await fetch(
@@ -52,43 +74,6 @@ const page = async () => {
     LEGENDARY: '#fbbf24',
     SECRET: '#f472b6',
   };
-
-  // Mocked bundles data
-  const bundles = [
-    {
-      id: 'bundle1',
-      name: 'Starter Bundle',
-      price: 4.99,
-      image: '/assets/images/bundles/blueBundle.png',
-      coinAmount: 500,
-      chests: [
-        { type: 'Starter', amount: 3 },
-        { type: 'Advanced', amount: 1 },
-      ],
-    },
-    {
-      id: 'bundle2',
-      name: 'Elite Bundle',
-      price: 14.99,
-      image: '/assets/images/bundles/greenBundle.png',
-      coinAmount: 2000,
-      chests: [
-        { type: 'Elite', amount: 2 },
-        { type: 'Advanced', amount: 2 },
-      ],
-    },
-    {
-      id: 'bundle3',
-      name: 'Mythic Bundle',
-      price: 29.99,
-      image: '/assets/images/bundles/orangeBundle.png',
-      coinAmount: 5000,
-      chests: [
-        { type: 'Mythic', amount: 1 },
-        { type: 'Elite', amount: 3 },
-      ],
-    },
-  ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -165,15 +150,16 @@ const page = async () => {
         Bundles
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
-        {bundles.map((bundle) => (
+        {bundleTypes.map((bundle) => (
           <div key={bundle.id} className="flex flex-col items-stretch">
-            <div className="group relative flex-1 flex flex-col">
-              <div className="bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
-                <div className="relative h-48 w-full flex items-center justify-center bg-[#23224a]">
-                  <img
-                    src={bundle.image}
+            <div className="group relative flex flex-col">
+              <div className="py-4 bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
+                <div className="relative h-48 w-full flex items-center justify-center">
+                  <Image
+                    src={getBundleImage(bundle.name)}
                     alt={bundle.name}
                     className="object-contain h-32 w-auto mx-auto"
+                    fill
                   />
                 </div>
                 <div className="p-4">
@@ -185,26 +171,44 @@ const page = async () => {
                       ${bundle.price}
                     </span>
                   </div>
-                  <button className="w-full py-2 rounded bg-[#008cff] text-white font-bold shadow transition hover:bg-[#005fa3]">
-                    Buy
-                  </button>
+                  <ShineButton>Buy</ShineButton>
                 </div>
               </div>
             </div>
             {/* Bundle contents row */}
             <div className="flex flex-row flex-wrap justify-start gap-2 mt-2 px-2 rounded-lg bg-[#18173a] border border-[#23224a] shadow-inner py-2">
-              {bundle.chests.map((chest) => (
+              {bundle.BundleTypeChestType.map((bundleTypeChestType) => (
                 <div
-                  key={chest.type}
-                  className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded bg-[#23224a] text-[#008cff]"
+                  key={bundleTypeChestType.id}
+                  className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded bg-[#23224a] text-[#008cff] transition-all duration-200 hover:scale-105 hover:bg-[#23224a]/80 hover:text-sky-300 hover:shadow-[0_0_8px_#00e0ff55]"
                 >
-                  <span>{chest.amount}x</span>
-                  <span>{chest.type}</span>
+                  <span>{bundleTypeChestType.amount}x</span>
+                  <span>
+                    {bundleTypeChestType.ChestType.name}{' '}
+                    {bundleTypeChestType.amount > 1 ? 'Chests' : 'Chest'}
+                  </span>
+                <div className="flex items-center gap-1.5">
+                    <Image
+                      src={getChestImage(bundleTypeChestType.ChestType.name)}
+                      alt="Coins"
+                      width={20}
+                      height={20}
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
               ))}
-              <div className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded bg-[#23224a] text-amber-400">
+              <div className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded bg-[#23224a] text-amber-400 transition-all duration-200 hover:scale-105 hover:bg-[#23224a]/80 hover:text-yellow-300 hover:shadow-[0_0_8px_#ffd70055]">
                 <span>{bundle.coinAmount}</span>
-                <span>Coins</span>
+                <div className="flex items-center gap-1.5">
+                  <Image
+                    src={coinIcon}
+                    alt="Coins"
+                    width={20}
+                    height={20}
+                    className="object-contain"
+                  />
+                </div>
               </div>
             </div>
           </div>
