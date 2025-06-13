@@ -52,13 +52,16 @@ model Session {
 }
 
 model Room {
-  id       String       @id @default(cuid())
-  name     String
-  category RoomCategory
-  rarity   Rarity
-  isSecret Boolean      @default(false)
-  assetUrl String
-  UserRoom UserRoom[]
+  id              String       @id @default(cuid())
+  name            String
+  category        RoomCategory
+  rarity          Rarity
+  isSecret        Boolean      @default(false)
+  previewImageUrl String
+  assetUrl        String
+  UserRoom        UserRoom[]
+
+  @@unique([name, category])
 }
 
 model UserRoom {

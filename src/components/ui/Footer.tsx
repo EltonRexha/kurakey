@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { FaDiscord } from 'react-icons/fa';
 import XLogo from './common/XLogo';
+import Image from 'next/image';
 
 const Footer = () => {
   const navigation = [
@@ -33,7 +34,13 @@ const Footer = () => {
           {/* Logo and Social Section */}
           <div className="space-y-6">
             <Link href="/home" className="flex-shrink-0">
-              <img src="/logo.png" alt="Kurakey" className="h-12 w-auto" />
+              <Image
+                src="/logo.png"
+                alt="Kurakey"
+                className="h-12 w-auto"
+                width={100}
+                height={100}
+              />
             </Link>
             <div className="flex items-center space-x-4">
               <a

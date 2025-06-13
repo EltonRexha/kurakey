@@ -7,20 +7,29 @@ import Card from './common/CarouselCard';
 import NavLinks from './common/NavLinks';
 import GetServerUser from '../../../libs/GetServerUser';
 import coinIcon from '@/assets/images/icons/coin.png';
+import prisma from '../../../prisma/prisma';
+
+async function getRooms() {
+  return prisma.room.findMany({
+    where: { isSecret: false },
+    select: {
+      id: true,
+      name: true,
+      previewImageUrl: true,
+      category: true,
+      rarity: true,
+    },
+    orderBy: { name: 'asc' },
+  });
+}
 
 const Navbar = async () => {
-  const sampleCards = [
-    { title: 'Room1', image: '/example.jpg' },
-    { title: 'Room2', image: '/example.jpg' },
-    { title: 'Room3', image: '/example.jpg' },
-    { title: 'Room4', image: '/example.jpg' },
-    { title: 'Room5', image: '/example.jpg' },
-  ];
+  const rooms = await getRooms();
 
   const user = await GetServerUser();
 
   if (!user) {
-    return 'nahh';
+    throw new Error('User not found');
   }
 
   const profileImage = user.image || '/placeholder-avatar.png';
@@ -90,8 +99,14 @@ const Navbar = async () => {
         {/* Carousel Section */}
         <div className="py-2">
           <HorizontalCarousel>
-            {sampleCards.map((card, index) => (
-              <Card key={index} title={card.title} image={card.image} />
+            {rooms.map((room) => (
+              <Card
+                key={room.id}
+                title={room.name}
+                image={room.previewImageUrl}
+                category={room.category}
+                rarity={room.rarity}
+              />
             ))}
           </HorizontalCarousel>
         </div>

@@ -1,4 +1,4 @@
-import { PrismaClient, Rarity } from '../src/generated/prisma';
+import { PrismaClient, Rarity, RoomCategory } from '../src/generated/prisma';
 
 const prisma = new PrismaClient();
 
@@ -183,6 +183,36 @@ async function main() {
   }
 
   console.log('✅ Bundle types seeded successfully!');
+
+  // --- Room seeding ---
+  console.log('🌱 Seeding rooms...');
+  const roomsData = (await import('./data/rooms')).default;
+  for (const [category, roomsArr] of Object.entries(roomsData)) {
+    for (const room of roomsArr) {
+      await prisma.room.upsert({
+        where: {
+          name_category: {
+            name: room.name,
+            category: category as RoomCategory,
+          },
+        },
+        update: {
+          rarity: room.rarity,
+          category: category as RoomCategory,
+          assetUrl: room.assetUrl,
+          previewImageUrl: room.imagePreviewUrl,
+        },
+        create: {
+          name: room.name,
+          rarity: room.rarity,
+          category: category as RoomCategory,
+          assetUrl: room.assetUrl,
+          previewImageUrl: room.imagePreviewUrl,
+        },
+      });
+    }
+  }
+  console.log('✅ Rooms seeded successfully!');
 }
 
 main()

@@ -187,7 +187,7 @@ const page = async () => {
                     {bundleTypeChestType.ChestType.name}{' '}
                     {bundleTypeChestType.amount > 1 ? 'Chests' : 'Chest'}
                   </span>
-                <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5">
                     <Image
                       src={getChestImage(bundleTypeChestType.ChestType.name)}
                       alt="Coins"
