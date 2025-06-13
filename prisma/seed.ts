@@ -25,7 +25,7 @@ async function main() {
   console.log('🌱 Starting to seed chest types and drop rates...');
 
   // Chest odds data from screenshot
-  const chestDropRates: Record<string, {rarity: Rarity, chance: number}[]> = {
+  const chestDropRates: Record<string, { rarity: Rarity; chance: number }[]> = {
     Starter: [
       { rarity: 'COMMON', chance: 70 },
       { rarity: 'UNCOMMON', chance: 20 },
@@ -88,6 +88,101 @@ async function main() {
   }
 
   console.log('✅ Chest types and drop rates seeded successfully!');
+
+  // --- BundleType seeding ---
+  console.log('🌱 Seeding bundle types...');
+
+  // Fetch chest type records for connect
+  const starterChest = await prisma.chestType.findUnique({
+    where: { name: 'Starter' },
+  });
+  const advancedChest = await prisma.chestType.findUnique({
+    where: { name: 'Advanced' },
+  });
+  const eliteChest = await prisma.chestType.findUnique({
+    where: { name: 'Elite' },
+  });
+  const mythicChest = await prisma.chestType.findUnique({
+    where: { name: 'Mythic' },
+  });
+
+  if (!starterChest || !advancedChest || !eliteChest || !mythicChest) {
+    throw new Error('One or more required chest types not found.');
+  }
+
+  const bundleTypes = [
+    {
+      name: 'Starter Bundle',
+      price: 5,
+      coinAmount: 500,
+      chests: [{ chestTypeId: starterChest.id, amount: 1 }],
+    },
+    {
+      name: 'Pro Bundle',
+      price: 10,
+      coinAmount: 1400,
+      chests: [
+        { chestTypeId: starterChest.id, amount: 1 },
+        { chestTypeId: advancedChest.id, amount: 1 },
+      ],
+    },
+    {
+      name: 'Elite Bundle',
+      price: 20,
+      coinAmount: 3200,
+      chests: [
+        { chestTypeId: advancedChest.id, amount: 1 },
+        { chestTypeId: eliteChest.id, amount: 1 },
+      ],
+    },
+    {
+      name: 'Mythic Bundle',
+      price: 50,
+      coinAmount: 9000,
+      chests: [
+        { chestTypeId: starterChest.id, amount: 2 },
+        { chestTypeId: advancedChest.id, amount: 2 },
+        { chestTypeId: eliteChest.id, amount: 2 },
+        { chestTypeId: mythicChest.id, amount: 1 },
+      ],
+    },
+  ];
+
+  for (const bundle of bundleTypes) {
+    // Upsert the bundle type
+    const createdBundleType = await prisma.bundleType.upsert({
+      where: { name: bundle.name },
+      update: {
+        price: bundle.price,
+        coinAmount: bundle.coinAmount,
+      },
+      create: {
+        name: bundle.name,
+        price: bundle.price,
+        coinAmount: bundle.coinAmount,
+      },
+    });
+
+    // Upsert the chest connections with amounts
+    for (const chest of bundle.chests) {
+      await prisma.bundleTypeChestType.upsert({
+        where: {
+          bundleTypeId_chestTypeId: {
+            bundleTypeId: createdBundleType.id,
+            chestTypeId: chest.chestTypeId,
+          },
+        },
+        update: { amount: chest.amount },
+        create: {
+          bundleTypeId: createdBundleType.id,
+          chestTypeId: chest.chestTypeId,
+          amount: chest.amount,
+        },
+      });
+    }
+  }
+
+  console.log('✅ Bundle types seeded successfully!');
 }
 
 main()

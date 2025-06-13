@@ -38,6 +38,7 @@ model User {
   receivedTrades  Trade[]           @relation("receiver")
   Notification    Notification[]
   UserCoinPackage UserCoinPackage[]
+  Bundle          Bundle[]
 }
 
 model Session {
@@ -73,11 +74,12 @@ model UserRoom {
 }
 
 model ChestType {
-  id            String          @id @default(cuid())
-  name          String          @unique
-  price         Int
-  Chests        Chest[]
-  ChestDropRate ChestDropRate[]
+  id                  String                @id @default(cuid())
+  name                String                @unique
+  price               Int
+  Chests              Chest[]
+  ChestDropRate       ChestDropRate[]
+  BundleTypeChestType BundleTypeChestType[]
 }
 
 model ChestDropRate {
@@ -101,6 +103,38 @@ model Chest {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   chestTypeId     String
+}
+
+model BundleType {
+  id                  String                @id @default(cuid())
+  name                String                @unique
+  price               Float // Price in real dollars
+  coinAmount          Int
+  Bundle              Bundle[]
+  BundleTypeChestType BundleTypeChestType[]
+}
+
+model BundleTypeChestType {
+  id String @id @default(cuid())
+
+  Bundle       BundleType @relation(fields: [bundleTypeId], references: [id])
+  bundleTypeId String
+  ChestType    ChestType  @relation(fields: [chestTypeId], references: [id])
+  chestTypeId  String
+  amount       Int //amount of chests being stored
+
+  @@unique([bundleTypeId, chestTypeId])
+}
+
+model Bundle {
+  id           String     @id @default(cuid())
+  type         BundleType @relation(fields: [bundleTypeId], references: [id])
+  User         User       @relation(fields: [userId], references: [id])
+  bundleTypeId String
+  userId       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Trade {
