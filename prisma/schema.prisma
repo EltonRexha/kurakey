@@ -73,10 +73,21 @@ model UserRoom {
 }
 
 model ChestType {
-  id     String  @id @default(cuid())
-  name   String  @unique
-  price  Int
-  Chests Chest[]
+  id            String          @id @default(cuid())
+  name          String          @unique
+  price         Int
+  Chests        Chest[]
+  ChestDropRate ChestDropRate[]
+}
+
+model ChestDropRate {
+  id          String    @id @default(cuid())
+  chestType   ChestType @relation(fields: [chestTypeId], references: [id])
+  chestTypeId String
+  rarity      Rarity
+  chance      Float // % of chance
+
+  @@unique([chestTypeId, rarity])
 }
 
 model Chest {
@@ -189,13 +200,6 @@ enum CoinTransactionType {
   GIFT
   OPEN_CHEST
 }
-
-// enum ChestType {
-//   STARTER
-//   ADVANCED
-//   ELITE
-//   MYTHIC
-// }
 
 enum Rarity {
   UNCOMMON
