@@ -18,11 +18,15 @@ const Card = ({ title, image, price, category, rarity, id }: CardProps) => {
     <Link href={`/room?id=${id}`}>
       <div className="min-w-[250px] bg-neutral-900 rounded-lg overflow-hidden snap-center hover:scale-[1.02] transition-transform duration-200 cursor-pointer">
         <div className="relative h-[150px] w-full">
+          {' '}
           <Image
             src={image}
             alt={title}
             className="w-full h-full object-cover"
             fill
+            priority
+            sizes="350px"
+            quality={90}
           />
         </div>
         <div className="p-2">

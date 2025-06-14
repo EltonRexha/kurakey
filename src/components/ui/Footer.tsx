@@ -34,12 +34,14 @@ const Footer = () => {
           {/* Logo and Social Section */}
           <div className="space-y-6">
             <Link href="/home" className="flex-shrink-0">
+              {' '}
               <Image
                 src="/logo.png"
                 alt="Kurakey"
                 className="h-12 w-auto"
                 width={100}
                 height={100}
+                sizes="100px"
               />
             </Link>
             <div className="flex items-center space-x-4">

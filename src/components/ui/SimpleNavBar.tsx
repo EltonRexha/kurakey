@@ -22,11 +22,13 @@ const SimpleNavBar = async () => {
           {/* Logo and Social Links */}
           <div className="flex items-center space-x-6">
             <Link href="/home" className="flex-shrink-0">
+              {' '}
               <Image
                 src="/logo.png"
                 alt="Kurakey"
                 width={100}
                 height={48}
+                sizes="120px"
                 className="h-14 w-auto"
               />
             </Link>
@@ -54,23 +56,26 @@ const SimpleNavBar = async () => {
           <div className="flex items-center gap-4">
             {/* Coin Balance */}
             <div className="flex items-center gap-1.5">
-              <p className="text-emerald-500 font-medium">{user.coinBalance}</p>
+              <p className="text-emerald-500 font-medium">{user.coinBalance}</p>{' '}
               <Image
                 src={coinIcon}
                 alt="Coins"
                 width={20}
                 height={20}
+                sizes="20px"
                 className="object-contain"
               />
             </div>
 
             {/* Profile Image */}
             <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-[#008cff]/50">
+              {' '}
               <Image
                 src={profileImage}
                 alt="User Profile"
                 fill
                 priority
+                sizes="32px"
                 className="object-cover"
               />
             </div>

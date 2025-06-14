@@ -89,10 +89,13 @@ const page = async () => {
               <div className="group relative flex-1 flex flex-col">
                 <div className="bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
                   <div className="relative h-48 w-full">
+                    {' '}
                     <Image
                       src={getChestImage(chest.name)}
                       alt={chest.name}
                       fill
+                      priority
+                      sizes="(max-width: 640px) 90vw, (max-width: 768px) 45vw, (max-width: 1024px) 30vw, 25vw"
                       className="object-contain p-4"
                     />
                   </div>
@@ -103,12 +106,13 @@ const page = async () => {
                     <div className="flex items-center gap-1.5">
                       <p className="text-emerald-500 font-medium text-lg">
                         {chest.price}
-                      </p>
+                      </p>{' '}
                       <Image
                         src={coinIcon}
                         alt="Coins"
                         width={24}
                         height={24}
+                        sizes="24px"
                         className="object-contain"
                       />
                     </div>
@@ -155,11 +159,13 @@ const page = async () => {
             <div className="group relative flex flex-col">
               <div className="py-4 bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
                 <div className="relative h-48 w-full flex items-center justify-center">
+                  {' '}
                   <Image
                     src={getBundleImage(bundle.name)}
                     alt={bundle.name}
                     className="object-contain h-32 w-auto mx-auto"
                     fill
+                    sizes="(max-width: 640px) 90vw, (max-width: 768px) 45vw, (max-width: 1024px) 30vw, 25vw"
                   />
                 </div>
                 <div className="p-4">
@@ -188,11 +194,13 @@ const page = async () => {
                     {bundleTypeChestType.amount > 1 ? 'Chests' : 'Chest'}
                   </span>
                   <div className="flex items-center gap-1.5">
+                    {' '}
                     <Image
                       src={getChestImage(bundleTypeChestType.ChestType.name)}
                       alt="Coins"
                       width={20}
                       height={20}
+                      sizes="20px"
                       className="object-contain"
                     />
                   </div>
@@ -201,11 +209,13 @@ const page = async () => {
               <div className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded bg-[#23224a] text-amber-400 transition-all duration-200 hover:scale-105 hover:bg-[#23224a]/80 hover:text-yellow-300 hover:shadow-[0_0_8px_#ffd70055]">
                 <span>{bundle.coinAmount}</span>
                 <div className="flex items-center gap-1.5">
+                  {' '}
                   <Image
                     src={coinIcon}
                     alt="Coins"
                     width={20}
                     height={20}
+                    sizes="20px"
                     className="object-contain"
                   />
                 </div>

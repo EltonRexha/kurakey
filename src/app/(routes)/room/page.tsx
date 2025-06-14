@@ -202,11 +202,12 @@ const page = async ({ searchParams }: PageProps) => {
                             rarityColors[chest.rarity]
                           }22 0%, transparent 70%)`,
                         }}
-                      />
+                      />{' '}
                       <Image
                         src={getChestImage(chest.name)}
                         alt={chest.name}
                         fill
+                        sizes="64px"
                         className="object-contain p-1 drop-shadow-[0_0_2px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:drop-shadow-[0_0_4px_rgba(0,0,0,0.7)]"
                       />
                     </div>
@@ -252,10 +253,12 @@ const page = async ({ searchParams }: PageProps) => {
                 <div className="group relative flex flex-col">
                   <div className="bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
                     <div className="relative h-48 w-full">
+                      {' '}
                       <Image
                         src={similarRoom.previewImageUrl}
                         alt={similarRoom.name}
                         fill
+                        sizes="(max-width: 640px) 90vw, (max-width: 768px) 45vw, (max-width: 1024px) 30vw, 25vw"
                         className="object-cover"
                       />
                     </div>
