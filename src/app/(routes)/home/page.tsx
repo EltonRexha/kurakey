@@ -8,6 +8,7 @@ import { getBundleImage } from '@/utils/getBundleImage';
 import ShineButton from '@/components/ui/common/ShineButton';
 import prisma from '../../../../prisma/prisma';
 import { ChestDropRatesResponse } from '../../../../libs/api/chests';
+import { getBaseUrl } from '@/utils/getBaseUrl';
 
 async function getChestTypes() {
   try {
@@ -41,10 +42,11 @@ async function getBundleTypes() {
 const page = async () => {
   const chestTypes = await getChestTypes();
   const bundleTypes = await getBundleTypes();
+  const baseUrl = await getBaseUrl();
 
   // Fetch drop rates from API using fetch (server-side)
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/chests/drop-rates`,
+    `${baseUrl || ''}/api/chests/drop-rates`,
     {
       cache: 'no-store',
     }
