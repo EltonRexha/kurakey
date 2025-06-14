@@ -51,7 +51,7 @@ const HorizontalCarousel = ({ children }: CarouselProps) => {
         spaceBetween={16}
         slidesPerView="auto"
         loop={true}
-        speed={1000}
+        speed={800}
         autoplay={{
           delay: 0,
           disableOnInteraction: false,
