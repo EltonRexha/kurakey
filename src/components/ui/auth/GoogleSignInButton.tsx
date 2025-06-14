@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
-import { GlowingButton } from '@/components/ui/common';
 import { FaGoogle } from 'react-icons/fa';
 import { signIn } from 'next-auth/react';
+import GlowingButton from '../common/GlowingButton';
 
 const GoogleSignInButton = () => {
   return (

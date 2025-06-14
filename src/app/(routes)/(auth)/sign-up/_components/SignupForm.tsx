@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import { GlowingButton } from '@/components/ui/common';
 import { User, Mail, Lock } from 'lucide-react';
 import { FormInput, GoogleSignInButton, OrDivider } from '@/components/ui/auth';
 import { useForm } from 'react-hook-form';
@@ -11,6 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import { signIn } from 'next-auth/react';
 import { useToastContext } from '@/context/ToastContext';
 import { createUser } from '../../../../../../libs/api/user';
+import GlowingButton from '@/components/ui/common/GlowingButton';
 
 type FormData = z.infer<typeof UserSchema>;
 

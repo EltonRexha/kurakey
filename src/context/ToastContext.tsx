@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, useContext } from 'react';
-import { ToastContainer } from '@/components/ui/common';
 import { useToaster } from '@/hooks/useToaster';
+import { ToastContainer } from '@/components/ui/common/ToastContainer';
 
 interface ToastContextType {
   addToast: (message: string, type: 'success' | 'error') => void;

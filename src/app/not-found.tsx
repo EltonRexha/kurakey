@@ -1,4 +1,4 @@
-import { GlowingButton } from '@/components/ui/common';
+import GlowingButton from '@/components/ui/common/GlowingButton';
 import Link from 'next/link';
 import React from 'react';
 

@@ -1,6 +1,5 @@
 'use client';
 import { AuthCard, FormInput } from '@/components/ui/auth';
-import { GlowingButton } from '@/components/ui/common';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { User } from 'lucide-react';
@@ -11,6 +10,7 @@ import { z } from 'zod';
 import { createOAuthUser } from '../../../../../libs/api/oauthUser';
 import { ClipLoader } from 'react-spinners';
 import { useRouter } from 'next/navigation';
+import GlowingButton from '@/components/ui/common/GlowingButton';
 
 const FormSchema = z.object({
   username: z

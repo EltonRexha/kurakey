@@ -1,7 +1,6 @@
 import React from 'react';
 import { getChestImage } from '@/utils/getChestImage';
 import Image from 'next/image';
-import { GlowingButton } from '@/components/ui/common';
 import coinIcon from '@/assets/images/icons/coin.png';
 import { ChestType } from '@/generated/prisma';
 import { getBundleImage } from '@/utils/getBundleImage';
@@ -9,6 +8,7 @@ import ShineButton from '@/components/ui/common/ShineButton';
 import prisma from '../../../../prisma/prisma';
 import { ChestDropRatesResponse } from '../../../../libs/api/chests';
 import { getBaseUrl } from '@/utils/getBaseUrl';
+import GlowingButton from '@/components/ui/common/GlowingButton';
 
 async function getChestTypes() {
   try {

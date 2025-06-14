@@ -1,6 +1,6 @@
 'use client';
 import { FormInput, GoogleSignInButton, OrDivider } from '@/components/ui/auth';
-import { GlowingButton } from '@/components/ui/common';
+import GlowingButton from '@/components/ui/common/GlowingButton';
 import { useToastContext } from '@/context/ToastContext';
 import LoginSchema from '@/schemas/loginSchema';
 import { zodResolver } from '@hookform/resolvers/zod';

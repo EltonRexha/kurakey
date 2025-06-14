@@ -1,8 +1,8 @@
 import { OAuthUserSchema } from '@/schemas/oauthUserSchema';
 import { NextResponse } from 'next/server';
 import prisma from '../../../../prisma/prisma';
-import { authOptions } from '../auth/[...nextauth]/route';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]/authOptions';
 
 export async function POST(request: Request) {
   const jsonBody = await request.json();
