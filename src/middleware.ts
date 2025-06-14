@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-const userRoutes = ['/home'];
+const userRoutes = ['/home', '/room'];
 const guestRoutes = ['/log-in', '/sign-up'];
 const OAuthRoutes = ['/finish-auth'];
 const AllRoutes = [...userRoutes, ...guestRoutes, ...OAuthRoutes]

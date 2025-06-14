@@ -1,31 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaDiscord } from 'react-icons/fa';
-import HorizontalCarousel from './common/HorizontalCarousel';
 import XLogo from './common/XLogo';
-import Card from './common/CarouselCard';
 import NavLinks from './common/NavLinks';
 import GetServerUser from '../../../libs/GetServerUser';
 import coinIcon from '@/assets/images/icons/coin.png';
-import prisma from '../../../prisma/prisma';
 
-async function getRooms() {
-  return prisma.room.findMany({
-    where: { isSecret: false },
-    select: {
-      id: true,
-      name: true,
-      previewImageUrl: true,
-      category: true,
-      rarity: true,
-    },
-    orderBy: { name: 'asc' },
-  });
-}
-
-const Navbar = async () => {
-  const rooms = await getRooms();
-
+const SimpleNavBar = async () => {
   const user = await GetServerUser();
 
   if (!user) {
@@ -95,25 +76,9 @@ const Navbar = async () => {
             </div>
           </div>
         </div>
-
-        {/* Carousel Section */}
-        <div className="py-2">
-          <HorizontalCarousel>
-            {rooms.map((room) => (
-              <Card
-                key={room.id}
-                title={room.name}
-                image={room.previewImageUrl}
-                category={room.category}
-                rarity={room.rarity}
-                id={room.id}
-              />
-            ))}
-          </HorizontalCarousel>
-        </div>
       </div>
     </nav>
   );
 };
 
-export default Navbar;
+export default SimpleNavBar;

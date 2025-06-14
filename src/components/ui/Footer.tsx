@@ -8,8 +8,8 @@ const Footer = () => {
     {
       title: 'Navigation',
       links: [
-        { name: 'Cases', href: '/home/chests' },
-        { name: 'Buy coins', href: '/home/buycoins' },
+        { name: 'Chests', href: '/home' },
+        { name: 'Buy coins', href: '/home/buy-coins' },
         { name: 'Rooms', href: '/home/Rooms' },
       ],
     },

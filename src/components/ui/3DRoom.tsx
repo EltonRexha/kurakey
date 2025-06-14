@@ -8,10 +8,11 @@ interface Room3DProps {
 
 const Room3D: React.FC<Room3DProps> = ({ playcanvasLink }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [hasLoaded, setHasLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  // Intersection observer to only load when in view
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -27,25 +28,12 @@ const Room3D: React.FC<Room3DProps> = ({ playcanvasLink }) => {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (isInView) {
-      const loadTimer = setTimeout(() => {
-        setHasLoaded(true);
-      }, 6000);
-
-      return () => clearTimeout(loadTimer);
-    }
-  }, [isInView]);
-
-  useEffect(() => {
-    if (hasLoaded) {
-      const fadeTimer = setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
-
-      return () => clearTimeout(fadeTimer);
-    }
-  }, [hasLoaded]);
+  const handleIframeLoad = () => {
+    // Give PlayCanvas a moment to initialize after iframe loads
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2200);
+  };
 
   return (
     <motion.div
@@ -59,25 +47,25 @@ const Room3D: React.FC<Room3DProps> = ({ playcanvasLink }) => {
           <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-10 flex items-center justify-center bg-[#203443]/50 backdrop-blur-sm"
+            className="absolute inset-0 z-10 flex items-center justify-center bg-[#191838]"
           >
-            <div className="w-16 h-16 border-4 border-[#55f279] border-t-transparent rounded-full animate-spin" />
+            <div className="w-16 h-16 border-4 border-[#008cff] border-t-transparent rounded-full animate-spin shadow-[0_0_15px_#008cff50]" />
           </motion.div>
         )}
-      </AnimatePresence>
-
-      {hasLoaded && isInView && (
+      </AnimatePresence>{' '}
+      {isInView && (
         <div className="w-full h-full overflow-hidden">
           <iframe
+            ref={iframeRef}
             src={playcanvasLink}
             loading="lazy"
             allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated"
-            className="w-full h-[calc(100%+50px)] -mb-[50px] border-0 scale-[1.01] transform-gpu"
-            onLoad={() => setHasLoaded(true)}
+            className="w-full h-[calc(100%+50px)] -mb-[50px] border-0 scale-[1.01] transform-gpu [&_canvas]:rounded-xl"
             style={{
               willChange: 'transform',
               backfaceVisibility: 'hidden',
             }}
+            onLoad={handleIframeLoad}
           />
         </div>
       )}
