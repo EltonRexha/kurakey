@@ -259,4 +259,5 @@ enum RoomCategory {
   SANCTUM
   ASCENSION
   SECRET
+  ANIME
 }
