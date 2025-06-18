@@ -9,6 +9,7 @@ import prisma from '../../../../prisma/prisma';
 import { ChestDropRatesResponse } from '../../../../libs/api/chests';
 import { getBaseUrl } from '@/utils/getBaseUrl';
 import GlowingButton from '@/components/ui/common/GlowingButton';
+import Link from 'next/link';
 
 async function getChestTypes() {
   try {
@@ -119,9 +120,11 @@ const page = async () => {
                       />
                     </div>
                     <div className="mt-4">
-                      <GlowingButton className="w-full">
-                        View Case
-                      </GlowingButton>
+                      <Link href={`/chest/${chest.name}`}>
+                        <GlowingButton className="w-full">
+                          View Case
+                        </GlowingButton>
+                      </Link>
                     </div>
                   </div>
                 </div>

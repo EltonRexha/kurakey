@@ -14,7 +14,7 @@ const GlowingButton: React.FC<GlowingButtonProps> = ({
 }) => {
   const baseClasses = `
     px-5 py-2.5 uppercase rounded-lg text-[17px] font-medium text-white/50
-    bg-transparent cursor-pointer border border-white/50
+    bg-transparent border border-white/50
     transition-all duration-500 ease-in-out select-none
     focus:outline-none
   `;
@@ -24,13 +24,22 @@ const GlowingButton: React.FC<GlowingButtonProps> = ({
     hover:shadow-[0_0_10px_#008cff,0_0_30px_#008cff,0_0_60px_#008cff]
     focus:text-white focus:bg-gradient-to-r from-[#008cff] to-[#00d4ff] focus:border-[#008cff]
     focus:shadow-[0_0_10px_#008cff,0_0_30px_#008cff,0_0_60px_#008cff]
+    cursor-pointer
   `;
+
+  const disabledClasses = `opacity-60 cursor-not-allowed`;
 
   const widthClass = fullWidth ? 'w-full' : 'inline-block';
 
   return (
     <button
-      className={`${baseClasses} ${hoverFocusClasses} ${widthClass} ${className}`
+      className={[
+        baseClasses,
+        props.disabled ? disabledClasses : hoverFocusClasses,
+        widthClass,
+        className,
+      ]
+        .join(' ')
         .trim()
         .replace(/\s+/g, ' ')}
       {...props}
