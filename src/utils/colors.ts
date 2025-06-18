@@ -21,4 +21,5 @@ export const categoryColors: Record<RoomCategory, string> = {
   SECRET: '#eab308',
   URBAN: '#a3a3a3',
   VOID: '#64748b',
+  ANIME: '#ff61d3',
 };

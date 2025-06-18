@@ -50,6 +50,7 @@ const rooms: Record<
     },
   ],
   VOID: [],
+  ANIME: [],
 };
 
 export default rooms;
