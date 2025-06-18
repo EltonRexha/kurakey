@@ -12,22 +12,43 @@ const rooms: Record<
       imagePreviewUrl: '/room-previews/sakuraDrift.png',
     },
   ],
-  ASCENSION: [],
-  COSMIC: [],
+  ASCENSION: [
+    {
+      name: 'Halo Nexus',
+      rarity: 'LEGENDARY',
+      assetUrl: 'https://playcanv.as/b/4224df34',
+      imagePreviewUrl: '/room-previews/haloNexus.png',
+    },
+  ],
+  COSMIC: [
+    {
+      name: 'Star Drop',
+      rarity: 'COMMON',
+      assetUrl: 'https://playcanv.as/b/8460c844',
+      imagePreviewUrl: '/room-previews/starDrop.png',
+    },
+  ],
   INFERNO: [],
   MYSTIC: [
     {
       name: 'Astreal Bloom',
       rarity: 'EPIC',
       assetUrl: 'https://playcanv.as/b/7640ecd5',
-      imagePreviewUrl: '/room-previews/astrealBloom.png'
+      imagePreviewUrl: '/room-previews/astrealBloom.png',
     },
   ],
   NEON: [],
   RAIN: [],
   SANCTUM: [],
   SECRET: [],
-  URBAN: [],
+  URBAN: [
+    {
+      name: 'Rooftop View',
+      rarity: 'COMMON',
+      assetUrl: 'https://playcanv.as/b/556419e7',
+      imagePreviewUrl: '/room-previews/rooftopView.png',
+    },
+  ],
   VOID: [],
 };
 
