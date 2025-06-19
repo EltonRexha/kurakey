@@ -8,6 +8,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import coinIcon from '@/assets/images/icons/coin.png';
 import Image from 'next/image';
+import { useMutation } from '@tanstack/react-query';
+import { buyChest } from '../../libs/api/chests';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { ClipLoader } from 'react-spinners';
+import { useToastContext } from '@/context/ToastContext';
+import { useItemNotification } from '@/context/ItemNotificationContext';
 
 const MIN = 1;
 const MAX = 100;
@@ -23,6 +30,8 @@ interface Props {
   setIsOpen: (isOpen: boolean) => void;
   price: number;
   userCoinBalance: number;
+  chestId: string;
+  chestName: string;
 }
 
 const BuyChestModal: React.FC<Props> = ({
@@ -30,8 +39,11 @@ const BuyChestModal: React.FC<Props> = ({
   setIsOpen,
   price,
   userCoinBalance,
+  chestId,
+  chestName,
 }) => {
   const mounted = useMounted();
+  const [loading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -46,6 +58,40 @@ const BuyChestModal: React.FC<Props> = ({
     },
   });
 
+  const router = useRouter();
+  const { addToast } = useToastContext();
+  const { addChest } = useItemNotification();
+
+  const buyChestMutation = useMutation({
+    mutationFn: buyChest,
+    onSuccess: ({ amount }) => {
+      setIsLoading(false);
+      if (amount > 1) {
+        addChest(
+          `${amount}x ${chestName} chests have been added to your inventory`,
+          chestName
+        );
+      } else {
+        addChest(
+          `${chestName} chest has been added to your inventory`,
+          chestName
+        );
+      }
+
+      setIsOpen(false);
+      router.refresh();
+    },
+    onError: () => {
+      setIsLoading(false);
+      addToast('Something wrong happened buying chests', 'error');
+      setIsOpen(false);
+      router.refresh();
+    },
+    onMutate: () => {
+      setIsLoading(true);
+    },
+  });
+
   if (!mounted) {
     return null;
   }
@@ -54,7 +100,10 @@ const BuyChestModal: React.FC<Props> = ({
   const totalPrice = watch('amount') * price;
 
   function onSubmit(data: FormData) {
-    console.log(data);
+    buyChestMutation.mutate({
+      amount: data.amount,
+      typeId: chestId,
+    });
   }
 
   function incrementAmount(amount: number) {
@@ -183,10 +232,32 @@ const BuyChestModal: React.FC<Props> = ({
               </div>
               {userCoinBalance < totalPrice ? (
                 <ShineButton type="submit" disabled>
-                  Buy
+                  {loading ? (
+                    <span className="flex items-center justify-center w-full">
+                      <ClipLoader
+                        color="#fbbf24"
+                        size={28}
+                        speedMultiplier={0.9}
+                      />
+                    </span>
+                  ) : (
+                    'Buy'
+                  )}
                 </ShineButton>
               ) : (
-                <ShineButton type="submit">Buy</ShineButton>
+                <ShineButton type="submit" disabled={loading}>
+                  {loading ? (
+                    <span className="flex items-center justify-center w-full">
+                      <ClipLoader
+                        color="#fbbf24"
+                        size={28}
+                        speedMultiplier={0.9}
+                      />
+                    </span>
+                  ) : (
+                    'Buy'
+                  )}
+                </ShineButton>
               )}
             </div>
           </form>

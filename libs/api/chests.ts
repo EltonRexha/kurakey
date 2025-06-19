@@ -10,3 +10,23 @@ export async function getAllChestDropRates() {
   );
   return response.data;
 }
+
+interface BuyChestResponse {
+  message: string;
+  success: boolean;
+  amount: number;
+}
+
+export async function buyChest({
+  typeId,
+  amount,
+}: {
+  typeId: string;
+  amount: number;
+}) {
+  const response = await axios.post<BuyChestResponse>('/chests', {
+    typeId,
+    amount,
+  });
+  return response.data;
+}

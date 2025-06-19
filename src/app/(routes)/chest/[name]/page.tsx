@@ -177,7 +177,14 @@ const ChestPage = async ({ params }: ChestPageProps) => {
               </div>
               <div className="mt-6 flex justify-center">
                 <div className="w-[90%] flex flex-col sm:flex-row gap-2">
-                  <BuyChestBtn price={chest.price} userBalance={user?.coinBalance}/>
+                  {user && (
+                    <BuyChestBtn
+                      price={chest.price}
+                      userBalance={user.coinBalance}
+                      chestId={chest.id}
+                      chestName={chest.name}
+                    />
+                  )}
                   {chest.owned ? (
                     <GlowingButton fullWidth>Open</GlowingButton>
                   ) : (

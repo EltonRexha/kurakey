@@ -16,14 +16,13 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <ToastContext.Provider value={{ addToast }}>
-      {children}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
+      {children}
     </ToastContext.Provider>
   );
 };
 
 export const useToastContext = () => {
-  'use client';
   const context = useContext(ToastContext);
   if (context === undefined) {
     throw new Error('useToastContext must be used within a ToastProvider');

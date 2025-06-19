@@ -6,9 +6,13 @@ import BuyChestModal from './BuyChestModal';
 const BuyChestBtn = ({
   price,
   userBalance,
+  chestId,
+  chestName,
 }: {
   price: number;
   userBalance: number;
+  chestId: string;
+  chestName: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,7 +26,14 @@ const BuyChestBtn = ({
       >
         Buy
       </StarsButton>
-      <BuyChestModal isOpen={isOpen} setIsOpen={setIsOpen} price={price} userCoinBalance={userBalance} />
+      <BuyChestModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        price={price}
+        userCoinBalance={userBalance}
+        chestId={chestId}
+        chestName={chestName}
+      />
     </>
   );
 };
