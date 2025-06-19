@@ -83,6 +83,7 @@ model ChestType {
   Chests              Chest[]
   ChestDropRate       ChestDropRate[]
   BundleTypeChestType BundleTypeChestType[]
+  CoinTransaction     CoinTransaction[]
 }
 
 model ChestDropRate {
@@ -163,6 +164,8 @@ model CoinTransaction {
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
   UserCoinPackage UserCoinPackage[]
+  chestType       ChestType?          @relation(fields: [chestTypeId], references: [id])
+  chestTypeId     String?
 }
 
 model FriendInvite {

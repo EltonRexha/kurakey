@@ -6,8 +6,8 @@ import XLogo from './common/XLogo';
 import Card from './common/CarouselCard';
 import NavLinks from './common/NavLinks';
 import GetServerUser from '../../../libs/GetServerUser';
-import coinIcon from '@/assets/images/icons/coin.png';
 import prisma from '../../../prisma/prisma';
+import CoinBalance from './common/CoinBalance';
 
 async function getRooms() {
   return prisma.room.findMany({
@@ -75,15 +75,7 @@ const Navbar = async () => {
           <div className="flex items-center gap-4">
             {/* Coin Balance */}
             <div className="flex items-center gap-1.5">
-              <p className="text-emerald-500 font-medium">{user.coinBalance}</p>{' '}
-              <Image
-                src={coinIcon}
-                alt="Coins"
-                width={20}
-                height={20}
-                sizes="20px"
-                className="object-contain"
-              />
+              <CoinBalance />
             </div>
 
             {/* Profile Image */}
