@@ -5,11 +5,11 @@ import { notFound } from 'next/navigation';
 import { getChestImage } from '@/utils/getChestImage';
 import { rarityColors } from '@/utils/colors';
 import coinIcon from '@/assets/images/icons/coin.png';
-import StarsButton from '@/components/ui/StarsButton';
 import GlowingButton from '@/components/ui/common/GlowingButton';
 import { Room, ChestType, ChestDropRate } from '@/generated/prisma';
 import prisma from '../../../../../prisma/prisma';
 import GetServerUser from '../../../../../libs/GetServerUser';
+import BuyChestBtn from '@/components/BuyChestBtn';
 
 // Server functions
 async function getChestTypeByName(
@@ -177,11 +177,9 @@ const ChestPage = async ({ params }: ChestPageProps) => {
               </div>
               <div className="mt-6 flex justify-center">
                 <div className="w-[90%] flex flex-col sm:flex-row gap-2">
-                  <StarsButton fullWidth>Buy</StarsButton>
+                  <BuyChestBtn price={chest.price} userBalance={user?.coinBalance}/>
                   {chest.owned ? (
-                    <GlowingButton fullWidth >
-                      Open
-                    </GlowingButton>
+                    <GlowingButton fullWidth>Open</GlowingButton>
                   ) : (
                     <GlowingButton fullWidth disabled>
                       Open

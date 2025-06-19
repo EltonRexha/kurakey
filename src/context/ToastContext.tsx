@@ -23,6 +23,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export const useToastContext = () => {
+  'use client';
   const context = useContext(ToastContext);
   if (context === undefined) {
     throw new Error('useToastContext must be used within a ToastProvider');

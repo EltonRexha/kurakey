@@ -27,6 +27,7 @@ export default function RootLayout({
         <UserSessionProvider>
           <ReactQuery>
             <ToastProvider>
+              <div id="modal"></div>
               <main>{children}</main>
             </ToastProvider>
           </ReactQuery>
