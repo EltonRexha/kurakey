@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getChestImage } from '@/utils/getChestImage';
+import axios from '../../libs/axios';
 
 interface Room {
   name: string;
@@ -14,6 +15,7 @@ interface Notification {
   type: string;
   message: string;
   createdAt: string;
+  isRead: boolean;
   chestType?: { name: string } | null;
   room?: Room | null;
 }
@@ -38,15 +40,19 @@ function getRoomImageUrl(room: Room) {
   return room?.previewImageUrl || '';
 }
 
+async function markNotificationAsRead(id: string) {
+  const res = await axios.post('/notification/mark-read', { id });
+  return res.data;
+}
+
 const fetchNotifications = async (
   page = 1,
   pageSize = 10
 ): Promise<NotificationApiResponse> => {
-  const res = await fetch(
-    `/api/notification?page=${page}&pageSize=${pageSize}`
+  const res = await axios.get(
+    `/notification?page=${page}&pageSize=${pageSize}`
   );
-  if (!res.ok) throw new Error('Failed to fetch notifications');
-  return res.json();
+  return res.data as NotificationApiResponse;
 };
 
 const NotificationDropdown = () => {
@@ -54,6 +60,7 @@ const NotificationDropdown = () => {
   const [allLoaded, setAllLoaded] = useState(false);
   const [allNotifications, setAllNotifications] = useState<Notification[]>([]);
   const pageSize = 10;
+  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useQuery<NotificationApiResponse>({
     queryKey: ['notifications', page],
     queryFn: () => fetchNotifications(page, pageSize),
@@ -77,6 +84,13 @@ const NotificationDropdown = () => {
     if (hasMore) setPage((p) => p + 1);
   };
 
+  const markReadMutation = useMutation({
+    mutationFn: markNotificationAsRead,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    },
+  });
+
   return (
     <div className="absolute -right-28 sm:right-0 top-0 mt-10 w-[90vw] sm:w-80 bg-[#23224a] border border-[#23224a] rounded-lg shadow-lg z-50 py-2">
       <div className="px-4 py-2 text-neutral-300 text-sm font-semibold border-b border-[#191838]">
@@ -95,6 +109,14 @@ const NotificationDropdown = () => {
           </div>
         ) : (
           notifications.map((notif) => {
+            const markRead = (
+              <p
+                className="cursor-pointer py-1 text-xs rounded underline text-[#008cff] hover:text-[#005fa3] transition-colors"
+                onClick={() => markReadMutation.mutate(notif.id)}
+              >
+                Mark as read
+              </p>
+            );
             if (notif.type === 'CHEST_RECEIVED' && notif.chestType) {
               const chestImg = getChestImageByName(notif.chestType.name);
               return (
@@ -103,12 +125,13 @@ const NotificationDropdown = () => {
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-color"
                 >
                   <div>
-                    <div className="text-[#fbbf24] text-xs font-bold">
+                    <div className="text-[#fbbf24] text-xs">
                       {notif.message}
                     </div>
                     <div className="text-neutral-400 text-xs">
                       {new Date(notif.createdAt).toLocaleString()}
                     </div>
+                    {markRead}
                   </div>
                   {chestImg && (
                     <Image
@@ -145,6 +168,7 @@ const NotificationDropdown = () => {
                     <div className="text-neutral-400 text-xs">
                       {new Date(notif.createdAt).toLocaleString()}
                     </div>
+                    {markRead}
                   </div>
                 </div>
               );
@@ -162,6 +186,7 @@ const NotificationDropdown = () => {
                   <div className="text-neutral-400 text-xs">
                     {new Date(notif.createdAt).toLocaleString()}
                   </div>
+                  {markRead}
                 </div>
               </div>
             );

@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
       user: {
         id: user.id,
       },
+      isRead: false,
     },
     orderBy: { createdAt: 'desc' },
     include: {
@@ -34,6 +35,7 @@ export async function GET(req: NextRequest) {
       user: {
         id: user.id,
       },
+      isRead: false,
     },
   });
 

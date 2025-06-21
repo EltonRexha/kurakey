@@ -6,6 +6,7 @@ import NavLinks from './common/NavLinks';
 import GetServerUser from '../../../libs/GetServerUser';
 import CoinBalance from './common/CoinBalance';
 import Notification from '../Notification';
+import hasUnreadNotifications from '../../../libs/hasUnreadNotifications';
 
 const SimpleNavBar = async () => {
   const user = await GetServerUser();
@@ -15,9 +16,7 @@ const SimpleNavBar = async () => {
   }
 
   const profileImage = user.image || '/placeholder-avatar.png';
-
-  // You can set hasNewNotifications based on your backend logic
-  const hasNewNotifications = false;
+  const hasNewNotifications = await hasUnreadNotifications(user.id);
 
   return (
     <nav className="bg-[#191838] border-b border-[#11142d] py-3">

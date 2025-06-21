@@ -5,7 +5,7 @@ import { getToken } from 'next-auth/jwt';
 const userRoutes = ['/home', '/room', '/chest'];
 const guestRoutes = ['/log-in', '/sign-up'];
 const OAuthRoutes = ['/finish-auth'];
-const AllRoutes = [...userRoutes, ...guestRoutes, ...OAuthRoutes]
+const AllRoutes = [...userRoutes, ...guestRoutes, ...OAuthRoutes];
 
 export default async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -13,7 +13,10 @@ export default async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   //Check if the path does not exist
-  if(!AllRoutes.some((route) => pathname.includes(route)) && pathname !== '/'){
+  if (
+    !AllRoutes.some((route) => pathname.includes(route)) &&
+    pathname !== '/'
+  ) {
     //Get them to that route so we can show them 404
     return NextResponse.next();
   }

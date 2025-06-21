@@ -9,6 +9,7 @@ import GetServerUser from '../../../libs/GetServerUser';
 import prisma from '../../../prisma/prisma';
 import CoinBalance from './common/CoinBalance';
 import Notification from '../Notification';
+import hasUnreadNotifications from '../../../libs/hasUnreadNotifications';
 
 async function getRooms() {
   return prisma.room.findMany({
@@ -31,7 +32,7 @@ const Navbar = async () => {
     throw new Error('User not found');
   }
   const profileImage = user.image || '/placeholder-avatar.png';
-  const hasNewNotifications = false;
+  const hasNewNotifications = await hasUnreadNotifications(user.id);
 
   return (
     <nav className="bg-[#191838] border-b border-[#11142d] py-3">

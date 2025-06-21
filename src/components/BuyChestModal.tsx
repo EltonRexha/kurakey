@@ -11,7 +11,7 @@ import Image from 'next/image';
 import { useMutation } from '@tanstack/react-query';
 import { buyChest } from '../../libs/api/chests';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { useToastContext } from '@/context/ToastContext';
 import { useItemNotification } from '@/context/ItemNotificationContext';
