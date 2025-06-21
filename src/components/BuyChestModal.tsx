@@ -60,7 +60,7 @@ const BuyChestModal: React.FC<Props> = ({
 
   const router = useRouter();
   const { addToast } = useToastContext();
-  const { addChest } = useItemNotification();
+  const { addChest, addXP } = useItemNotification();
 
   const buyChestMutation = useMutation({
     mutationFn: buyChest,
@@ -78,6 +78,7 @@ const BuyChestModal: React.FC<Props> = ({
         );
       }
 
+      addXP(20 * amount);
       setIsOpen(false);
       router.refresh();
     },

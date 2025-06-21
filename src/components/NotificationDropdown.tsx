@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { getChestImage } from '@/utils/getChestImage';
@@ -51,22 +51,39 @@ const fetchNotifications = async (
 
 const NotificationDropdown = () => {
   const [page, setPage] = useState(1);
+  const [allLoaded, setAllLoaded] = useState(false);
+  const [allNotifications, setAllNotifications] = useState<Notification[]>([]);
   const pageSize = 10;
   const { data, isLoading, isError } = useQuery<NotificationApiResponse>({
     queryKey: ['notifications', page],
     queryFn: () => fetchNotifications(page, pageSize),
   });
 
-  const notifications: Notification[] = data?.notifications || [];
-  const hasMore = data?.hasMore;
+  useEffect(() => {
+    if (!data) return;
+    if (page === 1) {
+      setAllNotifications(data.notifications);
+    } else if (data.notifications.length > 0) {
+      setAllNotifications((prev) => [...prev, ...data.notifications]);
+    }
+    if (!data.hasMore) setAllLoaded(true);
+  }, [data, page]);
+
+  const notifications: Notification[] =
+    allNotifications.length > 0 ? allNotifications : data?.notifications || [];
+  const hasMore = data?.hasMore && !allLoaded;
+
+  const handleViewMore = () => {
+    if (hasMore) setPage((p) => p + 1);
+  };
 
   return (
-    <div className="absolute -right-26 sm:right-0 top-0 mt-10 w-[90vw] sm:w-80 bg-[#23224a] border border-[#23224a] rounded-lg shadow-lg z-50 py-2">
+    <div className="absolute -right-28 sm:right-0 top-0 mt-10 w-[90vw] sm:w-80 bg-[#23224a] border border-[#23224a] rounded-lg shadow-lg z-50 py-2">
       <div className="px-4 py-2 text-neutral-300 text-sm font-semibold border-b border-[#191838]">
         Notifications
       </div>
-      <div className="max-h-64 overflow-y-auto flex flex-col gap-2">
-        {isLoading ? (
+      <div className="max-h-80 overflow-y-auto flex flex-col gap-2">
+        {isLoading && page === 1 ? (
           <div className="px-4 py-3 text-neutral-400 text-sm">Loading...</div>
         ) : isError ? (
           <div className="px-4 py-3 text-red-400 text-sm">
@@ -83,8 +100,16 @@ const NotificationDropdown = () => {
               return (
                 <div
                   key={notif.id}
-                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors cursor-pointer"
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-color"
                 >
+                  <div>
+                    <div className="text-[#fbbf24] text-xs font-bold">
+                      {notif.message}
+                    </div>
+                    <div className="text-neutral-400 text-xs">
+                      {new Date(notif.createdAt).toLocaleString()}
+                    </div>
+                  </div>
                   {chestImg && (
                     <Image
                       src={chestImg}
@@ -94,14 +119,6 @@ const NotificationDropdown = () => {
                       className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
                     />
                   )}
-                  <div>
-                    <div className="text-[#fbbf24] text-xs font-bold">
-                      {notif.message}
-                    </div>
-                    <div className="text-neutral-400 text-xs">
-                      {new Date(notif.createdAt).toLocaleString()}
-                    </div>
-                  </div>
                 </div>
               );
             }
@@ -110,7 +127,7 @@ const NotificationDropdown = () => {
               return (
                 <div
                   key={notif.id}
-                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors cursor-pointer"
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                 >
                   {roomImg && (
                     <Image
@@ -136,7 +153,7 @@ const NotificationDropdown = () => {
             return (
               <div
                 key={notif.id}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors cursor-pointer"
+                className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
               >
                 <div>
                   <div className="text-[#fbbf24] text-xs font-bold">
@@ -151,17 +168,12 @@ const NotificationDropdown = () => {
           })
         )}
       </div>
-      <div className="px-4 py-2 text-center text-xs text-[#008cff] cursor-pointer hover:underline">
-        {page > 1 && (
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="mr-2"
-          >
-            Previous
+      <div className="px-4 py-2 text-center text-xs text-[#008cff] hover:underline">
+        {hasMore && (
+          <button onClick={handleViewMore} className="cursor-pointer">
+            View More
           </button>
         )}
-        {hasMore && <button onClick={() => setPage((p) => p + 1)}>Next</button>}
-        {!hasMore && 'View all'}
       </div>
     </div>
   );

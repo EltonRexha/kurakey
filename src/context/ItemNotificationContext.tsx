@@ -11,11 +11,12 @@ export interface ItemNotification {
   id: string;
   message: string;
   chestTypeName: string;
-  chestImage: StaticImageData;
+  chestImage?: StaticImageData;
 }
 
 interface ItemNotificationContextType {
   addChest: (message: string, chestTypeName: string) => Promise<void>;
+  addXP: (xpAmount: number) => void;
 }
 
 const ItemNotificationContext = createContext<
@@ -33,8 +34,6 @@ export const ItemNotificationProvider: React.FC<{
 
   const addChest = useCallback(
     async (message: string, chestTypeName: string) => {
-      // Optionally: fetch chestType from API/db if you want to validate existence
-      // For now, just use getChestImage utility
       const chestImage = getChestImage(chestTypeName);
       const id = Math.random().toString(36).slice(2);
       setNotifications((prev) => [
@@ -46,14 +45,29 @@ export const ItemNotificationProvider: React.FC<{
           chestImage,
         },
       ]);
-      // Auto-remove after 5s
+      setTimeout(() => removeNotification(id), 5000);
+    },
+    [removeNotification]
+  );
+
+  const addXP = useCallback(
+    (xpAmount: number) => {
+      const id = Math.random().toString(36).slice(2);
+      setNotifications((prev) => [
+        ...prev,
+        {
+          id,
+          message: `${xpAmount}XP got added to your account`,
+          chestTypeName: '',
+        },
+      ]);
       setTimeout(() => removeNotification(id), 5000);
     },
     [removeNotification]
   );
 
   return (
-    <ItemNotificationContext.Provider value={{ addChest }}>
+    <ItemNotificationContext.Provider value={{ addChest, addXP }}>
       <ItemNotificationContainer
         notifications={notifications}
         removeNotification={removeNotification}
