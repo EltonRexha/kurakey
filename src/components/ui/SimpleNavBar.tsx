@@ -4,8 +4,8 @@ import { FaDiscord } from 'react-icons/fa';
 import XLogo from './common/XLogo';
 import NavLinks from './common/NavLinks';
 import GetServerUser from '../../../libs/GetServerUser';
-import coinIcon from '@/assets/images/icons/coin.png';
 import CoinBalance from './common/CoinBalance';
+import Notification from '../Notification';
 
 const SimpleNavBar = async () => {
   const user = await GetServerUser();
@@ -15,6 +15,9 @@ const SimpleNavBar = async () => {
   }
 
   const profileImage = user.image || '/placeholder-avatar.png';
+
+  // You can set hasNewNotifications based on your backend logic
+  const hasNewNotifications = false;
 
   return (
     <nav className="bg-[#191838] border-b border-[#11142d] py-3">
@@ -55,6 +58,8 @@ const SimpleNavBar = async () => {
           {/* Navigation Links - Now a client component */} <NavLinks />
           {/* User Info Section */}
           <div className="flex items-center gap-4">
+            {/* Notification Icon and Dropdown */}
+            <Notification hasNew={hasNewNotifications} />
             {/* Coin Balance */}
             <div className="flex items-center gap-1.5">
               <CoinBalance />

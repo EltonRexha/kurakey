@@ -59,7 +59,10 @@ export async function POST(request: Request) {
     ),
     prisma.user.update({
       where: { id: user.id },
-      data: { coinBalance: user.coinBalance - totalPrice },
+      data: {
+        coinBalance: user.coinBalance - totalPrice,
+        xp: user.xp + 20 * amount,
+      },
     }),
     prisma.coinTransaction.create({
       data: {
@@ -69,6 +72,36 @@ export async function POST(request: Request) {
         chestType: {
           connect: {
             id: typeId,
+          },
+        },
+      },
+    }),
+    prisma.notification.create({
+      data: {
+        message: '20xp has been added to your account',
+        type: 'XP_GAIN',
+        isRead: false,
+        xpAmount: 20,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    }),
+    prisma.notification.create({
+      data: {
+        message: `${amount}x ${chestType.name} has been added to your account`,
+        type: 'CHEST_RECEIVED',
+        isRead: false,
+        chestType: {
+          connect: {
+            id: chestType.id,
+          },
+        },
+        user: {
+          connect: {
+            id: user.id,
           },
         },
       },

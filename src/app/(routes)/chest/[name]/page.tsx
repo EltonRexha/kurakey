@@ -111,7 +111,8 @@ const ChestPage = async ({ params }: ChestPageProps) => {
                   src={getChestImage(chest.name)}
                   alt={chest.name}
                   fill
-                  sizes="250px"
+                  sizes="350px"
+                  quality={100}
                   className="object-contain drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]"
                   priority
                 />
