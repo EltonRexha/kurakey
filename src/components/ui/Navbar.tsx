@@ -8,6 +8,7 @@ import NavLinks from './common/NavLinks';
 import GetServerUser from '../../../libs/GetServerUser';
 import prisma from '../../../prisma/prisma';
 import CoinBalance from './common/CoinBalance';
+import Notification from '../Notification';
 
 async function getRooms() {
   return prisma.room.findMany({
@@ -25,14 +26,12 @@ async function getRooms() {
 
 const Navbar = async () => {
   const rooms = await getRooms();
-
   const user = await GetServerUser();
-
   if (!user) {
     throw new Error('User not found');
   }
-
   const profileImage = user.image || '/placeholder-avatar.png';
+  const hasNewNotifications = false;
 
   return (
     <nav className="bg-[#191838] border-b border-[#11142d] py-3">
@@ -41,7 +40,6 @@ const Navbar = async () => {
           {/* Logo and Social Links */}
           <div className="flex items-center space-x-6">
             <Link href="/home" className="flex-shrink-0">
-              {' '}
               <Image
                 src="/logo.png"
                 alt="Kurakey"
@@ -73,11 +71,12 @@ const Navbar = async () => {
           {/* Navigation Links - Now a client component */} <NavLinks />
           {/* User Info Section */}
           <div className="flex items-center gap-4">
+            {/* Notification Icon and Dropdown */}
+            <Notification hasNew={hasNewNotifications} />
             {/* Coin Balance */}
             <div className="flex items-center gap-1.5">
               <CoinBalance />
             </div>
-
             {/* Profile Image */}
             <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-[#008cff]/50">
               <Image
@@ -91,7 +90,6 @@ const Navbar = async () => {
             </div>
           </div>
         </div>
-
         {/* Carousel Section */}
         <div className="py-2">
           <HorizontalCarousel>
