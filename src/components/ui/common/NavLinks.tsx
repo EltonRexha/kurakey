@@ -6,7 +6,7 @@ const NavLinks = () => {
   const pathname = usePathname();
   const navItems = [
     { label: 'Chests', href: '/home' },
-    { label: 'Buy Coins', href: '/buy' },
+    { label: 'Buy Coins', href: '/buy-coins' },
     { label: 'Rooms', href: '/rooms' },
   ];
 
