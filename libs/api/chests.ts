@@ -1,3 +1,4 @@
+import { $Enums, ChestType } from '@/generated/prisma';
 import axios from '../axios';
 
 export interface ChestDropRatesResponse {
@@ -28,5 +29,26 @@ export async function buyChest({
     typeId,
     amount,
   });
+  return response.data;
+}
+
+interface OpenChestResponse {
+  message: string;
+  room: {
+    name: string;
+    id: string;
+    rarity: $Enums.Rarity;
+    category: $Enums.RoomCategory;
+    isSecret: boolean;
+    previewImageUrl: string;
+    assetUrl: string;
+  };
+}
+
+export async function openChest({ chestType }: { chestType: string }) {
+  const response = await axios.post<OpenChestResponse>('/chests/open', {
+    chestType,
+  });
+
   return response.data;
 }

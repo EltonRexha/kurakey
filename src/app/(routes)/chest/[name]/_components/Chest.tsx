@@ -4,7 +4,7 @@ import { getChestImage } from '@/utils/getChestImage';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 
-const OPENING_TIME_MS = 3000;
+export const OPENING_TIME_MS = 3000;
 
 interface Props {
   chest: {
@@ -20,17 +20,26 @@ interface Props {
   };
   isOpening: boolean;
   setChestIsOpening: (isOpening: boolean) => void;
+  chestIsOpen: boolean;
+  setChestIsOpen: (isOpening: boolean) => void;
 }
 
-const Chest = ({ isOpening, chest, setChestIsOpening }: Props) => {
+const Chest = ({
+  isOpening,
+  chest,
+  setChestIsOpening,
+  setChestIsOpen,
+  chestIsOpen,
+}: Props) => {
   useEffect(() => {
     if (isOpening) {
       setTimeout(() => {
+        setChestIsOpen(true);
         setChestIsOpening(false);
       }, OPENING_TIME_MS);
     }
   });
-  
+
   return (
     <div className="rounded-xl overflow-hidden">
       <div className="relative h-[300px] w-full sm:w-[400px] flex items-center justify-center">
@@ -38,6 +47,16 @@ const Chest = ({ isOpening, chest, setChestIsOpening }: Props) => {
           {isOpening ? (
             <Image
               src={getChestAnimation(chest.name)}
+              alt={chest.name}
+              fill
+              sizes="350px"
+              quality={100}
+              className="object-contain drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+              priority
+            />
+          ) : chestIsOpen ? (
+            <Image
+              src={getChestImage(chest.name, true)}
               alt={chest.name}
               fill
               sizes="350px"

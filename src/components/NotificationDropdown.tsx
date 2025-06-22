@@ -122,9 +122,9 @@ const NotificationDropdown = () => {
               return (
                 <div
                   key={notif.id}
-                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-color"
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                 >
-                  <div>
+                  <div className="mr-auto">
                     <div className="text-[#fbbf24] text-xs">
                       {notif.message}
                     </div>
@@ -137,8 +137,8 @@ const NotificationDropdown = () => {
                     <Image
                       src={chestImg}
                       alt={notif.chestType.name}
-                      width={32}
-                      height={32}
+                      width={52}
+                      height={52}
                       className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
                     />
                   )}
@@ -146,22 +146,12 @@ const NotificationDropdown = () => {
               );
             }
             if (notif.type === 'ROOM_RECEIVED' && notif.room) {
-              const roomImg = getRoomImageUrl(notif.room);
               return (
                 <div
                   key={notif.id}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                 >
-                  {roomImg && (
-                    <Image
-                      src={roomImg}
-                      alt={notif.room.name}
-                      width={32}
-                      height={32}
-                      className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
-                    />
-                  )}
-                  <div>
+                  <div className='mr-auto'>
                     <div className="text-[#fbbf24] text-xs font-bold">
                       {notif.message}
                     </div>
@@ -170,6 +160,13 @@ const NotificationDropdown = () => {
                     </div>
                     {markRead}
                   </div>
+                  <Image
+                    src={notif.room.previewImageUrl}
+                    alt={notif.room.name}
+                    width={52}
+                    height={52}
+                    className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
+                  />
                 </div>
               );
             }

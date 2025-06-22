@@ -1,13 +1,14 @@
 'use client';
 import BuyChestBtn from '@/components/BuyChestBtn';
 import GlowingButton from '@/components/ui/common/GlowingButton';
-import { $Enums } from '@/generated/prisma';
+import { $Enums, Room } from '@/generated/prisma';
 import { rarityColors } from '@/utils/colors';
 import coinIcon from '@/assets/images/icons/coin.png';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import Chest from './Chest';
 import OpenChestBtn from './OpenChestBtn';
+import RoomUnlockedModal from '@/components/RoomUnlockedModal';
 
 interface Props {
   chest: {
@@ -26,12 +27,20 @@ interface Props {
 
 const ChestContainer = ({ chest, userCoinBalance }: Props) => {
   const [chestIsOpening, setChestIsOpening] = useState(false);
+  const [unlockedRoom, setUnlockedRoom] = useState<Room | null>(null);
+  const [chestIsOpen, setChestIsOpen] = useState(false);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {/* Left side - Chest Display */}
       <div className="flex flex-col items-center justify-center">
-        <Chest chest={chest} isOpening={chestIsOpening} setChestIsOpening={setChestIsOpening} />
+        <Chest
+          chest={chest}
+          isOpening={chestIsOpening}
+          setChestIsOpening={setChestIsOpening}
+          setChestIsOpen={setChestIsOpen}
+          chestIsOpen={chestIsOpen}
+        />
       </div>
 
       {/* Right side - Chest Info and Odds */}
@@ -88,7 +97,7 @@ const ChestContainer = ({ chest, userCoinBalance }: Props) => {
             </div>
             <div className="mt-6 flex justify-center">
               <div className="w-[90%] flex flex-col sm:flex-row gap-2">
-                {userCoinBalance && (
+                {typeof userCoinBalance === 'number' && (
                   <BuyChestBtn
                     price={chest.price}
                     userBalance={userCoinBalance}
@@ -97,15 +106,33 @@ const ChestContainer = ({ chest, userCoinBalance }: Props) => {
                   />
                 )}
                 {chest.owned ? (
-                  <OpenChestBtn setIsOpening={setChestIsOpening} />
+                  <OpenChestBtn
+                    setIsOpening={setChestIsOpening}
+                    chestType={chest.name}
+                    setUnlockedRoom={setUnlockedRoom}
+                  />
                 ) : (
-                  <GlowingButton fullWidth disabled>Open</GlowingButton>
+                  <GlowingButton fullWidth disabled>
+                    Open
+                  </GlowingButton>
                 )}
               </div>
             </div>
           </div>
         </div>
       </div>
+      {unlockedRoom && (
+        <RoomUnlockedModal
+          isOpen={true}
+          room={unlockedRoom}
+          setIsOpen={() => {
+            if (unlockedRoom) {
+              setUnlockedRoom(null);
+              setChestIsOpen(false);
+            }
+          }}
+        />
+      )}
     </div>
   );
 };
