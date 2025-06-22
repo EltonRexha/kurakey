@@ -36,10 +36,6 @@ function getChestImageByName(name: string) {
   }
 }
 
-function getRoomImageUrl(room: Room) {
-  return room?.previewImageUrl || '';
-}
-
 async function markNotificationAsRead(id: string) {
   const res = await axios.post('/notification/mark-read', { id });
   return res.data;
