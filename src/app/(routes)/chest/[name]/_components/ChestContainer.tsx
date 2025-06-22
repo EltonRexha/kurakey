@@ -121,7 +121,7 @@ const ChestContainer = ({ chest, userCoinBalance }: Props) => {
           </div>
         </div>
       </div>
-      {unlockedRoom && (
+      {unlockedRoom && !chestIsOpening && (
         <RoomUnlockedModal
           isOpen={true}
           room={unlockedRoom}
