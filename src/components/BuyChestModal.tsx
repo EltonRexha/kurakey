@@ -129,7 +129,7 @@ const BuyChestModal: React.FC<Props> = ({
           onClose={() => {
             setIsOpen(false);
           }}
-          className="sm:w-max"
+          className="sm:w-max p-6"
         >
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="flex flex-col items-center gap-6">

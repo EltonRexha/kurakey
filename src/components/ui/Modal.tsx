@@ -28,7 +28,7 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in pointer-events-auto">
       <div
-        className={`relative bg-[#191838] border border-[#23224a] rounded-xl shadow-2xl p-6 min-w-[320px] max-w-full w-full sm:w-[400px] mx-4 animate-fade-in ${className}`}
+        className={`relative bg-[#191838] border border-[#23224a] rounded-xl shadow-2xl min-w-[320px] max-w-full w-full sm:w-[400px] mx-4 animate-fade-in ${className}`}
       >
         <button
           onClick={onClose}
