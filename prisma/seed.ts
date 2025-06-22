@@ -213,6 +213,33 @@ async function main() {
     }
   }
   console.log('✅ Rooms seeded successfully!');
+
+  // --- CoinPackage seeding ---
+  console.log('🌱 Seeding coin packages...');
+  const coinPackages = [
+    { price: 5, baseCoins: 500, bonusCoins: 0, name: 'starter' },
+    { price: 10, baseCoins: 1000, bonusCoins: 100, name: 'silver' },
+    { price: 20, baseCoins: 2000, bonusCoins: 300, name: 'gold I' },
+    { price: 50, baseCoins: 5000, bonusCoins: 1000, name: 'gold II' },
+  ];
+  for (const pkg of coinPackages) {
+    const existing = await prisma.coinPackage.findFirst({
+      where: { price: pkg.price },
+    });
+    if (existing) {
+      await prisma.coinPackage.update({
+        where: { id: existing.id },
+        data: {
+          baseCoins: pkg.baseCoins,
+          bonusCoins: pkg.bonusCoins,
+          name: pkg.name,
+        },
+      });
+    } else {
+      await prisma.coinPackage.create({ data: pkg });
+    }
+  }
+  console.log('✅ Coin packages seeded successfully!');
 }
 
 main()
