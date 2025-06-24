@@ -16,7 +16,7 @@ import { rarityColors, categoryColors } from '@/utils/colors';
 const Card = ({ title, image, price, category, rarity, id }: CardProps) => {
   return (
     <Link href={`/room?id=${id}`}>
-      <div className="min-w-[250px] bg-neutral-900 rounded-lg overflow-hidden snap-center hover:scale-[1.02] transition-transform duration-200 cursor-pointer">
+      <div className="min-w-[250px] bg-[#0d1024] rounded-lg overflow-hidden snap-center hover:scale-[1.02] transition-transform duration-200 cursor-pointer">
         <div className="relative h-[150px] w-full">
           {' '}
           <Image
