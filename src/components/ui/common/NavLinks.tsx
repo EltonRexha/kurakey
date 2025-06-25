@@ -7,7 +7,7 @@ const NavLinks = () => {
   const navItems = [
     { label: 'Chests', href: '/home' },
     { label: 'Buy Coins', href: '/buy-coins' },
-    { label: 'Rooms', href: '/rooms' },
+    { label: 'Room Index', href: '/rooms' },
   ];
 
   const isActive = (href: string) => {

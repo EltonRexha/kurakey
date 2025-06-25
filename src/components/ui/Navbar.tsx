@@ -1,19 +1,24 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaDiscord } from 'react-icons/fa';
-import HorizontalCarousel from './common/HorizontalCarousel';
-import XLogo from './common/XLogo';
-import Card from './common/CarouselCard';
-import NavLinks from './common/NavLinks';
-import GetServerUser from '../../../libs/GetServerUser';
-import prisma from '../../../prisma/prisma';
-import CoinBalance from './common/CoinBalance';
-import Notification from '../Notification';
-import hasUnreadNotifications from '../../../libs/hasUnreadNotifications';
+import Image from "next/image";
+import Link from "next/link";
+import { FaDiscord } from "react-icons/fa";
+import HorizontalCarousel from "./common/HorizontalCarousel";
+import XLogo from "./common/XLogo";
+import Card from "./common/CarouselCard";
+import NavLinks from "./common/NavLinks";
+import GetServerUser from "../../../libs/GetServerUser";
+import prisma from "../../../prisma/prisma";
+import CoinBalance from "./common/CoinBalance";
+import Notification from "../Notification";
+import hasUnreadNotifications from "../../../libs/hasUnreadNotifications";
 
 async function getRooms() {
   return prisma.room.findMany({
-    where: { isSecret: false },
+    where: {
+      isSecret: false,
+      rarity: {
+        not: "SECRET",
+      },
+    },
     select: {
       id: true,
       name: true,
@@ -21,7 +26,7 @@ async function getRooms() {
       category: true,
       rarity: true,
     },
-    orderBy: { name: 'asc' },
+    orderBy: { name: "asc" },
   });
 }
 
@@ -29,9 +34,9 @@ const Navbar = async () => {
   const rooms = await getRooms();
   const user = await GetServerUser();
   if (!user) {
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
-  const profileImage = user.image || '/placeholder-avatar.png';
+  const profileImage = user.image || "/placeholder-avatar.png";
   const hasNewNotifications = await hasUnreadNotifications(user.id);
 
   return (
