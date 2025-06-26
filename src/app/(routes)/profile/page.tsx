@@ -1,12 +1,13 @@
 import React, { Suspense } from "react";
-import ProfileSidebar from "./_components/ProfileSidebar";
+import ProfileSidebarWrapper from "./_components/ProfileSidebarWrapper";
 import ChestGridWrapper from "./_components/ChestGridWrapper";
 import RoomGridWrapper from "./_components/RoomGridWrapper";
+import ProfileSidebarSkeleton from "./_components/ProfileSidebarSkeleton";
 import ChestGridSkeleton from "./_components/ChestGridSkeleton";
 import RoomGridSkeleton from "./_components/RoomGridSkeleton";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import prisma from "../../../../prisma/prisma";
+
 import { redirect } from "next/navigation";
 
 interface PageProps {
@@ -22,33 +23,15 @@ const page = async ({ searchParams }: PageProps) => {
 
   // Determine which profile to show
   const userId = searchParams.id ?? session.user.id;
-  const isLoggedUser = userId === session.user.id;
   if (!searchParams.id) {
     redirect(`/profile?id=${userId}`);
   }
 
-  // Fetch user data from database
-  const dbUser = await prisma.user.findUnique({
-    where: { id: userId },
-    include: {
-      achievements: true,
-    },
-  });
-
-  if (!dbUser) {
-    redirect("/not-found");
-  }
-
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-8">
-      <ProfileSidebar
-        username={dbUser.username}
-        imageUrl={dbUser.image ?? "/placeholder-avatar.png"}
-        xp={dbUser.xp}
-        achievements={dbUser.achievements.map((a) => a.image)}
-        joined={dbUser.createdAt.toISOString()}
-        isLoggedUser={isLoggedUser}
-      />
+      <Suspense fallback={<ProfileSidebarSkeleton />}>
+        <ProfileSidebarWrapper userId={userId} />
+      </Suspense>
       <div className="lg:max-h-[calc(100vh-200px)] overflow-y-auto p-2">
         <Suspense fallback={<ChestGridSkeleton />}>
           <ChestGridWrapper userId={userId} />
