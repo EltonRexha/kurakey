@@ -11,7 +11,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { redirect } from "next/navigation";
 
 interface PageProps {
-  searchParams: { id?: string };
+  searchParams: Promise<{ id?: string }>;
 }
 
 const page = async ({ searchParams }: PageProps) => {
@@ -21,9 +21,11 @@ const page = async ({ searchParams }: PageProps) => {
     redirect("/log-in");
   }
 
+  const params = await searchParams;
+
   // Determine which profile to show
-  const userId = searchParams.id ?? session.user.id;
-  if (!searchParams.id) {
+  const userId = params.id ?? session.user.id;
+  if (!params.id) {
     redirect(`/profile?id=${userId}`);
   }
 
