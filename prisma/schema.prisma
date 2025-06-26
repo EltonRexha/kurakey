@@ -219,9 +219,11 @@ model CoinPackage {
 }
 
 model Achievement {
-  id    String           @id @default(cuid())
-  type  AchievementTypes
-  users User[]
+  id            String @id @default(cuid())
+  image         String
+  type          String @unique
+  unlockMessage String
+  users         User[]
 }
 
 enum NotificationType {
@@ -236,12 +238,6 @@ enum TradeStatus {
   PENDING
   COMPLETED
   REJECTED
-}
-
-enum AchievementTypes {
-  LEGENDARY_ROOMS
-  FULL_CATEGORIES
-  WEEK_ACTIVE
 }
 
 enum CoinTransactionType {

@@ -1,8 +1,8 @@
-import { $Enums, Prisma, Rarity, Room } from "@/generated/prisma";
-import { categoryColors, rarityColors } from "@/utils/colors";
-import Image from "next/image";
-import Link from "next/link";
-import prisma from "../../../../../prisma/prisma";
+import { $Enums, Prisma, Rarity, Room } from '@/generated/prisma';
+import { categoryColors, rarityColors } from '@/utils/colors';
+import Image from 'next/image';
+import Link from 'next/link';
+import prisma from '../../../../../prisma/prisma';
 
 interface RoomContainerProps {
   searchParams?: { [key: string]: string | string[] | undefined };
@@ -14,7 +14,7 @@ interface RoomContainerProps {
  */
 async function fetchRooms(nameQuery: string) {
   const where: Prisma.RoomWhereInput | undefined = nameQuery
-    ? { name: { contains: nameQuery, mode: "insensitive" } }
+    ? { name: { contains: nameQuery, mode: 'insensitive' } }
     : undefined;
 
   const rooms = await prisma.room.findMany({
@@ -33,7 +33,7 @@ async function fetchRooms(nameQuery: string) {
   return rooms.map<Room>((r) => ({
     id: r.id,
     name: r.name,
-    previewImageUrl: r.previewImageUrl ?? "/room-previews/placeholder.png",
+    previewImageUrl: r.previewImageUrl ?? '/room-previews/placeholder.png',
     category: r.category,
     rarity: r.rarity as Rarity,
     isSecret: r.isSecret,
@@ -45,7 +45,7 @@ const rarityAsc = Object.keys($Enums.Rarity);
 const rarityDesc = [...rarityAsc].reverse();
 
 const SecretRoomCard = () => (
-  <div className="w-full text-purple-500 sm:w-[250px] bg-[#0d0c1f] border border-[#23224a] rounded-lg overflow-hidden flex items-center justify-center h-[212px] text-neutral-100 text-3xl font-bold tracking-widest select-none shadow-[0_0_15px_#8b5cf6]/40">
+  <div className="w-full sm:w-[250px] bg-[#0d0c1f] border border-[#23224a] rounded-lg overflow-hidden flex items-center justify-center h-[212px] text-purple-500 text-3xl font-bold tracking-widest select-none shadow-[0_0_15px_#8b5cf6]/40">
     ???
   </div>
 );
@@ -57,7 +57,7 @@ const RoomCard = ({ room }: { room: Room }) => {
       href={`/room?id=${id}`}
       className="block w-full sm:w-[250px] bg-[#11142d] rounded-lg overflow-hidden hover:scale-[1.02] transition-transform duration-200"
     >
-      <div className="relative h-[150px] w-full">
+      <div className="relative h-[170px] w-full">
         <Image
           src={previewImageUrl}
           alt={name}
@@ -79,8 +79,8 @@ const RoomCard = ({ room }: { room: Room }) => {
             <span
               className="text-[10px] font-semibold px-2 py-1 rounded"
               style={{
-                color: categoryColors[category] ?? "#fff",
-                background: `${categoryColors[category] ?? "#fff"}22`,
+                color: categoryColors[category] ?? '#fff',
+                background: `${categoryColors[category] ?? '#fff'}22`,
               }}
             >
               {category[0] + category.slice(1).toLowerCase()}
@@ -106,19 +106,19 @@ const RoomCard = ({ room }: { room: Room }) => {
 const RoomContainer = async ({ searchParams }: RoomContainerProps) => {
   const nameQueryRaw = searchParams?.room;
   const nameQuery =
-    typeof nameQueryRaw === "string" ? nameQueryRaw.toLowerCase() : "";
+    typeof nameQueryRaw === 'string' ? nameQueryRaw.toLowerCase() : '';
 
   const filterOrder =
-    typeof searchParams?.filter === "string" &&
-    searchParams.filter === "rare_to_common"
-      ? "rare_to_common"
-      : "common_to_rare";
+    typeof searchParams?.filter === 'string' &&
+    searchParams.filter === 'rare_to_common'
+      ? 'rare_to_common'
+      : 'common_to_rare';
 
   const rooms = await fetchRooms(nameQuery);
 
   // Sort rooms by rarity
   rooms.sort((a, b) => {
-    const order = filterOrder === "rare_to_common" ? rarityDesc : rarityAsc;
+    const order = filterOrder === 'rare_to_common' ? rarityDesc : rarityAsc;
     return order.indexOf(a.rarity) - order.indexOf(b.rarity);
   });
 
@@ -131,7 +131,7 @@ const RoomContainer = async ({ searchParams }: RoomContainerProps) => {
   });
 
   const displayOrder =
-    filterOrder === "rare_to_common" ? rarityDesc : rarityAsc;
+    filterOrder === 'rare_to_common' ? rarityDesc : rarityAsc;
 
   return (
     <div className="space-y-10">
@@ -147,7 +147,7 @@ const RoomContainer = async ({ searchParams }: RoomContainerProps) => {
               {rarityKey[0] + rarityKey.slice(1).toLowerCase()}
             </h2>
             <div className="flex flex-wrap gap-4">
-              {rarityKey === "SECRET"
+              {rarityKey === 'SECRET'
                 ? [...sectionRooms].map((_, idx) => (
                     <SecretRoomCard key={idx} />
                   ))
