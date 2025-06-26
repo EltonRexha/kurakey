@@ -26,7 +26,7 @@ export default async function ProfileSidebarWrapper({
     redirect("/not-found");
   }
 
-    // Derive unlocked categories
+  // Derive unlocked categories
   const categoriesSet = new Set<RoomCategory>();
   const raritiesSet = new Set<Rarity>();
   dbUser.userRoom.forEach((ur) => {

@@ -46,7 +46,12 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
           </Link>
           <li
             className="px-4 py-2 hover:bg-[#2b2a55] cursor-pointer text-neutral-200 flex items-center gap-2 hover:text-[#008cff] transition-colors"
-            onClick={() => signOut()}
+            onClick={() =>
+              signOut({
+                callbackUrl: "/log-in",
+                redirect: true,
+              })
+            }
           >
             <LogOut size={16} />
             Logout
