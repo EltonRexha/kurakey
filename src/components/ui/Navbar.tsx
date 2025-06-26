@@ -5,6 +5,7 @@ import HorizontalCarousel from "./common/HorizontalCarousel";
 import XLogo from "./common/XLogo";
 import Card from "./common/CarouselCard";
 import NavLinks from "./common/NavLinks";
+import Profile from "./common/Profile";
 import GetServerUser from "../../../libs/GetServerUser";
 import prisma from "../../../prisma/prisma";
 import CoinBalance from "./common/CoinBalance";
@@ -83,17 +84,8 @@ const Navbar = async () => {
             <div className="flex items-center gap-1.5">
               <CoinBalance />
             </div>
-            {/* Profile Image */}
-            <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-[#008cff]/50">
-              <Image
-                src={profileImage}
-                alt="User Profile"
-                fill
-                priority
-                sizes="32px"
-                className="object-cover"
-              />
-            </div>
+            {/* Profile */}
+            <Profile imageUrl={profileImage} />
           </div>
         </div>
         {/* Carousel Section */}

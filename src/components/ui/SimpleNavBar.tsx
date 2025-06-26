@@ -1,21 +1,22 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaDiscord } from 'react-icons/fa';
-import XLogo from './common/XLogo';
-import NavLinks from './common/NavLinks';
-import GetServerUser from '../../../libs/GetServerUser';
-import CoinBalance from './common/CoinBalance';
-import Notification from '../Notification';
-import hasUnreadNotifications from '../../../libs/hasUnreadNotifications';
+import Image from "next/image";
+import Link from "next/link";
+import { FaDiscord } from "react-icons/fa";
+import XLogo from "./common/XLogo";
+import NavLinks from "./common/NavLinks";
+import GetServerUser from "../../../libs/GetServerUser";
+import CoinBalance from "./common/CoinBalance";
+import Notification from "../Notification";
+import hasUnreadNotifications from "../../../libs/hasUnreadNotifications";
+import Profile from "./common/Profile";
 
 const SimpleNavBar = async () => {
   const user = await GetServerUser();
 
   if (!user) {
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 
-  const profileImage = user.image || '/placeholder-avatar.png';
+  const profileImage = user.image || "/placeholder-avatar.png";
   const hasNewNotifications = await hasUnreadNotifications(user.id);
 
   return (
@@ -25,7 +26,7 @@ const SimpleNavBar = async () => {
           {/* Logo and Social Links */}
           <div className="flex items-center space-x-6">
             <Link href="/home" className="flex-shrink-0">
-              {' '}
+              {" "}
               <Image
                 src="/logo.png"
                 alt="Kurakey"
@@ -65,17 +66,7 @@ const SimpleNavBar = async () => {
             </div>
 
             {/* Profile Image */}
-            <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-[#008cff]/50">
-              {' '}
-              <Image
-                src={profileImage}
-                alt="User Profile"
-                fill
-                priority
-                sizes="32px"
-                className="object-cover"
-              />
-            </div>
+            <Profile imageUrl={profileImage} />
           </div>
         </div>
       </div>

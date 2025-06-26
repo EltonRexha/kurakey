@@ -240,6 +240,25 @@ async function main() {
     }
   }
   console.log('✅ Coin packages seeded successfully!');
+
+  // --- Achievement seeding ---
+  console.log('🌱 Seeding achievements...');
+  const achievementsData = (await import('./data/achievements')).default;
+  for (const ach of achievementsData) {
+    await prisma.achievement.upsert({
+      where: { type: ach.type },
+      update: {
+        image: ach.image,
+        unlockMessage: ach.unlockMessage,
+      },
+      create: {
+        type: ach.type,
+        image: ach.image,
+        unlockMessage: ach.unlockMessage,
+      },
+    });
+  }
+  console.log('✅ Achievements seeded successfully!');
 }
 
 main()
