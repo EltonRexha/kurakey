@@ -34,11 +34,14 @@ async function getRooms() {
 const Navbar = async () => {
   const rooms = await getRooms();
   const user = await GetServerUser();
-  if (!user) {
-    throw new Error("User not found");
+
+  let profileImage = "/placeholder-avatar.png";
+  let hasNewNotifications = false;
+
+  if (user) {
+    profileImage = user.image || profileImage;
+    hasNewNotifications = await hasUnreadNotifications(user.id);
   }
-  const profileImage = user.image || "/placeholder-avatar.png";
-  const hasNewNotifications = await hasUnreadNotifications(user.id);
 
   return (
     <nav className="bg-[#191838] border-b border-[#11142d] py-3">
@@ -78,14 +81,33 @@ const Navbar = async () => {
           {/* Navigation Links - Now a client component */} <NavLinks />
           {/* User Info Section */}
           <div className="flex items-center gap-4">
-            {/* Notification Icon and Dropdown */}
-            <Notification hasNew={hasNewNotifications} />
-            {/* Coin Balance */}
-            <div className="flex items-center gap-1.5">
-              <CoinBalance />
-            </div>
-            {/* Profile */}
-            <Profile imageUrl={profileImage} />
+            {user ? (
+              <>
+                {/* Notification Icon and Dropdown */}
+                <Notification hasNew={hasNewNotifications} />
+                {/* Coin Balance */}
+                <div className="flex items-center gap-1.5">
+                  <CoinBalance />
+                </div>
+                {/* Profile */}
+                <Profile imageUrl={profileImage} />
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/log-in"
+                  className="px-4 py-1.5 text-sm font-medium rounded-md text-white/50 bg-transparent border border-white/50 hover:text-white hover:bg-gradient-to-r from-[#008cff] to-[#00d4ff] hover:border-[#008cff] hover:shadow-[0_0_10px_#008cff,0_0_30px_#008cff,0_0_60px_#008cff] transition-all"
+                >
+                  Log In
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="px-4 py-1.5 text-sm font-medium rounded-md text-white/50 bg-transparent border border-white/50 hover:text-white hover:bg-gradient-to-r from-[#008cff] to-[#00d4ff] hover:border-[#008cff] hover:shadow-[0_0_10px_#008cff,0_0_30px_#008cff,0_0_60px_#008cff] transition-all"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </div>
         {/* Carousel Section */}
