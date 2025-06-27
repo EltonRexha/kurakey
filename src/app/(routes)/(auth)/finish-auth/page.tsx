@@ -58,7 +58,7 @@ export default function FinishAuthPage() {
     },
     onSuccess: async () => {
       await fetch('/api/auth/session');
-      router.push('/home');
+      router.push('/');
     },
   });
 

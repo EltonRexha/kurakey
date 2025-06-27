@@ -25,7 +25,7 @@ const page = () => {
       </div>
 
       <div className="flex flex-col items-center gap-4">
-        <Link href="/home" className="hover:no-underline">
+        <Link href="/" className="hover:no-underline">
           <GlowingButton>Return to Home</GlowingButton>
         </Link>
       </div>

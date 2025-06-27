@@ -22,7 +22,7 @@ const AnimatedLogo: React.FC<AnimatedLogoProps> = ({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className="mb-8 flex justify-center cursor-pointer"
-      onClick={() => router.push('/home')}
+      onClick={() => router.push('/')}
     >
       <Image
         src="/logo.png"

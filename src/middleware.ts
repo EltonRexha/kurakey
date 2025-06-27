@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const userRoutes = ["/home", "/room", "/chest", "/profile", "/rooms", "/buy-coins", "/room"];
+const userRoutes = ["/room", "/chest", "/profile", "/rooms", "/buy-coins", "/room"];
 const guestRoutes = ["/log-in", "/sign-up", "/profile", "/rooms", "/room"];
 const OAuthRoutes = ["/finish-auth"];
 const AllRoutes = [...userRoutes, ...guestRoutes, ...OAuthRoutes];
@@ -21,7 +21,7 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (token?.oauthProfile && pathname !== "/") {
+  if (token?.oauthProfile) {
     const isOAuthRoute = OAuthRoutes.some((route) => pathname.startsWith(route));
     if (isOAuthRoute) {
       return NextResponse.next();

@@ -50,7 +50,7 @@ export async function POST(request: Request) {
 
   if (userWithUsername) {
     return NextResponse.json(
-      { message: 'user with this email already exists' },
+      { message: 'user with this username already exists' },
       { status: 400 }
     );
   }

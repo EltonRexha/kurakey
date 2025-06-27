@@ -1,13 +1,12 @@
-import type { NextAuthOptions } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcrypt';
-import prisma from '../../../../../prisma/prisma';
+import type { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
+import prisma from "../../../../../prisma/prisma";
 
 //OAuth profile is only set once and after the user has prompted their username it is set to false
 
-
-declare module 'next-auth' {
+declare module "next-auth" {
   interface Session {
     user: {
       id: string;
@@ -22,7 +21,7 @@ declare module 'next-auth' {
   }
 }
 
-declare module 'next-auth/jwt' {
+declare module "next-auth/jwt" {
   interface JWT {
     userId?: string;
     username?: string;
@@ -37,17 +36,17 @@ declare module 'next-auth/jwt' {
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       httpOptions: {
         timeout: 10000,
       },
     }),
     CredentialsProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
-        email: { label: 'Email', type: 'text' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         const { email, password } = credentials as {
@@ -64,6 +63,10 @@ export const authOptions: NextAuthOptions = {
             email,
           },
         });
+
+        if (!user?.isActive) {
+          throw new Error("AccountInactive");
+        }
 
         if (!user) {
           return null;
@@ -87,13 +90,18 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, account, profile }) {
       if (account && profile) {
         const existingUser = await prisma.user.findUnique({
-          where: { email: profile.email ?? '' },
+          where: { email: profile.email ?? "" },
         });
 
         if (!existingUser) {
           token.oauthProfile = true;
         } else {
           //OAuth but its login
+
+          if (!existingUser.isActive) {
+            throw new Error("AccountInactive");
+          }
+
           token = {
             ...token,
             firstName: existingUser.firstName,
@@ -107,11 +115,21 @@ export const authOptions: NextAuthOptions = {
         }
       } else {
         const user = await prisma.user.findUnique({
-          where: { email: token.email ?? '' },
+          where: { email: token.email ?? "" },
         });
 
-        if (!user) {
+        console.log(token.oauthProfile);
+
+        if (token.oauthProfile && !user) {
           return token;
+        }
+
+        if (!user) {
+          throw new Error("AccountNotFound");
+        }
+
+        if (!user?.isActive) {
+          throw new Error("AccountInactive");
         }
 
         token = {
@@ -149,10 +167,10 @@ export const authOptions: NextAuthOptions = {
   },
 
   pages: {
-    signIn: '/log-in',
+    signIn: "/log-in",
   },
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
