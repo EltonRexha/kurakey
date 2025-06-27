@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const userRoutes = ["/home", "/room", "/chest", "/profile", "/rooms", "/bug-coins", "/room"];
+const userRoutes = ["/home", "/room", "/chest", "/profile", "/rooms", "/buy-coins", "/room"];
 const guestRoutes = ["/log-in", "/sign-up", "/profile", "/rooms", "/room"];
 const OAuthRoutes = ["/finish-auth"];
 const AllRoutes = [...userRoutes, ...guestRoutes, ...OAuthRoutes];
@@ -14,7 +14,7 @@ export default async function middleware(req: NextRequest) {
 
   //Check if the path does not exist, this also allows every other path thats not in one of the permission routes!
   if (
-    !AllRoutes.some((route) => pathname.includes(route)) &&
+    !AllRoutes.some((route) => pathname.startsWith(route)) &&
     pathname !== "/"
   ) {
     //Get them to that route so we can show them 404
@@ -22,7 +22,7 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (token?.oauthProfile && pathname !== "/") {
-    const isOAuthRoute = OAuthRoutes.some((route) => pathname.includes(route));
+    const isOAuthRoute = OAuthRoutes.some((route) => pathname.startsWith(route));
     if (isOAuthRoute) {
       return NextResponse.next();
     }
@@ -34,14 +34,14 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (!token) {
-    const isGuestRoute = guestRoutes.some((route) => pathname.includes(route));
+    const isGuestRoute = guestRoutes.some((route) => pathname.startsWith(route));
     if (!isGuestRoute) {
       return NextResponse.redirect(new URL("/log-in", req.url));
     }
     return NextResponse.next();
   }
 
-  const isUserRoute = userRoutes.some((route) => pathname.includes(route));
+  const isUserRoute = userRoutes.some((route) => pathname.startsWith(route));
   if (isUserRoute) {
     return NextResponse.next();
   }

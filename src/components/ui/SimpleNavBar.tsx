@@ -26,7 +26,7 @@ const SimpleNavBar = async () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo and Social Links */}
           <div className="flex items-center space-x-6">
-            <Link href="/home" className="flex-shrink-0">
+            <Link href="/" className="flex-shrink-0">
               {" "}
               <Image
                 src="/logo.png"
@@ -56,7 +56,7 @@ const SimpleNavBar = async () => {
               </a>
             </div>
           </div>
-          {/* Navigation Links - Now a client component */} <NavLinks />
+          {/* Navigation Links*/} <NavLinks />
           {/* User Info Section */}
           <div className="flex items-center gap-4">
             {user ? (
