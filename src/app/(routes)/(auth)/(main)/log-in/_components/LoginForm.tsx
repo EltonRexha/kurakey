@@ -1,15 +1,15 @@
-'use client';
-import { FormInput, GoogleSignInButton, OrDivider } from '@/components/ui/auth';
-import GlowingButton from '@/components/ui/common/GlowingButton';
-import { useToastContext } from '@/context/ToastContext';
-import LoginSchema from '@/schemas/loginSchema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Lock, Mail } from 'lucide-react';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+"use client";
+import { FormInput, GoogleSignInButton, OrDivider } from "@/components/ui/auth";
+import GlowingButton from "@/components/ui/common/GlowingButton";
+import { useToastContext } from "@/context/ToastContext";
+import LoginSchema from "@/schemas/loginSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Lock, Mail } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 type FormData = z.infer<typeof LoginSchema>;
 
@@ -23,23 +23,28 @@ const LoginForm = () => {
   });
 
   const [invalidCredentials, setInvalidCredentials] = useState(false);
+  const [userIsBanned, setUserIsBanned] = useState(false);
   const router = useRouter();
   const { addToast } = useToastContext();
 
   async function onSubmit(data: FormData) {
-    const res = await signIn('credentials', {
+    const res = await signIn("credentials", {
       redirect: false,
       email: data.email,
       password: data.password,
     });
 
     if (res?.error) {
-      setInvalidCredentials(true);
+      if (res.error === "AccountInactive") {
+        setUserIsBanned(true);
+      } else {
+        setInvalidCredentials(true);
+      }
       return;
     }
 
-    addToast('successfully logged in', 'success');
-    router.push('/home');
+    addToast("successfully logged in", "success");
+    router.push("/");
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -47,7 +52,7 @@ const LoginForm = () => {
         <FormInput
           id="email"
           label="Email"
-          {...register('email')}
+          {...register("email")}
           placeholder="Enter your email "
           required
           icon={<Mail />}
@@ -55,7 +60,7 @@ const LoginForm = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{
             delay: 0.1,
-            type: 'spring',
+            type: "spring",
             stiffness: 100,
             damping: 12,
           }}
@@ -69,7 +74,7 @@ const LoginForm = () => {
           id="password"
           label="Password"
           type="password"
-          {...register('password')}
+          {...register("password")}
           placeholder="Enter your password"
           required
           icon={<Lock />}
@@ -77,7 +82,7 @@ const LoginForm = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{
             delay: 0.2,
-            type: 'spring',
+            type: "spring",
             stiffness: 100,
             damping: 12,
           }}
@@ -92,12 +97,17 @@ const LoginForm = () => {
         <p className="mt-1 text-sm text-[#ff5f5f]">
           Email or password are incorrect
         </p>
-      )}{' '}
+      )}
+      {userIsBanned && (
+        <p className="mt-1 text-sm text-[#ff5f5f]">
+          This user is no longer active
+        </p>
+      )}{" "}
       <GlowingButton type="submit" fullWidth>
         LOG IN
       </GlowingButton>
       <OrDivider />
-      <GoogleSignInButton />
+      <GoogleSignInButton setAccountIsInactive={setUserIsBanned} />
     </form>
   );
 };

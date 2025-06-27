@@ -1,7 +1,7 @@
-import BuyChestSchema from '@/schemas/buyChestSchema';
-import { NextResponse } from 'next/server';
-import GetServerUser from '../../../../libs/GetServerUser';
-import prisma from '../../../../prisma/prisma';
+import BuyChestSchema from "@/schemas/buyChestSchema";
+import { NextResponse } from "next/server";
+import GetServerUser from "../../../../libs/GetServerUser";
+import prisma from "../../../../prisma/prisma";
 
 //Function to buy chest
 export async function POST(request: Request) {
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
   if (!user) {
     return NextResponse.json(
-      { message: 'You have to be authenticated to buy chests' },
+      { message: "You have to be authenticated to buy chests" },
       { status: 401 }
     );
   }
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
   if (!chestType) {
     return NextResponse.json(
-      { message: 'Could not find the chest' },
+      { message: "Could not find the chest" },
       { status: 404 }
     );
   }
@@ -41,11 +41,13 @@ export async function POST(request: Request) {
   if (user.coinBalance < totalPrice) {
     return NextResponse.json(
       {
-        message: 'insufficient coin balance',
+        message: "insufficient coin balance",
       },
       { status: 400 }
     );
   }
+
+  console.log(chestType);
 
   await prisma.$transaction([
     ...Array.from({ length: amount }).map(() =>
@@ -61,14 +63,14 @@ export async function POST(request: Request) {
       where: { id: user.id },
       data: {
         coinBalance: user.coinBalance - totalPrice,
-        xp: user.xp + 20 * amount,
+        xp: user.xp + chestType.xpGain * amount,
       },
     }),
     prisma.coinTransaction.create({
       data: {
         user: { connect: { id: user.id } },
         amount: -totalPrice,
-        type: 'PURCHASE',
+        type: "PURCHASE",
         chestType: {
           connect: {
             id: typeId,
@@ -78,10 +80,10 @@ export async function POST(request: Request) {
     }),
     prisma.notification.create({
       data: {
-        message: '20xp has been added to your account',
-        type: 'XP_GAIN',
+        message: `${chestType.xpGain}xp has been added to your account`,
+        type: "XP_GAIN",
         isRead: false,
-        xpAmount: 20,
+        xpAmount: chestType.xpGain,
         user: {
           connect: {
             id: user.id,
@@ -92,7 +94,7 @@ export async function POST(request: Request) {
     prisma.notification.create({
       data: {
         message: `${amount}x ${chestType.name} has been added to your account`,
-        type: 'CHEST_RECEIVED',
+        type: "CHEST_RECEIVED",
         isRead: false,
         chestType: {
           connect: {
@@ -110,9 +112,10 @@ export async function POST(request: Request) {
 
   return NextResponse.json(
     {
-      message: 'Successfully bought the coins',
+      message: "Successfully bought the coins",
       success: true,
       amount,
+      xpGained: chestType.xpGain * amount,
     },
     { status: 201 }
   );

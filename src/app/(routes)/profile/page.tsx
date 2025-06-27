@@ -15,16 +15,17 @@ interface PageProps {
 }
 
 const page = async ({ searchParams }: PageProps) => {
-  // Ensure user is authenticated
   const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    redirect("/log-in");
-  }
 
   const params = await searchParams;
 
   // Determine which profile to show
-  const userId = params.id ?? session.user.id;
+  const userId = params.id ?? session?.user.id;
+
+  if (!userId) {
+    redirect("/log-in");
+  }
+  
   if (!params.id) {
     redirect(`/profile?id=${userId}`);
   }

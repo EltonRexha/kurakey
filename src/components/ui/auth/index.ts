@@ -1,4 +1,4 @@
-export { default as AuthLayout } from '../../../app/(routes)/(auth)/layout';
+export { default as AuthLayout } from '../../../app/(routes)/(auth)/(main)/layout';
 export { default as AuthCard } from './AuthCard';
 export { default as FormInput } from './FormInput';
 export { default as AnimatedLogo } from './AnimatedLogo';

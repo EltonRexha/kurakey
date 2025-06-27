@@ -8,9 +8,9 @@ const Footer = () => {
     {
       title: 'Navigation',
       links: [
-        { name: 'Chests', href: '/home' },
-        { name: 'Buy coins', href: '/home/buy-coins' },
-        { name: 'Rooms', href: '/home/Rooms' },
+        { name: 'Chests', href: '/' },
+        { name: 'Buy coins', href: '/buy-coins' },
+        { name: 'Rooms', href: '/Rooms' },
       ],
     },
     {
@@ -33,7 +33,7 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Logo and Social Section */}
           <div className="space-y-6">
-            <Link href="/home" className="flex-shrink-0">
+            <Link href="/" className="flex-shrink-0">
               {' '}
               <Image
                 src="/logo.png"

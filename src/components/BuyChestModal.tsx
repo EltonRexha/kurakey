@@ -64,7 +64,7 @@ const BuyChestModal: React.FC<Props> = ({
 
   const buyChestMutation = useMutation({
     mutationFn: buyChest,
-    onSuccess: ({ amount }) => {
+    onSuccess: ({ amount, xpGained }) => {
       setIsLoading(false);
       if (amount > 1) {
         addChest(
@@ -78,7 +78,7 @@ const BuyChestModal: React.FC<Props> = ({
         );
       }
 
-      addXP(20 * amount);
+      addXP(xpGained);
       setIsOpen(false);
       router.refresh();
     },

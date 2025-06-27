@@ -1,8 +1,8 @@
-import { $Enums } from '@/generated/prisma';
-import { getChestAnimation } from '@/utils/getChestAnimation';
-import { getChestImage } from '@/utils/getChestImage';
-import Image from 'next/image';
-import React, { useEffect } from 'react';
+import { $Enums } from "@/generated/prisma";
+import { getChestAnimation } from "@/utils/getChestAnimation";
+import { getChestImage } from "@/utils/getChestImage";
+import Image from "next/image";
+import React, { useEffect } from "react";
 
 export const OPENING_TIME_MS = 3000;
 
@@ -35,10 +35,12 @@ const Chest = ({
     if (isOpening) {
       setTimeout(() => {
         setChestIsOpen(true);
-        setChestIsOpening(false);
+        setTimeout(() => {
+          setChestIsOpening(false);
+        }, 100);
       }, OPENING_TIME_MS);
     }
-  });
+  }, [isOpening, setChestIsOpen, setChestIsOpening]);
 
   return (
     <div className="rounded-xl overflow-hidden">
