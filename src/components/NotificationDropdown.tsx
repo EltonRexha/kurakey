@@ -1,9 +1,9 @@
-'use client';
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getChestImage } from '@/utils/getChestImage';
-import axios from '../../libs/axios';
+"use client";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getChestImage } from "@/utils/getChestImage";
+import axios from "../../libs/axios";
 
 interface Room {
   name: string;
@@ -37,7 +37,7 @@ function getChestImageByName(name: string) {
 }
 
 async function markNotificationAsRead(id: string) {
-  const res = await axios.post('/notification/mark-read', { id });
+  const res = await axios.post("/notification/mark-read", { id });
   return res.data;
 }
 
@@ -58,7 +58,7 @@ const NotificationDropdown = () => {
   const pageSize = 10;
   const queryClient = useQueryClient();
   const { data, isLoading, isError } = useQuery<NotificationApiResponse>({
-    queryKey: ['notifications', page],
+    queryKey: ["notifications", page],
     queryFn: () => fetchNotifications(page, pageSize),
   });
 
@@ -82,8 +82,17 @@ const NotificationDropdown = () => {
 
   const markReadMutation = useMutation({
     mutationFn: markNotificationAsRead,
+    // Optimistically update local state so UI reflects the change immediately
+    onMutate: async (id: string) => {
+      setAllNotifications((prev) =>
+        prev.filter((n) => (n.id === id ? false : true))
+      );
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+        exact: false,
+      });
     },
   });
 
@@ -113,7 +122,7 @@ const NotificationDropdown = () => {
                 Mark as read
               </p>
             );
-            if (notif.type === 'CHEST_RECEIVED' && notif.chestType) {
+            if (notif.type === "CHEST_RECEIVED" && notif.chestType) {
               const chestImg = getChestImageByName(notif.chestType.name);
               return (
                 <div
@@ -127,7 +136,7 @@ const NotificationDropdown = () => {
                     <div className="text-neutral-400 text-xs">
                       {new Date(notif.createdAt).toLocaleString()}
                     </div>
-                    {markRead}
+                    {!notif.isRead && markRead}
                   </div>
                   {chestImg && (
                     <Image
@@ -141,20 +150,20 @@ const NotificationDropdown = () => {
                 </div>
               );
             }
-            if (notif.type === 'ROOM_RECEIVED' && notif.room) {
+            if (notif.type === "ROOM_RECEIVED" && notif.room) {
               return (
                 <div
                   key={notif.id}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                 >
-                  <div className='mr-auto'>
+                  <div className="mr-auto">
                     <div className="text-[#fbbf24] text-xs font-bold">
                       {notif.message}
                     </div>
                     <div className="text-neutral-400 text-xs">
                       {new Date(notif.createdAt).toLocaleString()}
                     </div>
-                    {markRead}
+                    {!notif.isRead && markRead}
                   </div>
                   <Image
                     src={notif.room.previewImageUrl}
@@ -179,7 +188,7 @@ const NotificationDropdown = () => {
                   <div className="text-neutral-400 text-xs">
                     {new Date(notif.createdAt).toLocaleString()}
                   </div>
-                  {markRead}
+                  {!notif.isRead && markRead}
                 </div>
               </div>
             );

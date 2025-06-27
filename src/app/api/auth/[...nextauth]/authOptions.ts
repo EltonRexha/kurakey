@@ -118,8 +118,6 @@ export const authOptions: NextAuthOptions = {
           where: { email: token.email ?? "" },
         });
 
-        console.log(token.oauthProfile);
-
         if (token.oauthProfile && !user) {
           return token;
         }
