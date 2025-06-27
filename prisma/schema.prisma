@@ -82,6 +82,7 @@ model ChestType {
   id                  String                @id @default(cuid())
   name                String                @unique
   price               Int
+  xpGain              Int
   Chests              Chest[]
   ChestDropRate       ChestDropRate[]
   BundleTypeChestType BundleTypeChestType[]

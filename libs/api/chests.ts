@@ -1,5 +1,5 @@
-import { $Enums, ChestType } from '@/generated/prisma';
-import axios from '../axios';
+import { $Enums } from "@/generated/prisma";
+import axios from "../axios";
 
 export interface ChestDropRatesResponse {
   odds: Record<string, { rarity: string; chance: number }[]>;
@@ -7,7 +7,7 @@ export interface ChestDropRatesResponse {
 
 export async function getAllChestDropRates() {
   const response = await axios.get<ChestDropRatesResponse>(
-    '/chests/drop-rates'
+    "/chests/drop-rates"
   );
   return response.data;
 }
@@ -16,6 +16,7 @@ interface BuyChestResponse {
   message: string;
   success: boolean;
   amount: number;
+  xpGained: number;
 }
 
 export async function buyChest({
@@ -25,7 +26,7 @@ export async function buyChest({
   typeId: string;
   amount: number;
 }) {
-  const response = await axios.post<BuyChestResponse>('/chests', {
+  const response = await axios.post<BuyChestResponse>("/chests", {
     typeId,
     amount,
   });
@@ -46,7 +47,7 @@ interface OpenChestResponse {
 }
 
 export async function openChest({ chestType }: { chestType: string }) {
-  const response = await axios.post<OpenChestResponse>('/chests/open', {
+  const response = await axios.post<OpenChestResponse>("/chests/open", {
     chestType,
   });
 
