@@ -1,8 +1,8 @@
-'use client';
-import React, { createContext, useContext, useCallback, useState } from 'react';
-import { getChestImage } from '@/utils/getChestImage';
-import { StaticImageData } from 'next/image';
-import { ItemNotificationContainer } from '@/components/ui/common/ItemNotificationContainer';
+"use client";
+import React, { createContext, useContext, useCallback, useState } from "react";
+import { getChestImage } from "@/utils/getChestImage";
+import { StaticImageData } from "next/image";
+import { ItemNotificationContainer } from "@/components/ui/common/ItemNotificationContainer";
 
 //FUTURE: IF YOU HAVE IMPLEMENTED ADDING IMAGES OF CHEST TO DATABASE, THIS USES THE FUNCTIONS TO GET THE IMAGES
 //YOU NEED TO USE THE DATABASE TO GET THE IMAGE NOW!
@@ -10,11 +10,13 @@ import { ItemNotificationContainer } from '@/components/ui/common/ItemNotificati
 export interface ItemNotification {
   id: string;
   message: string;
-  chestTypeName: string;
+  chestTypeName?: string;
   chestImage?: StaticImageData;
+  roomImage?: string;
 }
 
 interface ItemNotificationContextType {
+  addRoom: (message: string, roomPreviewUrl: string) => void;
   addChest: (message: string, chestTypeName: string) => Promise<void>;
   addXP: (xpAmount: number) => void;
 }
@@ -50,6 +52,22 @@ export const ItemNotificationProvider: React.FC<{
     [removeNotification]
   );
 
+  const addRoom = useCallback(
+    (message: string, roomPreviewUrl: string) => {
+      const id = Math.random().toString(36).slice(2);
+      setNotifications((prev) => [
+        ...prev,
+        {
+          id,
+          message,
+          roomImage: roomPreviewUrl,
+        },
+      ]);
+      setTimeout(() => removeNotification(id), 5000);
+    },
+    [removeNotification]
+  );
+
   const addXP = useCallback(
     (xpAmount: number) => {
       const id = Math.random().toString(36).slice(2);
@@ -58,7 +76,7 @@ export const ItemNotificationProvider: React.FC<{
         {
           id,
           message: `${xpAmount}XP got added to your account`,
-          chestTypeName: '',
+          chestTypeName: "",
         },
       ]);
       setTimeout(() => removeNotification(id), 5000);
@@ -67,7 +85,7 @@ export const ItemNotificationProvider: React.FC<{
   );
 
   return (
-    <ItemNotificationContext.Provider value={{ addChest, addXP }}>
+    <ItemNotificationContext.Provider value={{ addChest, addXP, addRoom }}>
       <ItemNotificationContainer
         notifications={notifications}
         removeNotification={removeNotification}
@@ -81,7 +99,7 @@ export const useItemNotification = () => {
   const context = useContext(ItemNotificationContext);
   if (!context) {
     throw new Error(
-      'useItemNotification must be used within an ItemNotificationProvider'
+      "useItemNotification must be used within an ItemNotificationProvider"
     );
   }
   return context;
