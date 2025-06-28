@@ -38,6 +38,7 @@ export async function POST(request: Request) {
       type: {
         name: chestType,
       },
+      opened: false,
     },
     include: {
       type: {
@@ -74,9 +75,12 @@ export async function POST(request: Request) {
         },
       },
     }),
-    prisma.chest.delete({
+    prisma.chest.update({
       where: {
         id: chest.id,
+      },
+      data: {
+        opened: true,
       },
     }),
     prisma.notification.create({

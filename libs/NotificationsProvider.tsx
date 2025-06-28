@@ -14,7 +14,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const POLL_INTERVAL_MS = 6_000;
+const POLL_INTERVAL_MS = 5_000;
 
 const NotificationsProvider: React.FC<Props> = ({ children }) => {
   const { addChest, addXP, addRoom } = useItemNotification();

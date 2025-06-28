@@ -61,6 +61,7 @@ async function getOwnedAmount(chestType: string, userId: string) {
       User: {
         id: userId,
       },
+      opened: false,
     },
   });
 
