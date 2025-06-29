@@ -1,9 +1,9 @@
-"use client";
-import React from "react";
-import Image, { StaticImageData } from "next/image";
-import { motion } from "framer-motion";
-import { X } from "lucide-react";
-import { ItemNotification as ItemNotificationType } from "@/context/ItemNotificationContext";
+'use client';
+import React from 'react';
+import Image, { StaticImageData } from 'next/image';
+import { motion } from 'framer-motion';
+import { X } from 'lucide-react';
+import { ItemNotification as ItemNotificationType } from '@/context/ItemNotificationContext';
 
 interface Props {
   notification: ItemNotificationType;
@@ -34,7 +34,16 @@ export const ItemNotification: React.FC<Props> = ({
         {notification.roomImage && (
           <Image
             src={notification.roomImage}
-            alt={""}
+            alt={''}
+            width={40}
+            height={40}
+            className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
+          />
+        )}
+        {notification.achievementImage && (
+          <Image
+            src={notification.achievementImage}
+            alt={''}
             width={40}
             height={40}
             className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"

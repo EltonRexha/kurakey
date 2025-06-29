@@ -32,6 +32,12 @@ export async function GET(request: Request) {
           name: true,
         },
       },
+      achievement: {
+        select: {
+          image: true,
+          unlockMessage: true
+        }
+      }
     },
   });
 

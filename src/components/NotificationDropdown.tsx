@@ -1,9 +1,9 @@
-"use client";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getChestImage } from "@/utils/getChestImage";
-import axios from "../../libs/axios";
+'use client';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getChestImage } from '@/utils/getChestImage';
+import axios from '../../libs/axios';
 
 interface Room {
   name: string;
@@ -18,6 +18,10 @@ interface Notification {
   isRead: boolean;
   chestType?: { name: string } | null;
   room?: Room | null;
+  achievement?: {
+    image: string;
+    unlockMessage: string;
+  };
 }
 
 interface NotificationApiResponse {
@@ -37,7 +41,7 @@ function getChestImageByName(name: string) {
 }
 
 async function markNotificationAsRead(id: string) {
-  const res = await axios.post("/notification/mark-read", { id });
+  const res = await axios.post('/notification/mark-read', { id });
   return res.data;
 }
 
@@ -58,7 +62,7 @@ const NotificationDropdown = () => {
   const pageSize = 10;
   const queryClient = useQueryClient();
   const { data, isLoading, isError } = useQuery<NotificationApiResponse>({
-    queryKey: ["notifications", page],
+    queryKey: ['notifications', page],
     queryFn: () => fetchNotifications(page, pageSize),
   });
 
@@ -90,7 +94,7 @@ const NotificationDropdown = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["notifications"],
+        queryKey: ['notifications'],
         exact: false,
       });
     },
@@ -122,7 +126,7 @@ const NotificationDropdown = () => {
                 Mark as read
               </p>
             );
-            if (notif.type === "CHEST_RECEIVED" && notif.chestType) {
+            if (notif.type === 'CHEST_RECEIVED' && notif.chestType) {
               const chestImg = getChestImageByName(notif.chestType.name);
               return (
                 <div
@@ -150,7 +154,7 @@ const NotificationDropdown = () => {
                 </div>
               );
             }
-            if (notif.type === "ROOM_RECEIVED" && notif.room) {
+            if (notif.type === 'ROOM_RECEIVED' && notif.room) {
               return (
                 <div
                   key={notif.id}
@@ -175,7 +179,33 @@ const NotificationDropdown = () => {
                 </div>
               );
             }
+            if (notif.type === 'ACHIEVEMENT' && notif.achievement) {
+              return (
+                <div
+                  key={notif.id}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                >
+                  <div className="mr-auto">
+                    <div className="text-[#fbbf24] text-xs">
+                      {notif.message}
+                    </div>
+                    <div className="text-neutral-400 text-xs">
+                      {new Date(notif.createdAt).toLocaleString()}
+                    </div>
+                    {!notif.isRead && markRead}
+                  </div>
+                  <Image
+                    src={notif.achievement.image}
+                    alt={notif.achievement.unlockMessage}
+                    width={52}
+                    height={52}
+                    className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
+                  />
+                </div>
+              );
+            }
             // Other notification types (XP_GAIN, FRIEND_REQUEST, TRADE_INVITE, etc)
+
             return (
               <div
                 key={notif.id}

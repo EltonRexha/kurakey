@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   getUnShownNotifications,
   markNotificationsAsShown,
   Notification,
-} from "./api/notifications";
-import { useItemNotification } from "@/context/ItemNotificationContext";
-import useMounted from "@/hooks/useMounted";
+} from './api/notifications';
+import { useItemNotification } from '@/context/ItemNotificationContext';
+import useMounted from '@/hooks/useMounted';
 
 interface Props {
   children: React.ReactNode;
@@ -17,12 +17,12 @@ interface Props {
 const POLL_INTERVAL_MS = 5_000;
 
 const NotificationsProvider: React.FC<Props> = ({ children }) => {
-  const { addChest, addXP, addRoom } = useItemNotification();
+  const { addChest, addXP, addRoom, addAchievement } = useItemNotification();
   const [isReady, setIsReady] = useState(false);
   const mounted = useMounted();
 
   const { data } = useQuery({
-    queryKey: ["un-shown-notifications"],
+    queryKey: ['un-shown-notifications'],
     queryFn: getUnShownNotifications,
     refetchInterval: POLL_INTERVAL_MS,
     staleTime: 0,
@@ -30,7 +30,7 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (mounted) {
-      const loadingElement = document.getElementById("loading");
+      const loadingElement = document.getElementById('loading');
       setIsReady(!loadingElement);
     }
   }, [mounted, data]);
@@ -40,24 +40,26 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
 
     data.forEach((notification: Notification) => {
       switch (notification.type) {
-        case "CHEST_RECEIVED":
-          addChest(notification.message, notification.chestType?.name ?? "");
+        case 'CHEST_RECEIVED':
+          addChest(notification.message, notification.chestType?.name ?? '');
           break;
-        case "XP_GAIN":
+        case 'XP_GAIN':
           addXP(notification.xpAmount ?? 0);
           break;
-        case "ROOM_RECEIVED":
+        case 'ROOM_RECEIVED':
           if (notification.room?.previewImageUrl) {
             addRoom(notification.message, notification.room.previewImageUrl);
           }
           break;
+        case 'ACHIEVEMENT':
+          addAchievement(notification.message, notification.achievement.image);
       }
     });
 
     data.map((n) => {
       markNotificationsAsShown(n.id);
     });
-  }, [data, addChest, addXP, addRoom, isReady]);
+  }, [data, addChest, addXP, addRoom, isReady, addAchievement]);
 
   return <>{children}</>;
 };

@@ -1,5 +1,5 @@
-import { $Enums } from "@/generated/prisma";
-import axios from "../axios";
+import { $Enums } from '@/generated/prisma';
+import axios from '../axios';
 
 export interface Notification {
   id: string;
@@ -13,13 +13,17 @@ export interface Notification {
     previewImageUrl: string;
     name: string;
   };
+  achievement: {
+    image: string;
+    unlockedImage: string;
+  };
 }
 
 export async function getUnShownNotifications() {
-  const response = await axios.get<Notification[]>("/notification/un-shown");
+  const response = await axios.get<Notification[]>('/notification/un-shown');
   return response.data;
 }
 
 export async function markNotificationsAsShown(id: string) {
-  await axios.post("/notification/mark-shown", { id });
+  await axios.post('/notification/mark-shown', { id });
 }

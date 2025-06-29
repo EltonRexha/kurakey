@@ -39,7 +39,7 @@ export default async function ProfileSidebarWrapper({
       username={dbUser.username}
       imageUrl={dbUser.image ?? "/placeholder-avatar.png"}
       xp={dbUser.xp}
-      achievements={dbUser.achievements.map((a) => a.image)}
+      achievements={dbUser.achievements}
       joined={dbUser.createdAt.toISOString()}
       isLoggedUser={loggedUserId === userId}
       categories={[...categoriesSet] as RoomCategory[]}
