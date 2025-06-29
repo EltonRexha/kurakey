@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import Avatar from "./Avatar";
-import { User, LogOut, Box, LayoutGrid, HandCoins } from "lucide-react";
-import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { useState, useRef, useEffect } from 'react';
+import Avatar from './Avatar';
+import { User, LogOut, Box, LayoutGrid, HandCoins, Users } from 'lucide-react';
+import Link from 'next/link';
+import { signOut } from 'next-auth/react';
 
 interface ProfileProps {
   imageUrl: string;
@@ -12,9 +12,10 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
   const mobileNavItems = [
-    { label: "Chests", href: "/", icon: <Box size={16} /> },
-    { label: "Buy Coins", href: "/buy-coins", icon: <HandCoins size={16} /> },
-    { label: "Room Index", href: "/rooms", icon: <LayoutGrid size={16} /> },
+    { label: 'Chests', href: '/', icon: <Box size={16} /> },
+    { label: 'Buy Coins', href: '/buy-coins', icon: <HandCoins size={16} /> },
+    { label: 'Room Index', href: '/rooms', icon: <LayoutGrid size={16} /> },
+    { label: 'Search Users', href: '/users', icon: <Users size={16} /> },
   ];
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -25,8 +26,8 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
         setOpen(false);
       }
     }
-    if (open) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    if (open) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [open]);
 
   return (
@@ -47,7 +48,7 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
             <Link
               key={item.label}
               href={item.href}
-              className="px-4 py-2 hover:bg-[#2b2a55] cursor-pointer text-neutral-200 flex items-center gap-2 hover:text-[#008cff] transition-colors md:hidden"
+              className="px-4 py-3 text-xl sm:text-base hover:bg-[#2b2a55] cursor-pointer text-neutral-200 flex items-center gap-2 hover:text-[#008cff] transition-colors lg:hidden"
             >
               {item.icon}
               {item.label}
@@ -55,16 +56,16 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
           ))}
           <Link
             href="/profile"
-            className="px-4 py-2 hover:bg-[#2b2a55] cursor-pointer text-neutral-200 flex items-center gap-2 hover:text-[#008cff] transition-colors"
+            className="px-4 py-3 text-xl sm:text-base hover:bg-[#2b2a55] cursor-pointer text-neutral-200 flex items-center gap-2 hover:text-[#008cff] transition-colors"
           >
             <User size={16} />
             Profile
           </Link>
           <li
-            className="px-4 py-2 hover:bg-[#2b2a55] cursor-pointer text-neutral-200 flex items-center gap-2 hover:text-[#008cff] transition-colors"
+            className="px-4 py-3 text-xl sm:text-base hover:bg-[#2b2a55] cursor-pointer text-neutral-200 flex items-center gap-2 hover:text-[#008cff] transition-colors"
             onClick={() =>
               signOut({
-                callbackUrl: "/log-in",
+                callbackUrl: '/log-in',
                 redirect: true,
               })
             }
