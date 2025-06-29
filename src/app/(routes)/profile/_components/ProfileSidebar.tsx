@@ -5,7 +5,7 @@ import { UploadCloud } from 'lucide-react';
 import { CldUploadWidget } from 'next-cloudinary';
 import LevelBar from './LevelBar';
 import AchievementGrid from './AchievementGrid';
-import getLevel from '@/../libs/getLevel';
+import getLevel, { MAX_LEVEL } from '@/../libs/getLevel';
 import StarsButton from '@/components/ui/StarsButton';
 import { categoryColors, rarityColors } from '@/utils/colors';
 import { RoomCategory, Rarity, Achievement } from '@/generated/prisma';
@@ -34,7 +34,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
   rarities,
 }) => {
   const levelNum = Number(getLevel(xp));
-  const isMax = levelNum >= 10;
+  const isMax = levelNum >= MAX_LEVEL;
   const nextLevelXp = isMax ? xp : (levelNum + 1) * 100;
 
   const router = useRouter();
