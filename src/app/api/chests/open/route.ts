@@ -3,6 +3,7 @@ import prisma from '../../../../../prisma/prisma';
 import { NextResponse } from 'next/server';
 import GetServerUser from '../../../../../libs/GetServerUser';
 import { pickRoomByDropRates } from '../../../../../libs/pickRoomByDropRates';
+import { awardAchievementIfNotUnlocked } from '../../../../../libs/achievements';
 
 const schema = z.object({
   chestType: z.string(),
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
       type: {
         name: chestType,
       },
+      opened: false,
     },
     include: {
       type: {
@@ -55,9 +57,26 @@ export async function POST(request: Request) {
     );
   }
 
-  // Pick a rarity based on the chest's drop rates
   const dropRates = chest.type.ChestDropRate;
   const room = await pickRoomByDropRates(dropRates);
+
+  const allOpenedChests = await prisma.chest.findMany({
+    where: {
+      User: {
+        id: user.id,
+      },
+      opened: true,
+    },
+  });
+
+  //If the user has never opened a chest then give him an achievement
+  if (allOpenedChests.length === 0) {
+    await awardAchievementIfNotUnlocked({
+      userId: user.id,
+      achievementType: 'chestOpener',
+      message: 'The journey begins.',
+    });
+  }
 
   await prisma.$transaction([
     prisma.userRoom.create({
@@ -74,9 +93,12 @@ export async function POST(request: Request) {
         },
       },
     }),
-    prisma.chest.delete({
+    prisma.chest.update({
       where: {
         id: chest.id,
+      },
+      data: {
+        opened: true,
       },
     }),
     prisma.notification.create({
@@ -96,6 +118,68 @@ export async function POST(request: Request) {
       },
     }),
   ]);
+
+  //Room Explorer achievement
+  const roomsAfter = await prisma.userRoom.findMany({
+    where: {
+      userId: user.id,
+    },
+    select: {
+      roomId: true,
+    },
+  });
+  const specificRooms = new Set(roomsAfter.map((r) => r.roomId)).size;
+
+  if (specificRooms === 3) {
+    await awardAchievementIfNotUnlocked({
+      userId: user.id,
+      achievementType: 'roomExplorer',
+      message: "You've seen more than most",
+    });
+  }
+
+  if (room.rarity === 'RARE' || room.rarity === 'EPIC') {
+    await awardAchievementIfNotUnlocked({
+      userId: user.id,
+      achievementType: 'luckDrop',
+      message: 'Not everyone pulls a room like that.',
+    });
+  }
+
+  if (room.rarity === 'LEGENDARY' && room.category === 'VOID') {
+    await awardAchievementIfNotUnlocked({
+      userId: user.id,
+      achievementType: 'voidBorn',
+      message: "You've touched the edge of the unknown",
+    });
+  }
+
+  const legendaryRooms = await prisma.userRoom.findMany({
+    where: {
+      user: {
+        id: user.id,
+      },
+      room: {
+        rarity: 'LEGENDARY',
+      },
+    },
+  });
+
+  if (legendaryRooms.length === 10) {
+    await awardAchievementIfNotUnlocked({
+      userId: user.id,
+      achievementType: 'realityBreaker',
+      message: "You didn't just peek beyond the veil - you shattered it.",
+    });
+  }
+
+  if (room.rarity === 'SECRET' || room.isSecret) {
+    await awardAchievementIfNotUnlocked({
+      userId: user.id,
+      achievementType: 'secretWitness',
+      message: "What you saw wasn't meant for everyone.",
+    });
+  }
 
   return NextResponse.json(
     {

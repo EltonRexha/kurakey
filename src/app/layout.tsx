@@ -4,6 +4,7 @@ import ReactQuery from '../../libs/QueryClient';
 import './globals.css';
 import UserSessionProvider from '../../libs/UserSessionProvider';
 import { ItemNotificationProvider } from '@/context/ItemNotificationContext';
+import NotificationsProvider from '../../libs/NotificationsProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,8 +31,10 @@ export default function RootLayout({
           <ReactQuery>
             <ToastProvider>
               <ItemNotificationProvider>
-                <div id="modal"></div>
-                <main>{children}</main>
+                <NotificationsProvider>
+                  <div id="modal"></div>
+                  <main>{children}</main>
+                </NotificationsProvider>
               </ItemNotificationProvider>
             </ToastProvider>
           </ReactQuery>

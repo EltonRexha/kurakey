@@ -10,13 +10,17 @@ import { ItemNotificationContainer } from '@/components/ui/common/ItemNotificati
 export interface ItemNotification {
   id: string;
   message: string;
-  chestTypeName: string;
+  chestTypeName?: string;
   chestImage?: StaticImageData;
+  roomImage?: string;
+  achievementImage?: string;
 }
 
 interface ItemNotificationContextType {
+  addRoom: (message: string, roomPreviewUrl: string) => void;
   addChest: (message: string, chestTypeName: string) => Promise<void>;
   addXP: (xpAmount: number) => void;
+  addAchievement: (message: string, imageUrl: string) => void;
 }
 
 const ItemNotificationContext = createContext<
@@ -50,6 +54,22 @@ export const ItemNotificationProvider: React.FC<{
     [removeNotification]
   );
 
+  const addRoom = useCallback(
+    (message: string, roomPreviewUrl: string) => {
+      const id = Math.random().toString(36).slice(2);
+      setNotifications((prev) => [
+        ...prev,
+        {
+          id,
+          message,
+          roomImage: roomPreviewUrl,
+        },
+      ]);
+      setTimeout(() => removeNotification(id), 5000);
+    },
+    [removeNotification]
+  );
+
   const addXP = useCallback(
     (xpAmount: number) => {
       const id = Math.random().toString(36).slice(2);
@@ -58,7 +78,22 @@ export const ItemNotificationProvider: React.FC<{
         {
           id,
           message: `${xpAmount}XP got added to your account`,
-          chestTypeName: '',
+        },
+      ]);
+      setTimeout(() => removeNotification(id), 5000);
+    },
+    [removeNotification]
+  );
+
+  const addAchievement = useCallback(
+    (message: string, imageUrl: string) => {
+      const id = Math.random().toString(36).slice(2);
+      setNotifications((prev) => [
+        ...prev,
+        {
+          id,
+          message: message,
+          achievementImage: imageUrl,
         },
       ]);
       setTimeout(() => removeNotification(id), 5000);
@@ -67,7 +102,9 @@ export const ItemNotificationProvider: React.FC<{
   );
 
   return (
-    <ItemNotificationContext.Provider value={{ addChest, addXP }}>
+    <ItemNotificationContext.Provider
+      value={{ addChest, addXP, addRoom, addAchievement }}
+    >
       <ItemNotificationContainer
         notifications={notifications}
         removeNotification={removeNotification}

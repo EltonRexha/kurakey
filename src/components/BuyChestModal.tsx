@@ -66,19 +66,7 @@ const BuyChestModal: React.FC<Props> = ({
     mutationFn: buyChest,
     onSuccess: ({ amount, xpGained }) => {
       setIsLoading(false);
-      if (amount > 1) {
-        addChest(
-          `${amount}x ${chestName} chests have been added to your inventory`,
-          chestName
-        );
-      } else {
-        addChest(
-          `${chestName} chest has been added to your inventory`,
-          chestName
-        );
-      }
-
-      addXP(xpGained);
+   
       setIsOpen(false);
       router.refresh();
     },

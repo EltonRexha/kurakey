@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
     include: {
       chestType: true,
       room: true,
+      achievement: true
     },
     skip,
     take: pageSize,

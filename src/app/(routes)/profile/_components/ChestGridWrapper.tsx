@@ -1,5 +1,5 @@
-import prisma from "../../../../../prisma/prisma";
-import ChestGrid from "./ChestGrid";
+import prisma from '../../../../../prisma/prisma';
+import ChestGrid from './ChestGrid';
 
 interface ChestGridWrapperProps {
   userId: string;
@@ -7,13 +7,14 @@ interface ChestGridWrapperProps {
 
 async function getUserChests(userId: string) {
   const chests = await prisma.chest.findMany({
-    where: { userId },
+    where: { userId, opened: false },
     include: {
       type: true,
     },
   });
 
-  const chestMap: Record<string, { id: string; name: string; count: number }> = {};
+  const chestMap: Record<string, { id: string; name: string; count: number }> =
+    {};
 
   chests.forEach((chest) => {
     const { id, name } = chest.type;
@@ -27,7 +28,9 @@ async function getUserChests(userId: string) {
 }
 
 // Server component
-export default async function ChestGridWrapper({ userId }: ChestGridWrapperProps) {
+export default async function ChestGridWrapper({
+  userId,
+}: ChestGridWrapperProps) {
   const chests = await getUserChests(userId);
   return <ChestGrid chests={chests} />;
 }

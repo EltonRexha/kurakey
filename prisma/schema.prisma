@@ -183,19 +183,22 @@ model FriendInvite {
 }
 
 model Notification {
-  id          String           @id @default(cuid())
-  user        User             @relation(fields: [userId], references: [id])
-  userId      String
-  message     String
-  chestType   ChestType?       @relation(fields: [chestTypeId], references: [id])
-  room        Room?            @relation(fields: [roomId], references: [id])
-  xpAmount    Int?
-  type        NotificationType
-  isRead      Boolean          @default(false)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  chestTypeId String?
-  roomId      String?
+  id            String           @id @default(cuid())
+  user          User             @relation(fields: [userId], references: [id])
+  userId        String
+  message       String
+  shown         Boolean          @default(false)
+  chestType     ChestType?       @relation(fields: [chestTypeId], references: [id])
+  room          Room?            @relation(fields: [roomId], references: [id])
+  achievement   Achievement?     @relation(fields: [achievementId], references: [id])
+  xpAmount      Int?
+  type          NotificationType
+  isRead        Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  chestTypeId   String?
+  roomId        String?
+  achievementId String?
 }
 
 model UserCoinPackage {
@@ -221,11 +224,12 @@ model CoinPackage {
 }
 
 model Achievement {
-  id            String @id @default(cuid())
+  id            String         @id @default(cuid())
   image         String
-  type          String @unique
+  type          String         @unique
   unlockMessage String
   users         User[]
+  Notification  Notification[]
 }
 
 enum NotificationType {
@@ -234,6 +238,7 @@ enum NotificationType {
   XP_GAIN
   FRIEND_REQUEST
   TRADE_INVITE
+  ACHIEVEMENT
 }
 
 enum TradeStatus {

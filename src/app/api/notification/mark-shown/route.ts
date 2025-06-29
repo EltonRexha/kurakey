@@ -15,14 +15,15 @@ export async function POST(req: NextRequest) {
 
   if (!user) {
     return NextResponse.json(
-      { error: "You need to login to mark as read" },
+      { error: "You need to login to mark as shown" },
       { status: 401 }
     );
   }
 
   await prisma.notification.update({
     where: { id },
-    data: { isRead: true },
+    data: { shown: true },
   });
+
   return NextResponse.json({ success: true });
 }
