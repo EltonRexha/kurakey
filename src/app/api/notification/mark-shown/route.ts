@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const user = GetServerUser();
+  const user = await GetServerUser();
 
   if (!user) {
     return NextResponse.json(

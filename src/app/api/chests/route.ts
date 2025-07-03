@@ -47,8 +47,6 @@ export async function POST(request: Request) {
     );
   }
 
-  console.log(chestType);
-
   await prisma.$transaction([
     ...Array.from({ length: amount }).map(() =>
       prisma.chest.create({

@@ -1,12 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
-
-// Configure Cloudinary using environment variables.
-console.log("API key present?", {
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+import { NextRequest, NextResponse } from 'next/server';
+import { v2 as cloudinary } from 'cloudinary';
+import GetServerUser from '../../../../libs/GetServerUser';
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -22,11 +16,14 @@ cloudinary.config({
  */
 export async function POST(req: NextRequest) {
   try {
+    const user = await GetServerUser();
+
+    if (!user) {
+      return NextResponse.json({ message: 'unauthorized' }, { status: 401 });
+    }
+
     const { paramsToSign } = await req.json();
 
-    console.log(paramsToSign);
-
-    // Combine any incoming params (e.g. folder, public_id) with timestamp.
     const signature = cloudinary.utils.api_sign_request(
       { ...paramsToSign },
       process.env.CLOUDINARY_API_SECRET as string
@@ -34,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ signature });
   } catch (error) {
-    console.error("[cloudinary-sign]", error);
-    return new NextResponse("Failed to generate signature", { status: 500 });
+    console.error('[cloudinary-sign]', error);
+    return new NextResponse('Failed to generate signature', { status: 500 });
   }
 }

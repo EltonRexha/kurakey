@@ -1,12 +1,12 @@
-import React from "react";
-import Image from "next/image";
-import Room3D from "@/components/ui/3DRoom";
-import { getChestImage } from "@/utils/getChestImage";
-import Link from "next/link";
-import { Icon } from "@iconify/react";
-import { notFound } from "next/navigation";
-import prisma from "../../../../prisma/prisma";
-import { Rarity, RoomCategory } from "@/generated/prisma";
+import React from 'react';
+import Image from 'next/image';
+import Room3D from '@/components/ui/3DRoom';
+import { getChestImage } from '@/utils/getChestImage';
+import Link from 'next/link';
+import { Icon } from '@iconify/react';
+import { notFound } from 'next/navigation';
+import prisma from '../../../../prisma/prisma';
+import { Rarity, RoomCategory } from '@/generated/prisma';
 
 interface Room {
   id: string;
@@ -102,7 +102,7 @@ async function userOwnsRoom(roomId: string, userId: string) {
 async function isAllowedToView(room: Room) {
   const user = await GetServerUser();
 
-  if (room.category === "SECRET" || room.isSecret) {
+  if (room.category === 'SECRET' || room.isSecret) {
     if (!user) {
       return false;
     }
@@ -114,8 +114,8 @@ async function isAllowedToView(room: Room) {
   return true;
 }
 
-import { rarityColors, categoryColors } from "@/utils/colors";
-import GetServerUser from "../../../../libs/GetServerUser";
+import { rarityColors, categoryColors } from '@/utils/colors';
+import GetServerUser from '../../../../libs/GetServerUser';
 
 interface PageProps {
   searchParams: Promise<{ id?: string }>;
@@ -198,7 +198,7 @@ const page = async ({ searchParams }: PageProps) => {
             </h1>
             <div className="flex flex-wrap gap-6 text-neutral-400 mb-6">
               <div className="flex items-center bg-[#18173a]/50 px-4 py-2 rounded-lg border border-[#23224a] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_#008cff33] group">
-                <p className="mr-2">Category:</p>{" "}
+                <p className="mr-2">Category:</p>{' '}
                 <span
                   className="px-3 py-1 rounded-md font-medium transition-all duration-300"
                   style={{
@@ -237,7 +237,7 @@ const page = async ({ searchParams }: PageProps) => {
                     className="group flex items-center gap-4 bg-[#18173a] border border-[#23224a] rounded-lg p-4 transform transition-all duration-300 hover:scale-[1.02]"
                     style={
                       {
-                        "--hover-color": rarityColors[chest.rarity] + "33",
+                        '--hover-color': rarityColors[chest.rarity] + '33',
                       } as React.CSSProperties
                     }
                   >
@@ -249,7 +249,7 @@ const page = async ({ searchParams }: PageProps) => {
                             rarityColors[chest.rarity]
                           }22 0%, transparent 70%)`,
                         }}
-                      />{" "}
+                      />{' '}
                       <Image
                         src={getChestImage(chest.name)}
                         alt={chest.name}
@@ -271,7 +271,7 @@ const page = async ({ searchParams }: PageProps) => {
                           }33`,
                         }}
                       >
-                        {chest.chance}% Chance
+                        {Math.round(chest.chance * 10) / 10 === 0 ? '<0% Chance' : `${Math.round(chest.chance * 10) / 10}% Chance`}
                       </div>
                     </div>
                     <div
@@ -300,7 +300,7 @@ const page = async ({ searchParams }: PageProps) => {
                 <div className="group relative flex flex-col">
                   <div className="bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
                     <div className="relative h-48 w-full">
-                      {" "}
+                      {' '}
                       <Image
                         src={similarRoom.previewImageUrl}
                         alt={similarRoom.name}
@@ -312,7 +312,7 @@ const page = async ({ searchParams }: PageProps) => {
                     <div className="p-4">
                       <h3 className="text-xl font-semibold text-neutral-100 mb-2">
                         {similarRoom.name}
-                      </h3>{" "}
+                      </h3>{' '}
                       <p
                         className="text-sm"
                         style={{ color: categoryColors[similarRoom.category] }}
