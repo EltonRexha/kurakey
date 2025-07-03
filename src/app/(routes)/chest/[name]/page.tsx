@@ -145,7 +145,6 @@ const ChestPage = async ({ params }: ChestPageProps) => {
                           {Math.round(room.odds * 10) / 10 === 0
                             ? '<0% Chance'
                             : `${Math.round(room.odds * 10) / 10}% Chance`}
-                          % chance
                         </span>
                       </div>
                     </div>
