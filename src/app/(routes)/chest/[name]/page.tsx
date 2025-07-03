@@ -142,7 +142,10 @@ const ChestPage = async ({ params }: ChestPageProps) => {
                             color: rarityColors[room.rarity],
                           }}
                         >
-                          {room.odds}% chance
+                          {Math.round(room.odds * 10) / 10 === 0
+                            ? '<0% Chance'
+                            : `${Math.round(room.odds * 10) / 10}% Chance`}
+                          % chance
                         </span>
                       </div>
                     </div>
