@@ -149,15 +149,23 @@ model Bundle {
 model Trade {
   id String @id @default(cuid())
 
-  sender        User        @relation("sender", fields: [senderId], references: [id])
-  senderId      String      @map("userAId")
-  receiver      User        @relation("receiver", fields: [receiverId], references: [id])
-  receiverId    String
-  offeredRooms  UserRoom[]  @relation("tradeSenderRooms")
-  wantedRooms   UserRoom[]  @relation("tradeReceiverRooms")
-  offeredChests Chest[]     @relation("tradeSenderChests")
-  wantedChests  Chest[]     @relation("tradeReceiverChests")
-  status        TradeStatus @default(PENDING)
+  sender            User       @relation("sender", fields: [senderId], references: [id])
+  senderId          String
+  receiver          User       @relation("receiver", fields: [receiverId], references: [id])
+  receiverId        String
+  senderRooms       UserRoom[] @relation("tradeSenderRooms")
+  receiverRooms     UserRoom[] @relation("tradeReceiverRooms")
+  senderChests      Chest[]    @relation("tradeSenderChests")
+  receiverChests    Chest[]    @relation("tradeReceiverChests")
+  senderReady       Boolean    @default(false)
+  receiverReady     Boolean    @default(false)
+  senderConfirmed   Boolean    @default(false)
+  receiverConfirmed Boolean    @default(false)
+
+  status       TradeStatus    @default(PENDING)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Notification Notification[]
 }
 
 model CoinTransaction {
@@ -191,6 +199,7 @@ model Notification {
   chestType     ChestType?       @relation(fields: [chestTypeId], references: [id])
   room          Room?            @relation(fields: [roomId], references: [id])
   achievement   Achievement?     @relation(fields: [achievementId], references: [id])
+  trade         Trade?           @relation(fields: [tradeId], references: [id])
   xpAmount      Int?
   type          NotificationType
   isRead        Boolean          @default(false)
@@ -199,6 +208,7 @@ model Notification {
   chestTypeId   String?
   roomId        String?
   achievementId String?
+  tradeId       String?
 }
 
 model UserCoinPackage {

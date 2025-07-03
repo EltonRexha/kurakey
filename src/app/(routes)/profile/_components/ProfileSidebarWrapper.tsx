@@ -1,9 +1,9 @@
-import prisma from "../../../../../prisma/prisma";
-import ProfileSidebar from "./ProfileSidebar";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import { redirect } from "next/navigation";
-import { RoomCategory, Rarity } from "@/generated/prisma";
+import prisma from '../../../../../prisma/prisma';
+import ProfileSidebar from './ProfileSidebar';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
+import { redirect } from 'next/navigation';
+import { RoomCategory, Rarity } from '@/generated/prisma';
 
 interface ProfileSidebarWrapperProps {
   userId: string;
@@ -23,7 +23,7 @@ export default async function ProfileSidebarWrapper({
   });
 
   if (!dbUser) {
-    redirect("/not-found");
+    redirect('/not-found');
   }
 
   // Derive unlocked categories
@@ -37,13 +37,14 @@ export default async function ProfileSidebarWrapper({
   return (
     <ProfileSidebar
       username={dbUser.username}
-      imageUrl={dbUser.image ?? "/placeholder-avatar.png"}
+      imageUrl={dbUser.image ?? '/placeholder-avatar.png'}
       xp={dbUser.xp}
       achievements={dbUser.achievements}
       joined={dbUser.createdAt.toISOString()}
       isLoggedUser={loggedUserId === userId}
       categories={[...categoriesSet] as RoomCategory[]}
       rarities={[...raritiesSet] as Rarity[]}
+      id={dbUser.id}
     />
   );
 }

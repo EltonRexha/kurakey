@@ -5,12 +5,13 @@ import { UploadCloud } from 'lucide-react';
 import { CldUploadWidget } from 'next-cloudinary';
 import LevelBar from './LevelBar';
 import AchievementGrid from './AchievementGrid';
-import getLevel, { MAX_LEVEL } from '@/../libs/getLevel';
+import getLevel, { MAX_LEVEL, MIN_LEVEL_TRADE } from '@/../libs/getLevel';
 import StarsButton from '@/components/ui/StarsButton';
 import { categoryColors, rarityColors } from '@/utils/colors';
 import { RoomCategory, Rarity, Achievement } from '@/generated/prisma';
 import { updateProfileImage } from '../../../../../libs/api/user';
 import { useRouter } from 'next/navigation';
+import TradeBtn from './TradeBtn';
 
 interface ProfileSidebarProps {
   username: string;
@@ -21,6 +22,7 @@ interface ProfileSidebarProps {
   isLoggedUser: boolean;
   categories: RoomCategory[];
   rarities: Rarity[];
+  id: string;
 }
 
 const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
@@ -32,6 +34,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
   isLoggedUser,
   categories,
   rarities,
+  id,
 }) => {
   const levelNum = Number(getLevel(xp));
   const isMax = levelNum >= MAX_LEVEL;
@@ -177,9 +180,14 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
       <p className="text-xs text-neutral-400 mt-4">
         Joined: {new Date(joined).toLocaleDateString()}
       </p>
-      {!isLoggedUser && (
-        <StarsButton className="w-full mt-4">Invite To Trade</StarsButton>
-      )}
+      {!isLoggedUser &&
+        (levelNum >= MIN_LEVEL_TRADE ? (
+          <TradeBtn receiverId={id} />
+        ) : (
+          <StarsButton className="w-full mt-4" disabled>
+            Must reach level {MIN_LEVEL_TRADE} to trade
+          </StarsButton>
+        ))}
     </aside>
   );
 };

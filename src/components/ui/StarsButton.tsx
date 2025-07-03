@@ -33,7 +33,7 @@ const StarsButton: React.FC<StarsButtonProps> = ({
           background: bgColor,
           border: `3px solid ${borderColor}`,
           ...(disabled
-            ? { color: '#b0b0b0', background: bgColor, borderColor }
+            ? { color: '#FFFFFF', background: bgColor, borderColor }
             : {}),
           '--btn-bg': bgColor,
         } as React.CSSProperties

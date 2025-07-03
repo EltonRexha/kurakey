@@ -1,4 +1,5 @@
 export const MAX_LEVEL = 10;
+export const MIN_LEVEL_TRADE = 3;
 
 const Levels: Record<number, { xp: number }> = {
   1: { xp: 0 },
@@ -17,7 +18,9 @@ export const getLevel = (xp: number) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const level = Object.entries(Levels).find(([_, level]) => level.xp >= xp);
   if (xp > Levels[MAX_LEVEL].xp) return MAX_LEVEL;
-  return level?.[0] || 1;
+
+  const lvl = level?.[0];
+  return lvl ? parseInt(lvl) : 1;
 };
 
 export default getLevel;

@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   const body = BuyChestSchema.safeParse(json);
 
   if (body.error) {
-    return NextResponse.json(body.data, { status: 400 });
+    return NextResponse.json(body.error, { status: 400 });
   }
 
   const user = await GetServerUser();
