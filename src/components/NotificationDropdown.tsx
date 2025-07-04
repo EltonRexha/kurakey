@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getChestImage } from '@/utils/getChestImage';
 import axios from '../../libs/axios';
+import ShineButton from './ui/common/ShineButton';
 
 interface Room {
   name: string;
@@ -204,7 +205,36 @@ const NotificationDropdown = () => {
                 </div>
               );
             }
-            // Other notification types (XP_GAIN, FRIEND_REQUEST, TRADE_INVITE, etc)
+
+            if (notif.type === 'TRADE_INVITE') {
+              return (
+                <div
+                  key={notif.id}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                >
+                  <div>
+                    <div className="text-[#fbbf24] text-xs font-bold">
+                      {notif.message}
+                    </div>
+                    <div className="text-neutral-400 text-xs">
+                      {new Date(notif.createdAt).toLocaleString()}
+                    </div>
+                    <div className="mt-2 mb-2">
+                      <ShineButton
+                        style={{
+                          height: '30px',
+                        }}
+                      >
+                        View Trade
+                      </ShineButton>
+                    </div>
+
+                    {!notif.isRead && markRead}
+                  </div>
+                </div>
+              );
+            }
+            // Other notification types (XP_GAIN, FRIEND_REQUEST, etc)
 
             return (
               <div

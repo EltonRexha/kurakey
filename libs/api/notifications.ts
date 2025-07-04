@@ -17,6 +17,9 @@ export interface Notification {
     image: string;
     unlockedImage: string;
   };
+  trade: {
+    id: string
+  }
 }
 
 export async function getUnShownNotifications() {

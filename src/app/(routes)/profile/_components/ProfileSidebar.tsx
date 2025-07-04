@@ -22,7 +22,8 @@ interface ProfileSidebarProps {
   isLoggedUser: boolean;
   categories: RoomCategory[];
   rarities: Rarity[];
-  id: string;
+  profileId: string;
+  currentUserXp?: number;
 }
 
 const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
@@ -34,7 +35,8 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
   isLoggedUser,
   categories,
   rarities,
-  id,
+  profileId,
+  currentUserXp,
 }) => {
   const levelNum = Number(getLevel(xp));
   const isMax = levelNum >= MAX_LEVEL;
@@ -181,8 +183,9 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
         Joined: {new Date(joined).toLocaleDateString()}
       </p>
       {!isLoggedUser &&
-        (levelNum >= MIN_LEVEL_TRADE ? (
-          <TradeBtn receiverId={id} />
+        currentUserXp &&
+        (getLevel(currentUserXp) >= MIN_LEVEL_TRADE ? (
+          <TradeBtn receiverId={profileId} />
         ) : (
           <StarsButton className="w-full mt-4" disabled>
             Must reach level {MIN_LEVEL_TRADE} to trade

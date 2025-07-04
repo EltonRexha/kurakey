@@ -10,7 +10,7 @@ const CreateTradeSchema = z.object({
 });
 
 const DAYS_COOL_DOWN_RESET = 3;
-const COOL_DOWN_TRADES_AMOUNT = 2;
+const COOL_DOWN_TRADES_AMOUNT = 42;
 
 export async function POST(request: Request) {
   const user = await GetServerUser();
@@ -37,6 +37,23 @@ export async function POST(request: Request) {
 
   const { receiverUserId } = body.data;
 
+  if (receiverUserId === user.id) {
+    return NextResponse.json(
+      { message: 'You cannot sent a trade invite to your self' },
+      { status: 400 }
+    );
+  }
+
+  const receiver = await prisma.user.findUnique({
+    where: {
+      id: receiverUserId,
+    },
+  });
+
+  if (!receiver) {
+    return NextResponse.json({ message: 'User not found' }, { status: 404 });
+  }
+
   const threeDaysAgo = subDays(new Date(), DAYS_COOL_DOWN_RESET);
 
   //Trades these 3 days
@@ -60,25 +77,63 @@ export async function POST(request: Request) {
     );
   }
 
-  const trade = await prisma.trade.create({
-    data: {
-      sender: {
-        connect: {
-          id: user.id,
+  const result = await prisma.$transaction(async (tx) => {
+    const trade = await tx.trade.create({
+      data: {
+        sender: {
+          connect: {
+            id: user.id,
+          },
+        },
+        receiver: {
+          connect: {
+            id: receiverUserId,
+          },
         },
       },
-      receiver: {
-        connect: {
-          id: receiverUserId,
+    });
+
+    const receiverNotification = await tx.notification.create({
+      data: {
+        message: `${user.username} invited you to trade`,
+        type: 'TRADE_INVITE',
+        trade: {
+          connect: {
+            id: trade.id,
+          },
+        },
+        user: {
+          connect: {
+            id: receiverUserId,
+          },
         },
       },
-    },
+    });
+
+    const senderNotification = await tx.notification.create({
+      data: {
+        message: `you've invited ${receiver?.username} to trade`,
+        type: 'TRADE_INVITE',
+        trade: {
+          connect: {
+            id: trade.id,
+          },
+        },
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    });
+
+    return { trade, receiverNotification, senderNotification };
   });
 
   return NextResponse.json(
     {
       message: 'Trade successfully created',
-      tradeId: trade.id,
+      tradeId: result.trade.id,
     },
     { status: 200 }
   );

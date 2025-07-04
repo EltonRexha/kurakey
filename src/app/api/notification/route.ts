@@ -25,7 +25,12 @@ export async function GET(req: NextRequest) {
     include: {
       chestType: true,
       room: true,
-      achievement: true
+      achievement: true,
+      trade: {
+        select: {
+          id: true,
+        },
+      },
     },
     skip,
     take: pageSize,

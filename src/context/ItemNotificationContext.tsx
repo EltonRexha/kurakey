@@ -14,6 +14,7 @@ export interface ItemNotification {
   chestImage?: StaticImageData;
   roomImage?: string;
   achievementImage?: string;
+  tradeId?: string;
 }
 
 interface ItemNotificationContextType {
@@ -21,6 +22,7 @@ interface ItemNotificationContextType {
   addChest: (message: string, chestTypeName: string) => Promise<void>;
   addXP: (xpAmount: number) => void;
   addAchievement: (message: string, imageUrl: string) => void;
+  addTrade: (message: string, tradeId: string) => void;
 }
 
 const ItemNotificationContext = createContext<
@@ -101,9 +103,25 @@ export const ItemNotificationProvider: React.FC<{
     [removeNotification]
   );
 
+  const addTrade = useCallback(
+    (message: string, tradeId: string) => {
+      const id = Math.random().toString(36).slice(2);
+      setNotifications((prev) => [
+        ...prev,
+        {
+          id,
+          message,
+          tradeId,
+        },
+      ]);
+      setTimeout(() => removeNotification(id), 5000);
+    },
+    [removeNotification]
+  );
+
   return (
     <ItemNotificationContext.Provider
-      value={{ addChest, addXP, addRoom, addAchievement }}
+      value={{ addChest, addXP, addRoom, addAchievement, addTrade }}
     >
       <ItemNotificationContainer
         notifications={notifications}

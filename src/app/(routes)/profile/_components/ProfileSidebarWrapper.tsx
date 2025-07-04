@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import { redirect } from 'next/navigation';
 import { RoomCategory, Rarity } from '@/generated/prisma';
+import GetServerUser from '../../../../../libs/GetServerUser';
 
 interface ProfileSidebarWrapperProps {
   userId: string;
@@ -14,6 +15,7 @@ export default async function ProfileSidebarWrapper({
 }: ProfileSidebarWrapperProps) {
   // Get currently logged-in user to determine if viewing own profile
   const session = await getServerSession(authOptions);
+  const user = await GetServerUser();
   const loggedUserId = session?.user?.id;
 
   // Fetch user with achievements
@@ -44,7 +46,8 @@ export default async function ProfileSidebarWrapper({
       isLoggedUser={loggedUserId === userId}
       categories={[...categoriesSet] as RoomCategory[]}
       rarities={[...raritiesSet] as Rarity[]}
-      id={dbUser.id}
+      profileId={dbUser.id}
+      currentUserXp={user?.xp}
     />
   );
 }

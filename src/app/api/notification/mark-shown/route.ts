@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../prisma/prisma";
 import GetServerUser from "../../../../../libs/GetServerUser";
 
-export async function POST(req: NextRequest) {
-  const { id } = await req.json();
+export async function POST(request: NextRequest) {
+  const { id } = await request.json();
   if (!id) {
     return NextResponse.json(
       { error: "Missing notification id" },

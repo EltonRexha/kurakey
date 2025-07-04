@@ -17,7 +17,8 @@ interface Props {
 const POLL_INTERVAL_MS = 5_000;
 
 const NotificationsProvider: React.FC<Props> = ({ children }) => {
-  const { addChest, addXP, addRoom, addAchievement } = useItemNotification();
+  const { addChest, addXP, addRoom, addAchievement, addTrade } =
+    useItemNotification();
   const [isReady, setIsReady] = useState(false);
   const mounted = useMounted();
 
@@ -28,7 +29,10 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
     staleTime: 0,
   });
 
+  console.log('rendered');
+
   useEffect(() => {
+    console.log('Hello');
     if (mounted) {
       const loadingElement = document.getElementById('loading');
       setIsReady(!loadingElement);
@@ -36,7 +40,10 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
   }, [mounted, data]);
 
   useEffect(() => {
+    console.log(data);
+
     if (!data || data.length === 0 || !isReady) return;
+
 
     data.forEach((notification: Notification) => {
       switch (notification.type) {
@@ -53,13 +60,15 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
           break;
         case 'ACHIEVEMENT':
           addAchievement(notification.message, notification.achievement.image);
+        case 'TRADE_INVITE':
+          addTrade(notification.message, notification.trade.id);
       }
     });
 
     data.map((n) => {
       markNotificationsAsShown(n.id);
     });
-  }, [data, addChest, addXP, addRoom, isReady, addAchievement]);
+  }, [data, addChest, addXP, addRoom, isReady, addAchievement, addTrade]);
 
   return <>{children}</>;
 };
