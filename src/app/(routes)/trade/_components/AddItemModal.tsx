@@ -6,8 +6,10 @@ import FullscreenModal from './FullscreenModal';
 import { Minus, Plus } from 'lucide-react';
 import ChestCard from '@/app/(routes)/profile/_components/ChestCard';
 import RoomCard from '@/app/(routes)/profile/_components/RoomCard';
-import GlowingButton from '@/components/ui/common/GlowingButton';
 import { useTradeData } from './TradeContext';
+import { MoonLoader } from 'react-spinners';
+import aggregateChests from '../_utils/aggregateChests';
+import aggregateRooms from '../_utils/aggregateRooms';
 
 interface AddItemModalProps {
   isOpen: boolean;
@@ -17,41 +19,17 @@ interface AddItemModalProps {
 // This component is purely UI. Local state is used so that the + / – buttons
 // feel interactive, but nothing gets persisted back to the mock context.
 const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
-  const trade = useTradeData();
+  const { trade, isLoading: tradeLoading } = useTradeData();
 
   const [chests, setChests] = useState(
-    trade.senderChests.map((c) => ({ ...c, selected: 0 }))
+    aggregateChests(trade?.senderChests ?? []).map((c) => ({ ...c, selected: 0 }))
   );
   const [rooms, setRooms] = useState(
-    trade.senderRooms.map((r) => ({ ...r, selected: 0 }))
+    aggregateRooms(trade?.senderRooms ?? []).map((r) => ({ ...r, selected: 0 }))
   );
 
-  const inc = (
-    arr: any[],
-    setArr: React.Dispatch<React.SetStateAction<any[]>>,
-    idx: number,
-    max: number
-  ) =>
-    setArr(
-      arr.map((item, i) =>
-        i === idx
-          ? { ...item, selected: Math.min(item.selected + 1, max) }
-          : item
-      )
-    );
 
-  const dec = (
-    arr: any[],
-    setArr: React.Dispatch<React.SetStateAction<any[]>>,
-    idx: number
-  ) =>
-    setArr(
-      arr.map((item, i) =>
-        i === idx ? { ...item, selected: Math.max(item.selected - 1, 0) } : item
-      )
-    );
 
-  // Responsive column calculation similar to InventoryGrid
   const [cols, setCols] = useState(1);
 
   useEffect(() => {
@@ -68,6 +46,16 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  if (tradeLoading || !trade) {
+    return (
+      <FullscreenModal isOpen={isOpen} onClose={onClose}>
+        <div className="flex items-center justify-center min-h-full p-6">
+          <MoonLoader color="#008cff" size={80} speedMultiplier={0.9} />
+        </div>
+      </FullscreenModal>
+    );
+  }
 
   return (
     <FullscreenModal isOpen={isOpen} onClose={onClose}>
@@ -87,8 +75,8 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
           rooms={rooms}
           setChests={setChests}
           setRooms={setRooms}
-          inc={inc}
-          dec={dec}
+          inc={() => { }}
+          dec={() => { }}
         />
 
       </div>
@@ -98,10 +86,48 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
 
 interface ItemSelectionGridProps {
   cols: number;
-  chests: any[];
-  rooms: any[];
-  setChests: React.Dispatch<React.SetStateAction<any[]>>;
-  setRooms: React.Dispatch<React.SetStateAction<any[]>>;
+  chests: {
+    selected: number;
+    type: "chest";
+    data: {
+      name: string;
+      count: number;
+      id: string;
+    };
+  }[];
+  rooms: {
+    selected: number;
+    type: "room";
+    data: {
+      name: string;
+      image: string;
+      rarity: string;
+      category: string;
+      count: number;
+      id: string;
+    };
+  }[];
+  setChests: React.Dispatch<React.SetStateAction<{
+    selected: number;
+    type: "chest";
+    data: {
+      name: string;
+      count: number;
+      id: string;
+    };
+  }[]>>;
+  setRooms: React.Dispatch<React.SetStateAction<{
+    selected: number;
+    type: "room";
+    data: {
+      name: string;
+      image: string;
+      rarity: string;
+      category: string;
+      count: number;
+      id: string;
+    };
+  }[]>>;
   inc: (
     arr: any[],
     setArr: React.Dispatch<React.SetStateAction<any[]>>,
@@ -135,9 +161,9 @@ const ItemSelectionGrid: React.FC<ItemSelectionGridProps> = ({
       style={{ gridTemplateColumns: `repeat(${cols}, minmax(130px, 1fr))` }}
     >
       {chests.map((c, idx) => (
-        <div key={c.id} className="flex flex-col items-center">
+        <div key={c.data.id} className="flex flex-col items-center">
           <div className="aspect-square min-w-full">
-            <ChestCard name={c.name} count={c.count} />
+            <ChestCard name={c.data.name} count={c.data.count} />
           </div>
           <div className="flex items-center gap-2 mt-2">
             <button
@@ -151,7 +177,7 @@ const ItemSelectionGrid: React.FC<ItemSelectionGridProps> = ({
             </span>
             <button
               className="p-1.5 bg-emerald-600/20 border border-emerald-500 rounded hover:bg-emerald-600/30 cursor-pointer"
-              onClick={() => inc(chests, setChests, idx, c.count)}
+              onClick={() => inc(chests, setChests, idx, c.data.count)}
             >
               <Plus size={16} color="white" />
             </button>
@@ -160,14 +186,14 @@ const ItemSelectionGrid: React.FC<ItemSelectionGridProps> = ({
       ))}
 
       {rooms.map((r, idx) => (
-        <div key={r.id} className="flex flex-col items-center">
+        <div key={r.data.id} className="flex flex-col items-center">
           <div className="aspect-square w-full">
             <RoomCard
-              name={r.name}
-              image={r.image}
-              rarity={r.rarity}
-              category={r.category as any}
-              count={r.count}
+              name={r.data.name}
+              image={r.data.image}
+              rarity={r.data.rarity}
+              category={r.data.category as any}
+              count={r.data.count}
             />
           </div>
           <div className="flex items-center gap-2 mt-2">
@@ -182,7 +208,7 @@ const ItemSelectionGrid: React.FC<ItemSelectionGridProps> = ({
             </span>
             <button
               className="p-1.5 bg-rose-600/20 border border-rose-500 rounded hover:bg-rose-600/30 cursor-pointer"
-              onClick={() => inc(rooms, setRooms, idx, r.count)}
+              onClick={() => inc(rooms, setRooms, idx, r.data.count)}
             >
               <Plus size={16} color="white" />
             </button>

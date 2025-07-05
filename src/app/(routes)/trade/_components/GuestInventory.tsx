@@ -6,16 +6,27 @@ import { useTradeData } from './TradeContext';
 import Avatar from '@/components/ui/common/Avatar';
 import aggregateChests from '../_utils/aggregateChests';
 import aggregateRooms from '../_utils/aggregateRooms';
+import { MoonLoader } from 'react-spinners';
 
 
 const GuestInventory: React.FC = () => {
-  const trade = useTradeData();
+  const { trade, isLoading: tradeLoading } = useTradeData();
+
+  if (tradeLoading || !trade) {
+    return (
+      <div className="bg-[#0d1024]/30 border border-[#11142d] rounded-lg p-5 w-full flex items-center justify-center h-[450px]">
+        <MoonLoader color="#008cff" size={60} speedMultiplier={0.9} />
+      </div>
+    );
+  }
+
   const guest = trade.receiver;
 
   const chestAgg = aggregateChests(trade.receiverChests);
   const roomAgg = aggregateRooms(trade.receiverRooms);
 
   const items = [...chestAgg, ...roomAgg];
+
 
   return (
     <div className="bg-[#0d1024]/30 border border-[#11142d] rounded-lg p-5 w-full">

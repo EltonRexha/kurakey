@@ -52,7 +52,7 @@ const page = async ({ searchParams }: PageProps) => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 pb-8 pt-16">
-      <TradeWrapper />
+      <TradeWrapper tradeId={params.id as string} />
     </div>
   );
 };

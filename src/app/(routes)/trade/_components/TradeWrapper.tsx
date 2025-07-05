@@ -8,11 +8,11 @@ import GuestInventory from './GuestInventory';
 import arrows from '@/assets/images/other/arrows.png';
 import FillButton from '@/components/ui/common/FillButton';
 
-const TradeWrapper: React.FC = () => {
+const TradeWrapper: React.FC<{ tradeId: string }> = ({ tradeId }) => {
   return (
-    <TradeProvider>
+    <TradeProvider tradeId={tradeId}>
       <div className="flex flex-col items-center gap-6">
-        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 w-[90%] lg:w-auto">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 w-[90%] lg:w-full">
           <UserInventory />
 
           <div className="flex flex-col items-center justify-center flex-shrink-0 self-center">
