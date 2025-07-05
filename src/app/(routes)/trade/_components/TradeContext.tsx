@@ -1,89 +1,98 @@
 'use client';
 
 import React, { createContext, useContext } from 'react';
+import { TradeApiResponse } from '../../../../../libs/api/trade';
 
-export interface Chest {
-  id: string;
-  name: string;
-  count: number;
-}
+// Matches EXACTLY the shape returned by GET /api/trade/[id]
 
-export interface Room {
-  id: string;
-  name: string;
-  image: string;
-  rarity: string;
-  category: string;
-  count: number;
-}
+// --- Mock -------------------------------------------------------------------
 
-interface UserData {
-  id: string;
-  username: string;
-  image: string;
-  ready: boolean;
-  chests: Chest[];
-  rooms: Room[];
-}
-
-interface TradeData {
-  user: UserData;
-  guest: UserData;
-  status: 'PENDING' | 'READY' | 'COMPLETED';
-}
-
-// Mocked trade data – nothing here changes, it is purely for UI demonstration purposes.
-const mockTradeData: TradeData = {
-  user: {
+const mockTradeApi: TradeApiResponse = {
+  id: 'trade-123',
+  sender: {
     id: 'user-1',
     username: 'You',
     image: '/placeholder-avatar.png',
-    ready: false,
-    chests: [
-      { id: 'c1', name: 'Starter', count: 2 },
-      { id: 'c2', name: 'Elite', count: 1 },
-    ],
-    rooms: [
-      {
-        id: 'r1',
-        name: 'Galaxy Gate',
-        image: '/room-previews/galaxyGate.png',
-        rarity: 'RARE',
-        category: 'COSMIC',
-        count: 1,
-      },
-    ],
   },
-  guest: {
+  receiver: {
     id: 'user-2',
     username: 'GuestUser',
     image: '/placeholder-avatar.png',
-    ready: true,
-    chests: [{ id: 'c3', name: 'Advanced', count: 1 }],
-    rooms: [
-      {
-        id: 'r2',
-        name: 'Sakura Drift',
-        image: '/room-previews/sakuraDrift.png',
-        rarity: 'COMMON',
-        category: 'ZEN',
-        count: 1,
-      },
-    ],
   },
+  senderChests: [
+    {
+      id: 'c1',
+      opened: false,
+      type: { id: 'ct1', name: 'Starter', price: 0, xpGain: 10 },
+    },
+    {
+      id: 'c2',
+      opened: false,
+      type: { id: 'ct2', name: 'Elite', price: 0, xpGain: 20 },
+    },
+  ],
+  receiverChests: [
+    {
+      id: 'c3',
+      opened: false,
+      type: { id: 'ct3', name: 'Advanced', price: 0, xpGain: 15 },
+    },
+  ],
+  senderRooms: [
+    {
+      id: 'ur1',
+      roomId: 'room1',
+      room: {
+        id: 'room1',
+        name: 'Galaxy Gate',
+        category: 'COSMIC',
+        rarity: 'RARE',
+        previewImageUrl: '/room-previews/galaxyGate.png',
+        assetUrl: '/rooms/galaxyGate.glb',
+      },
+    },
+    {
+      id: 'ur1123123',
+      roomId: 'room1',
+      room: {
+        id: 'room1',
+        name: 'Galaxy Gate',
+        category: 'COSMIC',
+        rarity: 'RARE',
+        previewImageUrl: '/room-previews/galaxyGate.png',
+        assetUrl: '/rooms/galaxyGate.glb',
+      },
+    },
+  ],
+  receiverRooms: [
+    {
+      id: 'ur2',
+      roomId: 'room2',
+      room: {
+        id: 'room2',
+        name: 'Sakura Drift',
+        category: 'ZEN',
+        rarity: 'COMMON',
+        previewImageUrl: '/room-previews/sakuraDrift.png',
+        assetUrl: '/rooms/sakuraDrift.glb',
+      },
+    },
+  ],
+  senderReady: false,
+  receiverReady: true,
+  senderConfirmed: false,
+  receiverConfirmed: false,
   status: 'PENDING',
 };
 
-export const TradeContext = createContext<TradeData>(mockTradeData);
+// --- Context ----------------------------------------------------------------
+
+export const TradeContext = createContext<TradeApiResponse>(mockTradeApi);
 
 export const TradeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => {
-  return (
-    <TradeContext.Provider value={mockTradeData}>
-      {children}
-    </TradeContext.Provider>
-  );
-};
+}) => (
+  <TradeContext.Provider value={mockTradeApi}>{children}</TradeContext.Provider>
+);
 
 export const useTradeData = () => useContext(TradeContext);

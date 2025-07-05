@@ -2,13 +2,14 @@ import React from 'react';
 import GetServerUser from '../../../../libs/GetServerUser';
 import prisma from '../../../../prisma/prisma';
 import TradeWrapper from './_components/TradeWrapper';
+import { redirect } from 'next/navigation';
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-async function userInTrade(userId: string, tradeId: string) {
-  return !!(await prisma.trade.findUnique({
+async function fetchUserTrade(userId: string, tradeId: string) {
+  return await prisma.trade.findUnique({
     where: {
       id: tradeId,
       OR: [
@@ -24,7 +25,7 @@ async function userInTrade(userId: string, tradeId: string) {
         },
       ],
     },
-  }));
+  });
 }
 
 const page = async ({ searchParams }: PageProps) => {
@@ -39,10 +40,14 @@ const page = async ({ searchParams }: PageProps) => {
     throw new Error('User not found');
   }
 
-  const canView = await userInTrade(user.id, params.id as string);
+  const trade = await fetchUserTrade(user.id, params.id as string);
 
-  if (!canView) {
+  if (!trade) {
     return 'Trade not found';
+  }
+
+  if (trade.status === 'COMPLETED') {
+    return redirect(`/trade/completed?id=${trade.id}`);
   }
 
   return (

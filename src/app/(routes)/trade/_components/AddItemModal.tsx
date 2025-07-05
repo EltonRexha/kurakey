@@ -17,13 +17,13 @@ interface AddItemModalProps {
 // This component is purely UI. Local state is used so that the + / – buttons
 // feel interactive, but nothing gets persisted back to the mock context.
 const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
-  const { user } = useTradeData();
+  const trade = useTradeData();
 
   const [chests, setChests] = useState(
-    user.chests.map((c) => ({ ...c, selected: 0 }))
+    trade.senderChests.map((c) => ({ ...c, selected: 0 }))
   );
   const [rooms, setRooms] = useState(
-    user.rooms.map((r) => ({ ...r, selected: 0 }))
+    trade.senderRooms.map((r) => ({ ...r, selected: 0 }))
   );
 
   const inc = (

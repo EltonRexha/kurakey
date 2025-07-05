@@ -4,14 +4,18 @@ import React from 'react';
 import InventoryGrid from './InventoryGrid';
 import { useTradeData } from './TradeContext';
 import Avatar from '@/components/ui/common/Avatar';
+import aggregateChests from '../_utils/aggregateChests';
+import aggregateRooms from '../_utils/aggregateRooms';
+
 
 const GuestInventory: React.FC = () => {
-  const { guest } = useTradeData();
+  const trade = useTradeData();
+  const guest = trade.receiver;
 
-  const items = [
-    ...guest.chests.map((c) => ({ type: 'chest' as const, data: c })),
-    ...guest.rooms.map((r) => ({ type: 'room' as const, data: r })),
-  ];
+  const chestAgg = aggregateChests(trade.receiverChests);
+  const roomAgg = aggregateRooms(trade.receiverRooms);
+
+  const items = [...chestAgg, ...roomAgg];
 
   return (
     <div className="bg-[#0d1024]/30 border border-[#11142d] rounded-lg p-5 w-full">
@@ -28,8 +32,8 @@ const GuestInventory: React.FC = () => {
       {/* Status */}
       <div className="mt-4 text-neutral-100 font-semibold text-center">
         Status:{' '}
-        <span className={guest.ready ? 'text-emerald-500' : 'text-red-500'}>
-          {guest.ready ? 'Ready' : 'Unready'}
+        <span className={trade.receiverReady ? 'text-emerald-500' : 'text-red-500'}>
+          {trade.receiverReady ? 'Ready' : 'Unready'}
         </span>
       </div>
     </div>

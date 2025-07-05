@@ -41,6 +41,8 @@ const InventoryGrid: React.FC<InventoryGridProps> = ({ items }) => {
   const totalSlots = cols * 3; // 3 rows
   const placeholders = Math.max(totalSlots - items.length, 0);
 
+  console.log(items);
+
   return (
     <div
       className="grid gap-2 overflow-y-auto h-[320px] grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4"

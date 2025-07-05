@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getChestImage } from '@/utils/getChestImage';
 import axios from '../../libs/axios';
-import ShineButton from './ui/common/ShineButton';
 import FillButton from './ui/common/FillButton';
 import Link from 'next/link';
 
