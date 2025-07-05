@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import { ItemNotification as ItemNotificationType } from '@/context/ItemNotificationContext';
 import Link from 'next/link';
 import ShineButton from './ShineButton';
+import FillButton from './FillButton';
 
 interface Props {
   notification: ItemNotificationType;
@@ -61,7 +62,9 @@ export const ItemNotification: React.FC<Props> = ({
             href={`/trade?id=${notification.tradeId}`}
             className="inline-block mt-2 w-full"
           >
-            <ShineButton type="button">View Trade</ShineButton>
+            <FillButton type="button" className="h-8" fullWidth>
+              View Trade
+            </FillButton>
           </Link>
         )}
       </div>

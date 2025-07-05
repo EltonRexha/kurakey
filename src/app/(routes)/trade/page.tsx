@@ -1,6 +1,7 @@
 import React from 'react';
 import GetServerUser from '../../../../libs/GetServerUser';
 import prisma from '../../../../prisma/prisma';
+import TradeWrapper from './_components/TradeWrapper';
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -44,7 +45,11 @@ const page = async ({ searchParams }: PageProps) => {
     return 'Trade not found';
   }
 
-  return <div>Trade found</div>;
+  return (
+    <div className="max-w-6xl mx-auto px-4 pb-8 pt-16">
+      <TradeWrapper />
+    </div>
+  );
 };
 
 export default page;

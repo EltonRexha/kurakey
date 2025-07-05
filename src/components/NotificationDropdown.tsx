@@ -5,6 +5,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getChestImage } from '@/utils/getChestImage';
 import axios from '../../libs/axios';
 import ShineButton from './ui/common/ShineButton';
+import FillButton from './ui/common/FillButton';
+import Link from 'next/link';
 
 interface Room {
   name: string;
@@ -22,6 +24,9 @@ interface Notification {
   achievement?: {
     image: string;
     unlockMessage: string;
+  };
+  trade?: {
+    id: string;
   };
 }
 
@@ -220,13 +225,14 @@ const NotificationDropdown = () => {
                       {new Date(notif.createdAt).toLocaleString()}
                     </div>
                     <div className="mt-2 mb-2">
-                      <ShineButton
-                        style={{
-                          height: '30px',
-                        }}
-                      >
-                        View Trade
-                      </ShineButton>
+                      <Link href={`/trade?id=${notif.trade?.id}`}>
+                        <FillButton
+                          fullWidth
+                          className="h-8"
+                        >
+                          View Trade
+                        </FillButton>
+                      </Link>
                     </div>
 
                     {!notif.isRead && markRead}

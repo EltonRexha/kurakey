@@ -29,10 +29,7 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
     staleTime: 0,
   });
 
-  console.log('rendered');
-
   useEffect(() => {
-    console.log('Hello');
     if (mounted) {
       const loadingElement = document.getElementById('loading');
       setIsReady(!loadingElement);
@@ -40,10 +37,7 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
   }, [mounted, data]);
 
   useEffect(() => {
-    console.log(data);
-
     if (!data || data.length === 0 || !isReady) return;
-
 
     data.forEach((notification: Notification) => {
       switch (notification.type) {
@@ -60,8 +54,10 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
           break;
         case 'ACHIEVEMENT':
           addAchievement(notification.message, notification.achievement.image);
+          break;
         case 'TRADE_INVITE':
           addTrade(notification.message, notification.trade.id);
+          break;
       }
     });
 
