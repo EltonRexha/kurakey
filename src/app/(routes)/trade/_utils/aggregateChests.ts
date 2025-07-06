@@ -1,7 +1,18 @@
 import { TradeChest } from '../../../../../libs/api/trade';
 
+export interface AggregatedChest {
+  type: 'chest';
+  data: {
+    name: string;
+    count: number;
+    id: string;
+  };
+}
+
 // helper to aggregate chests by type name
-export default function aggregateChests(chests: TradeChest[]) {
+export default function aggregateChests(
+  chests: TradeChest[]
+): AggregatedChest[] {
   const map = new Map<string, { name: string; count: number; id: string }>();
   chests.forEach((c) => {
     const key = c.type.name;

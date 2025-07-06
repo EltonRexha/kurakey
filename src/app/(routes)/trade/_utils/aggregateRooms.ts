@@ -1,6 +1,19 @@
 import { TradeRoom } from '../../../../../libs/api/trade';
 
-export default function aggregateRooms(rooms: TradeRoom[]) {
+export interface AggregatedRoom {
+  type: 'room';
+  data: {
+    name: string;
+    image: string;
+    rarity: string;
+    category: string;
+    count: number;
+    id: string;
+    roomId: string;
+  };
+}
+
+export default function aggregateRooms(rooms: TradeRoom[]): AggregatedRoom[] {
   const map = new Map<
     string,
     { room: TradeRoom['room']; count: number; id: string }

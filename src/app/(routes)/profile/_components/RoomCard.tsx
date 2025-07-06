@@ -9,15 +9,16 @@ interface RoomCardProps {
   rarity: string;
   category: RoomCategory;
   count: number;
+  countMessage?: string;
 }
 
-const RoomCard: React.FC<RoomCardProps> = ({ name, image, rarity, category, count }) => {
+const RoomCard: React.FC<RoomCardProps> = ({ name, image, rarity, category, count, countMessage }) => {
   return (
     <div className="relative w-full h-full bg-[#0d1024] border border-[#11142d] rounded-md overflow-hidden group">
       <Image src={image} alt={name} fill className="object-cover group-hover:scale-105 transition-transform duration-200" />
       {count > 1 && (
         <span className="absolute top-1 right-1 bg-[#008cff] text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-          x{count}
+          {countMessage ? countMessage : ''} {count}x
         </span>
       )}
       <div className="absolute inset-0 flex flex-col justify-end p-1">
