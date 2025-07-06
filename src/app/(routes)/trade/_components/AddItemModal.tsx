@@ -8,8 +8,6 @@ import ChestCard from '@/app/(routes)/profile/_components/ChestCard';
 import RoomCard from '@/app/(routes)/profile/_components/RoomCard';
 import { useTradeData } from './TradeContext';
 import { Loader2 } from 'lucide-react';
-import aggregateChests from '../_utils/aggregateChests';
-import aggregateRooms from '../_utils/aggregateRooms';
 
 interface AddItemModalProps {
   isOpen: boolean;
@@ -21,11 +19,9 @@ interface AddItemModalProps {
 const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
   const { trade, isLoading: tradeLoading } = useTradeData();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [chests, setChests] = useState<any[]>(
     trade?.userChests.map((c) => ({ ...c, selected: 0 })) ?? []
   );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [rooms, setRooms] = useState<any[]>(
     trade?.userRooms.map((r) => ({ ...r, selected: 0 })) ?? []
   );

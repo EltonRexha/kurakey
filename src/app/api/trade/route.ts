@@ -9,8 +9,8 @@ const CreateTradeSchema = z.object({
   receiverUserId: z.string(),
 });
 
-const DAYS_COOL_DOWN_RESET = 3;
-const COOL_DOWN_TRADES_AMOUNT = 2;
+const DAYS_COOL_DOWN_RESET = 4;
+const COOL_DOWN_TRADES_AMOUNT = 3;
 
 export async function POST(request: Request) {
   const user = await GetServerUser();

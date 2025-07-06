@@ -23,6 +23,7 @@ interface ItemNotificationContextType {
   addXP: (xpAmount: number) => void;
   addAchievement: (message: string, imageUrl: string) => void;
   addTrade: (message: string, tradeId: string) => void;
+  addOther: (message: string) => void;
 }
 
 const ItemNotificationContext = createContext<
@@ -119,9 +120,21 @@ export const ItemNotificationProvider: React.FC<{
     [removeNotification]
   );
 
+  const addOther = useCallback(
+    (message: string) => {
+      const id = Math.random().toString(36).slice(2);
+      setNotifications((prev) => [
+        ...prev,
+        { id, message },
+      ]);
+      setTimeout(() => removeNotification(id), 5000);
+    },
+    [removeNotification]
+  );
+
   return (
     <ItemNotificationContext.Provider
-      value={{ addChest, addXP, addRoom, addAchievement, addTrade }}
+      value={{ addChest, addXP, addRoom, addAchievement, addTrade, addOther }}
     >
       <ItemNotificationContainer
         notifications={notifications}

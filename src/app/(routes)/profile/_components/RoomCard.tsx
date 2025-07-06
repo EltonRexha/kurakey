@@ -35,7 +35,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ name, image, rarity, category, coun
             <span
               key={label}
               className="text-[10px] font-semibold px-1 rounded text-white shadow-sm"
-              style={{ background: `${color}dd` }}
+              style={{ background: `${color}95` }}
             >
               {label}
             </span>

@@ -40,6 +40,7 @@ export async function PUT(
           },
         },
       ],
+      status: 'PENDING',
     },
   });
 

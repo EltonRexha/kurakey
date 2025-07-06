@@ -33,6 +33,7 @@ export async function GET(
           },
         },
       ],
+      status: 'PENDING',
     },
     include: {
       receiver: true,

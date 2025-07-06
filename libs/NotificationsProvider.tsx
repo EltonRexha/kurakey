@@ -17,7 +17,7 @@ interface Props {
 const POLL_INTERVAL_MS = 5_000;
 
 const NotificationsProvider: React.FC<Props> = ({ children }) => {
-  const { addChest, addXP, addRoom, addAchievement, addTrade } =
+  const { addChest, addXP, addRoom, addAchievement, addTrade, addOther } =
     useItemNotification();
   const [isReady, setIsReady] = useState(false);
   const mounted = useMounted();
@@ -57,6 +57,9 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
           break;
         case 'TRADE_INVITE':
           addTrade(notification.message, notification.trade.id);
+          break;
+        default:
+          addOther(notification.message);
           break;
       }
     });

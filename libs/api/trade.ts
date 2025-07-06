@@ -77,3 +77,10 @@ export async function readyTrade(tradeId: string, ready: boolean) {
   );
   return response.data;
 }
+
+export async function cancelTrade(tradeId: string) {
+  const response = await axios.post<{ message: string }>(
+    `/trade/${tradeId}/cancel`
+  );
+  return response.data;
+}

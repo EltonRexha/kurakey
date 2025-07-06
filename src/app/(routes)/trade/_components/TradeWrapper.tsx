@@ -8,6 +8,7 @@ import GuestInventory from './GuestInventory';
 import arrows from '@/assets/images/other/arrows.png';
 import FillButton from '@/components/ui/common/FillButton';
 import ReadyBtn from './ReadyBtn';
+import CancelBtn from './CancelBtn';
 
 const TradeWrapper: React.FC<{ tradeId: string }> = ({ tradeId }) => {
   return (
@@ -32,9 +33,7 @@ const TradeWrapper: React.FC<{ tradeId: string }> = ({ tradeId }) => {
         <div className="flex flex-col items-center justify-center w-72 sm:w-82">
           <ReadyBtn />
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm justify-center">
-            <FillButton backgroundColor="bg-red-500" fullWidth>
-              Cancel Trade
-            </FillButton>
+            <CancelBtn tradeId={tradeId} />
             <FillButton backgroundColor="bg-amber-500" fullWidth disabled>
               Confirm Trade
             </FillButton>
