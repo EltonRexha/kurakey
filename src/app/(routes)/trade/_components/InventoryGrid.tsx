@@ -5,10 +5,26 @@
 import { useEffect, useState } from 'react';
 import ChestCard from '@/app/(routes)/profile/_components/ChestCard';
 import RoomCard from '@/app/(routes)/profile/_components/RoomCard';
+import Link from 'next/link';
 
-interface Item {
-  type: 'chest' | 'room';
-  data: any;
+type Item = {
+  type: 'chest';
+  data: {
+    name: string;
+    count: number;
+    id: string;
+  };
+} | {
+  type: 'room';
+  data: {
+    name: string;
+    image: string;
+    rarity: string;
+    category: string;
+    count: number;
+    id: string;
+    roomId: string;
+  };
 }
 
 interface InventoryGridProps {
@@ -50,13 +66,15 @@ const InventoryGrid: React.FC<InventoryGridProps> = ({ items }) => {
           {item.type === 'chest' ? (
             <ChestCard name={item.data.name} count={item.data.count} />
           ) : (
-            <RoomCard
-              name={item.data.name}
-              image={item.data.image}
-              rarity={item.data.rarity}
-              category={item.data.category as any}
-              count={item.data.count}
-            />
+            <Link href={`/room?id=${item.data.roomId}`}>
+              <RoomCard
+                name={item.data.name}
+                image={item.data.image}
+                rarity={item.data.rarity}
+                category={item.data.category as any}
+                count={item.data.count}
+              />
+            </Link>
           )}
         </div>
       ))}

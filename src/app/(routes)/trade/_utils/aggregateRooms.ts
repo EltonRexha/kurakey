@@ -20,6 +20,7 @@ export default function aggregateRooms(rooms: TradeRoom[]) {
       category: r.room.category,
       count: r.count,
       id: r.id,
+      roomId: r.room.id,
     },
   }));
 }

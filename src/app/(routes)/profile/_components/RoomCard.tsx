@@ -22,21 +22,24 @@ const RoomCard: React.FC<RoomCardProps> = ({ name, image, rarity, category, coun
       )}
       <div className="absolute inset-0 flex flex-col justify-end p-1">
         <div className="flex gap-1 mb-1">
-          <span
-            className="text-[10px] font-semibold px-1 rounded"
-            style={{ color: rarityColors[rarity], background: `${rarityColors[rarity]}22` }}
-          >
-            {rarity.charAt(0) + rarity.slice(1).toLowerCase()}
-          </span>
-          <span
-            className="text-[10px] font-semibold px-1 rounded"
-            style={{
+          {[
+            {
+              label: rarity.charAt(0) + rarity.slice(1).toLowerCase(),
+              color: rarityColors[rarity],
+            },
+            {
+              label: category.charAt(0) + category.slice(1).toLowerCase(),
               color: categoryColors[category],
-              background: `${categoryColors[category]}22`,
-            }}
-          >
-            {category.charAt(0) + category.slice(1).toLowerCase()}
-          </span>
+            },
+          ].map(({ label, color }) => (
+            <span
+              key={label}
+              className="text-[10px] font-semibold px-1 rounded text-white shadow-sm"
+              style={{ background: `${color}dd` }}
+            >
+              {label}
+            </span>
+          ))}
         </div>
       </div>
     </div>
