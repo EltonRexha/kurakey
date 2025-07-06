@@ -6,7 +6,7 @@ import { useTradeData } from './TradeContext';
 import Avatar from '@/components/ui/common/Avatar';
 import aggregateChests from '../_utils/aggregateChests';
 import aggregateRooms from '../_utils/aggregateRooms';
-import { MoonLoader } from 'react-spinners';
+import { Loader2 } from 'lucide-react';
 
 
 const GuestInventory: React.FC = () => {
@@ -15,15 +15,15 @@ const GuestInventory: React.FC = () => {
   if (tradeLoading || !trade) {
     return (
       <div className="bg-[#0d1024]/30 border border-[#11142d] rounded-lg p-5 w-full flex items-center justify-center h-[450px]">
-        <MoonLoader color="#008cff" size={60} speedMultiplier={0.9} />
+        <Loader2 className="animate-spin" size={60} color="#008cff" />
       </div>
     );
   }
 
-  const guest = trade.receiver;
+  const guest = trade.guest;
 
-  const chestAgg = aggregateChests(trade.receiverChests);
-  const roomAgg = aggregateRooms(trade.receiverRooms);
+  const chestAgg = aggregateChests(trade.guestChests);
+  const roomAgg = aggregateRooms(trade.guestRooms);
 
   const items = [...chestAgg, ...roomAgg];
 
@@ -43,8 +43,8 @@ const GuestInventory: React.FC = () => {
       {/* Status */}
       <div className="mt-4 text-neutral-100 font-semibold text-center">
         Status:{' '}
-        <span className={trade.receiverReady ? 'text-emerald-500' : 'text-red-500'}>
-          {trade.receiverReady ? 'Ready' : 'Unready'}
+        <span className={trade.guestReady ? 'text-emerald-500' : 'text-red-500'}>
+          {trade.guestReady ? 'Ready' : 'Unready'}
         </span>
       </div>
     </div>

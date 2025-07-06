@@ -4,7 +4,7 @@ import { useToaster } from '@/hooks/useToaster';
 import { ToastContainer } from '@/components/ui/common/ToastContainer';
 
 interface ToastContextType {
-  addToast: (message: string, type: 'success' | 'error') => void;
+  addToast: (message: string, type: 'success' | 'error' | 'warning') => void;
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);

@@ -64,5 +64,23 @@ export async function GET(
     return NextResponse.json({ message: 'trade not found' }, { status: 404 });
   }
 
-  return NextResponse.json(trade);
+  // derive user vs guest perspective
+  const isSender = trade.senderId === user.id;
+
+  const responseBody = {
+    id: trade.id,
+    user: isSender ? trade.sender : trade.receiver,
+    guest: isSender ? trade.receiver : trade.sender,
+    userChests: isSender ? trade.senderChests : trade.receiverChests,
+    guestChests: isSender ? trade.receiverChests : trade.senderChests,
+    userRooms: isSender ? trade.senderRooms : trade.receiverRooms,
+    guestRooms: isSender ? trade.receiverRooms : trade.senderRooms,
+    userReady: isSender ? trade.senderReady : trade.receiverReady,
+    guestReady: isSender ? trade.receiverReady : trade.senderReady,
+    userConfirmed: isSender ? trade.senderConfirmed : trade.receiverConfirmed,
+    guestConfirmed: isSender ? trade.receiverConfirmed : trade.senderConfirmed,
+    status: trade.status,
+  };
+
+  return NextResponse.json(responseBody);
 }

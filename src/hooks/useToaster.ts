@@ -9,7 +9,7 @@ export const useToaster = () => {
     setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
   }, []);
 
-  const addToast = useCallback((message: string, type: 'success' | 'error') => {
+  const addToast = useCallback((message: string, type: 'success' | 'error' | 'warning') => {
     const id = Math.random().toString(36).substr(2, 9);
     const newToast: Toast = {
       id,

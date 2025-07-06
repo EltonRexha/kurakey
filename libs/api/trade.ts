@@ -50,20 +50,30 @@ export interface Trader {
 
 export interface TradeApiResponse {
   id: string;
-  sender: Trader;
-  receiver: Trader;
-  senderChests: TradeChest[];
-  receiverChests: TradeChest[];
-  senderRooms: TradeRoom[];
-  receiverRooms: TradeRoom[];
-  senderReady: boolean;
-  receiverReady: boolean;
-  senderConfirmed: boolean;
-  receiverConfirmed: boolean;
+  user: Trader;
+  guest: Trader;
+  userChests: TradeChest[];
+  guestChests: TradeChest[];
+  userRooms: TradeRoom[];
+  guestRooms: TradeRoom[];
+  userReady: boolean;
+  guestReady: boolean;
+  userConfirmed: boolean;
+  guestConfirmed: boolean;
   status: 'PENDING' | 'COMPLETED' | 'REJECTED';
 }
 
 export async function fetchTrade(tradeId: string) {
   const response = await axios.get<TradeApiResponse>(`/trade/${tradeId}`);
+  return response.data;
+}
+
+export async function readyTrade(tradeId: string, ready: boolean) {
+  const response = await axios.put<{ message: string }>(
+    `/trade/${tradeId}/ready`,
+    {
+      ready,
+    }
+  );
   return response.data;
 }

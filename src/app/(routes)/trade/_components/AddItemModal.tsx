@@ -7,7 +7,7 @@ import { Minus, Plus } from 'lucide-react';
 import ChestCard from '@/app/(routes)/profile/_components/ChestCard';
 import RoomCard from '@/app/(routes)/profile/_components/RoomCard';
 import { useTradeData } from './TradeContext';
-import { MoonLoader } from 'react-spinners';
+import { Loader2 } from 'lucide-react';
 import aggregateChests from '../_utils/aggregateChests';
 import aggregateRooms from '../_utils/aggregateRooms';
 
@@ -21,14 +21,14 @@ interface AddItemModalProps {
 const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
   const { trade, isLoading: tradeLoading } = useTradeData();
 
-  const [chests, setChests] = useState(
-    aggregateChests(trade?.senderChests ?? []).map((c) => ({ ...c, selected: 0 }))
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [chests, setChests] = useState<any[]>(
+    trade?.userChests.map((c) => ({ ...c, selected: 0 })) ?? []
   );
-  const [rooms, setRooms] = useState(
-    aggregateRooms(trade?.senderRooms ?? []).map((r) => ({ ...r, selected: 0 }))
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [rooms, setRooms] = useState<any[]>(
+    trade?.userRooms.map((r) => ({ ...r, selected: 0 })) ?? []
   );
-
-
 
   const [cols, setCols] = useState(1);
 
@@ -51,7 +51,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
     return (
       <FullscreenModal isOpen={isOpen} onClose={onClose}>
         <div className="flex items-center justify-center min-h-full p-6">
-          <MoonLoader color="#008cff" size={80} speedMultiplier={0.9} />
+          <Loader2 className="animate-spin" size={60} color="#008cff" />
         </div>
       </FullscreenModal>
     );
