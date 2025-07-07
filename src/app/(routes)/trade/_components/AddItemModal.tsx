@@ -12,6 +12,7 @@ import { useMutation } from '@tanstack/react-query';
 import { getInventory } from '../../../../../libs/api/inventory';
 import aggregateChests, { AggregatedChest } from '../_utils/aggregateChests';
 import aggregateRooms, { AggregatedRoom } from '../_utils/aggregateRooms';
+import { updateTrade } from '../../../../../libs/api/trade';
 
 interface AddItemModalProps {
   isOpen: boolean;
@@ -22,7 +23,7 @@ type TradeOfferingChests = AggregatedChest & { selected: number };
 type TradeOfferingRooms = AggregatedRoom & { selected: number };
 
 const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
-  const { trade, isLoading: tradeLoading } = useTradeData();
+  const { trade, isLoading: tradeLoading, setUserInventoryIsLoading } = useTradeData();
 
   const [chests, setChests] = useState<TradeOfferingChests[]>([]);
   const [rooms, setRooms] = useState<TradeOfferingRooms[]>([]);
@@ -111,6 +112,14 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
 
   const inventoryLoading = inventoryMutation.status === 'pending' || inventoryMutation.status === 'idle';
 
+  const updateTradeMutation = useMutation({
+    mutationFn: ({ chests, rooms }: { chests: { chestTypeId: string; quantity: number }[]; rooms: { roomId: string; quantity: number }[] }) =>
+      updateTrade(trade?.id ?? '', chests, rooms),
+    onError: () => {
+      setUserInventoryIsLoading(false);
+    },
+  });
+
   if (tradeLoading || !trade || inventoryLoading) {
     return (
       <FullscreenModal isOpen={isOpen} onClose={onClose}>
@@ -122,8 +131,11 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
   }
 
   function onCloseModal() {
-    console.log(chests);
-    console.log(rooms);
+    setUserInventoryIsLoading(true);
+    updateTradeMutation.mutate({
+      chests: chests.filter((chest) => chest.selected > 0).map((chest) => ({ chestTypeId: chest.data.chestTypeId, quantity: chest.selected })),
+      rooms: rooms.filter((room) => room.selected > 0).map((room) => ({ roomId: room.data.roomId, quantity: room.selected })),
+    });
     onClose();
   }
 

@@ -56,6 +56,8 @@ export async function PUT(
       data: {
         receiverReady: false,
         senderReady: false,
+        receiverConfirmed: false,
+        senderConfirmed: false,
       },
     });
   } else {

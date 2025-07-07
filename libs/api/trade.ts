@@ -84,3 +84,15 @@ export async function cancelTrade(tradeId: string) {
   );
   return response.data;
 }
+
+export async function updateTrade(
+  tradeId: string,
+  chests: { chestTypeId: string; quantity: number }[],
+  rooms: { roomId: string; quantity: number }[]
+) {
+  const response = await axios.put<{ message: string }>(`/trade/${tradeId}`, {
+    chests,
+    rooms,
+  });
+  return response.data;
+}

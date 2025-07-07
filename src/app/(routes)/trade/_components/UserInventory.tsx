@@ -11,10 +11,10 @@ import aggregateRooms from '../_utils/aggregateRooms';
 import { Loader2 } from 'lucide-react';
 
 const UserInventory: React.FC = () => {
-  const { trade, isLoading: tradeLoading } = useTradeData();
+  const { trade, isLoading: tradeLoading, userInventoryIsLoading } = useTradeData();
   const [open, setOpen] = useState(false);
 
-  if (tradeLoading || !trade) {
+  if (tradeLoading || !trade || userInventoryIsLoading) {
     return (
       <div className="relative bg-[#0d1024]/30 border border-[#11142d] rounded-lg p-5 w-full flex items-center justify-center h-[450px]">
         <Loader2 className="animate-spin" size={60} color="#008cff" />
