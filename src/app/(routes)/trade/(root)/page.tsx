@@ -1,7 +1,7 @@
 import React from 'react';
-import GetServerUser from '../../../../libs/GetServerUser';
-import prisma from '../../../../prisma/prisma';
-import TradeWrapper from './_components/TradeWrapper';
+import GetServerUser from '../../../../../libs/GetServerUser';
+import prisma from '../../../../../prisma/prisma';
+import TradeWrapper from '../_components/TradeWrapper';
 import { redirect } from 'next/navigation';
 
 interface PageProps {

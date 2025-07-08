@@ -14,6 +14,20 @@ export async function POST(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const trade = await prisma.trade.findUnique({
+    where: {
+      id,
+      OR: [{ sender: { id: user.id } }, { receiver: { id: user.id } }],
+    },
+  });
+
+  if (trade?.status === 'COMPLETED') {
+    return NextResponse.json(
+      { error: 'Trade already completed' },
+      { status: 400 }
+    );
+  }
+
   await prisma.$transaction(async (tx) => {
     const trade = await tx.trade.delete({
       where: {

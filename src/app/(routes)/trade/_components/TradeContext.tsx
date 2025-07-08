@@ -5,6 +5,7 @@ import { fetchTrade, TradeApiResponse } from '../../../../../libs/api/trade';
 import { useQuery } from '@tanstack/react-query';
 import { useToastContext } from '@/context/ToastContext';
 import _ from 'lodash';
+import { useRouter } from 'next/navigation';
 
 export const TradeContext = createContext<{ trade: TradeApiResponse | undefined, isLoading: boolean, userInventoryIsLoading: boolean, setUserInventoryIsLoading: (isLoading: boolean) => void }>({ trade: undefined, isLoading: true, userInventoryIsLoading: false, setUserInventoryIsLoading: () => { } });
 
@@ -12,13 +13,16 @@ export const TradeProvider: React.FC<{ children: React.ReactNode, tradeId: strin
   children,
   tradeId,
 }) => {
+  const router = useRouter();
   const tradeQuery = useQuery({
     queryKey: ['trade', tradeId],
     queryFn: () => fetchTrade(tradeId),
-    refetchInterval: 5000,
+    refetchInterval: 3000,
   });
 
   const { addToast } = useToastContext();
+
+  const error = tradeQuery.error as { status: number } | null;
 
   const prevGuestRef = useRef<{ chests: TradeApiResponse['guestChests']; rooms: TradeApiResponse['guestRooms'] } | null>(null);
   const prevUserRef = useRef<{ chests: TradeApiResponse['userChests']; rooms: TradeApiResponse['userRooms'] } | null>(null);
@@ -36,7 +40,7 @@ export const TradeProvider: React.FC<{ children: React.ReactNode, tradeId: strin
         const roomsChanged = !_.isEqual(prevGuestData.rooms, currentGuestRooms);
 
         if (chestsChanged || roomsChanged) {
-          addToast('Guest inventory has changed, review their changes before readying up again', 'warning');
+          addToast('Guest inventory has changed', 'warning');
         }
       }
 
@@ -57,8 +61,19 @@ export const TradeProvider: React.FC<{ children: React.ReactNode, tradeId: strin
       prevUserRef.current = { chests: currentUserChests, rooms: currentUserRooms };
       prevGuestRef.current = { chests: currentGuestChests, rooms: currentGuestRooms };
     }
+
+    if (tradeQuery.data?.guestConfirmed && tradeQuery.data?.userConfirmed) {
+      router.push(`/trade/completed?id=${tradeQuery.data.id}`);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tradeQuery.data]);
+
+  useEffect(() => {
+    if (error && error.status === 404) {
+      router.push('/');
+    }
+  }, [error, router]);
 
   return (
     <TradeContext.Provider value={{ trade: tradeQuery.data, isLoading: tradeQuery.isLoading, userInventoryIsLoading, setUserInventoryIsLoading }}>{children}</TradeContext.Provider>

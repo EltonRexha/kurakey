@@ -96,3 +96,10 @@ export async function updateTrade(
   });
   return response.data;
 }
+
+export async function confirmTrade(tradeId: string) {
+  const response = await axios.post<{ message: string }>(
+    `/trade/${tradeId}/confirm`
+  );
+  return response.data;
+}

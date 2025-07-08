@@ -9,8 +9,10 @@ import arrows from '@/assets/images/other/arrows.png';
 import ReadyBtn from './ReadyBtn';
 import CancelBtn from './CancelBtn';
 import ConfirmButton from './ConfirmButton';
+import StatusMessage from './StatusMessage';
 
 const TradeWrapper: React.FC<{ tradeId: string }> = ({ tradeId }) => {
+  const [readyBtnDisabled, setReadyBtnDisabled] = useState(false);
   return (
     <TradeProvider tradeId={tradeId}>
       <div className="flex flex-col items-center gap-6">
@@ -31,13 +33,16 @@ const TradeWrapper: React.FC<{ tradeId: string }> = ({ tradeId }) => {
           <GuestInventory />
         </div>
         <div className="flex flex-col items-center justify-center w-72 sm:w-82">
-          <ReadyBtn />
+          <ReadyBtn readyBtnDisabled={readyBtnDisabled} />
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm justify-center">
             <CancelBtn tradeId={tradeId} />
-            <ConfirmButton />
+            <ConfirmButton setReadyBtnDisabled={setReadyBtnDisabled} />
           </div>
-
         </div>
+        <StatusMessage />
+        <p className="text-sm text-gray-500">
+          Trade ID: {tradeId}
+        </p>
       </div>
     </TradeProvider>
   );

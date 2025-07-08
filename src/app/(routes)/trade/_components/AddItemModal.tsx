@@ -8,7 +8,7 @@ import ChestCard from '@/app/(routes)/profile/_components/ChestCard';
 import RoomCard from '@/app/(routes)/profile/_components/RoomCard';
 import { useTradeData } from './TradeContext';
 import { Loader2 } from 'lucide-react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getInventory } from '../../../../../libs/api/inventory';
 import aggregateChests, { AggregatedChest } from '../_utils/aggregateChests';
 import aggregateRooms, { AggregatedRoom } from '../_utils/aggregateRooms';
@@ -32,23 +32,15 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
 
   const [cols, setCols] = useState(1);
 
-  const inventoryMutation = useMutation({
-    mutationFn: getInventory,
+  const inventoryQuery = useQuery({
+    queryKey: ['inventory'],
+    queryFn: getInventory,
   });
 
   useEffect(() => {
-    if (isOpen) {
-      inventoryMutation.mutate();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+    if (!trade || !inventoryQuery.data) return;
 
-  useEffect(() => {
-    if (!trade || !inventoryMutation.data) return;
-
-    const inventory = inventoryMutation.data.inventory;
-
-    console.log(inventory);
+    const inventory = inventoryQuery.data.inventory;
 
     const chestAgg = aggregateChests(inventory.chests);
     const roomAgg = aggregateRooms(inventory.userRooms);
@@ -71,7 +63,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
 
     setChests(chestsWithSelected);
     setRooms(roomsWithSelected);
-  }, [trade, inventoryMutation.data]);
+  }, [trade, inventoryQuery.data]);
 
   function inc<T extends { selected: number }>(
     setArr: React.Dispatch<React.SetStateAction<T[]>>,
@@ -117,7 +109,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const inventoryLoading = inventoryMutation.status === 'pending' || inventoryMutation.status === 'idle';
+  const inventoryLoading = inventoryQuery.isLoading;
 
   const updateTradeMutation = useMutation({
     mutationFn: ({ chests, rooms }: { chests: { chestTypeId: string; quantity: number }[]; rooms: { roomId: string; quantity: number }[] }) =>

@@ -10,7 +10,7 @@ const CreateTradeSchema = z.object({
 });
 
 const DAYS_COOL_DOWN_RESET = 4;
-const COOL_DOWN_TRADES_AMOUNT = 3;
+const COOL_DOWN_TRADES_AMOUNT = 30;
 
 export async function POST(request: Request) {
   const user = await GetServerUser();
@@ -59,6 +59,9 @@ export async function POST(request: Request) {
   //Trades these 3 days
   const trades = await prisma.trade.findMany({
     where: {
+      sender: {
+        id: user.id,
+      },
       receiver: {
         id: receiverUserId,
       },
