@@ -146,9 +146,9 @@ const RoomUnlockedModal: React.FC<RoomUnlockedModalProps> = ({
         <Modal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          className="sm:w-max sm:p-2"
+          className="sm:w-max sm:p-2 "
         >
-          <div className="flex flex-col items-center gap-4 w-full sm:w-[80vw] h-[95vh] lg:w-[900px] lg:h-[850px] py-4 px-4">
+          <div className="flex flex-col items-center gap-4 w-full sm:w-[80vw] h-[95vh] lg:w-[900px]  py-4 px-4">
             <h2 className="text-3xl font-bold text-neutral-100 mb-2 text-center z-10">
               Room Unlocked!
             </h2>
