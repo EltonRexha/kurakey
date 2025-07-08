@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { fetchTrade, TradeApiResponse } from '../../../../../libs/api/trade';
+import { fetchTrade, TradeApiResponse } from '../../../../../../libs/api/trade';
 import { useQuery } from '@tanstack/react-query';
 import { useToastContext } from '@/context/ToastContext';
 import _ from 'lodash';

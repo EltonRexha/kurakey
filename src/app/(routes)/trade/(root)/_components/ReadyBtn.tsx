@@ -2,7 +2,7 @@ import FillButton from '@/components/ui/common/FillButton'
 import React, { useEffect, useState } from 'react'
 import { useTradeData } from './TradeContext';
 import { Loader2 } from 'lucide-react';
-import { readyTrade } from '../../../../../libs/api/trade';
+import { readyTrade } from '../../../../../../libs/api/trade';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 

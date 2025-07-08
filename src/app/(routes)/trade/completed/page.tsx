@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import GetServerUser from '../../../../../libs/GetServerUser';
 import prisma from '../../../../../prisma/prisma';
-import TradeWrapper from '../_components/TradeWrapper';
+import CompletedTradeWrapper from './_components/CompletedTradeWrapper';
+import CompletedTradeWrapperSkeleton from './_components/CompletedTradeWrapperSkeleton';
 
 interface PageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -11,19 +12,14 @@ async function fetchUserTrade(userId: string, tradeId: string) {
     return await prisma.trade.findUnique({
         where: {
             id: tradeId,
-            OR: [
-                {
-                    receiver: {
-                        id: userId,
-                    },
-                },
-                {
-                    sender: {
-                        id: userId,
-                    },
-                },
-            ],
             status: 'COMPLETED',
+            OR: [
+                { receiverId: userId },
+                { senderId: userId },
+            ],
+        },
+        select: {
+            id: true,
         },
     });
 }
@@ -45,9 +41,12 @@ const page = async ({ searchParams }: PageProps) => {
     if (!trade) {
         return 'Trade not found';
     }
+
     return (
         <div className="max-w-7xl mx-auto px-4 pb-8 pt-16">
-            <TradeWrapper tradeId={params.id as string} />
+            <Suspense fallback={<CompletedTradeWrapperSkeleton />}>
+                <CompletedTradeWrapper tradeId={trade.id} />
+            </Suspense>
         </div>
     );
 };

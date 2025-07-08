@@ -1,6 +1,6 @@
 import FillButton from '@/components/ui/common/FillButton'
 import React from 'react'
-import { cancelTrade } from '../../../../../libs/api/trade'
+import { cancelTrade } from '../../../../../../libs/api/trade'
 import { useMutation } from '@tanstack/react-query'
 import { useToastContext } from '@/context/ToastContext'
 import { useRouter } from 'next/navigation'

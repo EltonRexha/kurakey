@@ -9,10 +9,10 @@ import RoomCard from '@/app/(routes)/profile/_components/RoomCard';
 import { useTradeData } from './TradeContext';
 import { Loader2 } from 'lucide-react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getInventory } from '../../../../../libs/api/inventory';
-import aggregateChests, { AggregatedChest } from '../_utils/aggregateChests';
-import aggregateRooms, { AggregatedRoom } from '../_utils/aggregateRooms';
-import { updateTrade } from '../../../../../libs/api/trade';
+import { getInventory } from '../../../../../../libs/api/inventory';
+import aggregateChests, { AggregatedChest } from '../../_utils/aggregateChests';
+import aggregateRooms, { AggregatedRoom } from '../../_utils/aggregateRooms';
+import { updateTrade } from '../../../../../../libs/api/trade';
 
 interface AddItemModalProps {
   isOpen: boolean;

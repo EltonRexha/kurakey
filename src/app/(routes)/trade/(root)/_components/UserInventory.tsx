@@ -6,8 +6,8 @@ import InventoryGrid from './InventoryGrid';
 import AddItemModal from './AddItemModal';
 import { useTradeData } from './TradeContext';
 import Avatar from '@/components/ui/common/Avatar';
-import aggregateChests from '../_utils/aggregateChests';
-import aggregateRooms from '../_utils/aggregateRooms';
+import aggregateChests from '../../_utils/aggregateChests';
+import aggregateRooms from '../../_utils/aggregateRooms';
 import { Loader2 } from 'lucide-react';
 
 const UserInventory: React.FC = () => {
