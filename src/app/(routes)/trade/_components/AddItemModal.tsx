@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FullscreenModal from './FullscreenModal';
 import { Minus, Plus } from 'lucide-react';
 import ChestCard from '@/app/(routes)/profile/_components/ChestCard';
@@ -27,6 +27,8 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
 
   const [chests, setChests] = useState<TradeOfferingChests[]>([]);
   const [rooms, setRooms] = useState<TradeOfferingRooms[]>([]);
+  const startChestsRef = useRef<TradeOfferingChests[]>([]);
+  const startRoomsRef = useRef<TradeOfferingRooms[]>([]);
 
   const [cols, setCols] = useState(1);
 
@@ -44,10 +46,12 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (!trade || !inventoryMutation.data) return;
 
-    const inventory = inventoryMutation.data.inventory[0];
+    const inventory = inventoryMutation.data.inventory;
 
-    const chestAgg = aggregateChests(inventory.Chest);
-    const roomAgg = aggregateRooms(inventory.userRoom);
+    console.log(inventory);
+
+    const chestAgg = aggregateChests(inventory.chests);
+    const roomAgg = aggregateRooms(inventory.userRooms);
 
     const tradeChestNames = trade.userChests.map((c) => c.type.name);
     const tradeRoomIds = trade.userRooms.map((r) => r.room.id);
@@ -61,6 +65,9 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
       ...r,
       selected: tradeRoomIds.filter((id) => id === r.data.roomId).length,
     }));
+
+    startChestsRef.current = chestsWithSelected;
+    startRoomsRef.current = roomsWithSelected;
 
     setChests(chestsWithSelected);
     setRooms(roomsWithSelected);
@@ -131,6 +138,12 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
   }
 
   function onCloseModal() {
+    const changed = JSON.stringify(chests) !== JSON.stringify(startChestsRef.current) || JSON.stringify(rooms) !== JSON.stringify(startRoomsRef.current);
+    if (!changed) {
+      onClose();
+      return;
+    }
+
     setUserInventoryIsLoading(true);
     updateTradeMutation.mutate({
       chests: chests.filter((chest) => chest.selected > 0).map((chest) => ({ chestTypeId: chest.data.chestTypeId, quantity: chest.selected })),

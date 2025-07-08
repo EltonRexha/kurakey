@@ -49,13 +49,15 @@ const UserInventory: React.FC = () => {
         </span>
       </div>
 
-      <button
-        onClick={() => setOpen(true)}
-        className="absolute -top-5 -left-5 p-3 bg-[#0d1024] border border-[#11142d] rounded-lg hover:bg-[#008cff]/40 transition cursor-pointer"
-        title="Add items / Remove items"
-      >
-        <Pencil size={24} color="white" />
-      </button>
+      {!trade.userReady &&
+        <button
+          onClick={() => setOpen(true)}
+          className="absolute -top-5 -left-5 p-3 bg-[#0d1024] border border-[#11142d] rounded-lg hover:bg-[#008cff]/40 transition cursor-pointer"
+          title="Add items / Remove items"
+        >
+          <Pencil size={24} color="white" />
+        </button>
+      }
 
       <AddItemModal isOpen={open} onClose={() => setOpen(false)} />
     </div>

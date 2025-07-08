@@ -4,7 +4,7 @@ import axios from '../axios';
 interface InventoryApiResponse {
   message: string;
   inventory: {
-    userRoom: ({
+    userRooms: ({
       room: {
         name: string;
         rarity: $Enums.Rarity;
@@ -21,7 +21,7 @@ interface InventoryApiResponse {
       userId: string;
       roomId: string;
     })[];
-    Chest: ({
+    chests: ({
       type: {
         name: string;
         id: string;
@@ -36,7 +36,7 @@ interface InventoryApiResponse {
       chestTypeId: string;
       opened: boolean;
     })[];
-  }[];
+  };
 }
 
 export async function getInventory() {

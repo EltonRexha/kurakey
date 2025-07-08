@@ -10,23 +10,33 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const inventory = await prisma.user.findMany({
+  const chests = await prisma.chest.findMany({
     where: {
-      id: user.id,
+      User: {
+        id: user.id,
+      },
+      opened: false,
     },
-    select: {
-      Chest: {
-        include: {
-          type: true,
-        },
-      },
-      userRoom: {
-        include: {
-          room: true,
-        },
-      },
+    include: {
+      type: true,
     },
   });
+
+  const userRooms = await prisma.userRoom.findMany({
+    where: {
+      user: {
+        id: user.id,
+      },
+    },
+    include: {
+      room: true,
+    },
+  });
+
+  const inventory = {
+    chests,
+    userRooms,
+  };
 
   return NextResponse.json(
     {

@@ -6,9 +6,9 @@ import { TradeProvider } from './TradeContext';
 import UserInventory from './UserInventory';
 import GuestInventory from './GuestInventory';
 import arrows from '@/assets/images/other/arrows.png';
-import FillButton from '@/components/ui/common/FillButton';
 import ReadyBtn from './ReadyBtn';
 import CancelBtn from './CancelBtn';
+import ConfirmButton from './ConfirmButton';
 
 const TradeWrapper: React.FC<{ tradeId: string }> = ({ tradeId }) => {
   return (
@@ -34,9 +34,7 @@ const TradeWrapper: React.FC<{ tradeId: string }> = ({ tradeId }) => {
           <ReadyBtn />
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm justify-center">
             <CancelBtn tradeId={tradeId} />
-            <FillButton backgroundColor="bg-amber-500" fullWidth disabled>
-              Confirm Trade
-            </FillButton>
+            <ConfirmButton />
           </div>
 
         </div>

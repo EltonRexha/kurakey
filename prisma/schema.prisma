@@ -68,15 +68,15 @@ model Room {
 }
 
 model UserRoom {
-  id              String   @id @default(cuid())
-  user            User     @relation(fields: [userId], references: [id])
-  userId          String
-  room            Room     @relation(fields: [roomId], references: [id])
-  roomId          String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  offeredInTrades Trade[]  @relation("tradeSenderRooms")
-  wantedInTrades  Trade[]  @relation("tradeReceiverRooms")
+  id                   String   @id @default(cuid())
+  user                 User     @relation(fields: [userId], references: [id])
+  userId               String
+  room                 Room     @relation(fields: [roomId], references: [id])
+  roomId               String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  senderTradeOffered   Trade[]  @relation("tradeSenderRooms")
+  receiverTradeOffered Trade[]  @relation("tradeReceiverRooms")
 }
 
 model ChestType {
@@ -102,16 +102,16 @@ model ChestDropRate {
 }
 
 model Chest {
-  id              String    @id @default(cuid())
-  type            ChestType @relation(fields: [chestTypeId], references: [id])
-  User            User      @relation(fields: [userId], references: [id])
-  userId          String
-  opened          Boolean   @default(false)
-  offeredInTrades Trade[]   @relation("tradeSenderChests")
-  wantedInTrades  Trade[]   @relation("tradeReceiverChests")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  chestTypeId     String
+  id                   String    @id @default(cuid())
+  type                 ChestType @relation(fields: [chestTypeId], references: [id])
+  User                 User      @relation(fields: [userId], references: [id])
+  userId               String
+  opened               Boolean   @default(false)
+  senderTradeOffered   Trade[]   @relation("tradeSenderChests")
+  receiverTradeOffered Trade[]   @relation("tradeReceiverChests")
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  chestTypeId          String
 }
 
 model BundleType {

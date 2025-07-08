@@ -163,6 +163,7 @@ export async function PUT(
       where: {
         userId: user.id,
         chestTypeId,
+        opened: false,
       },
       select: {
         id: true,

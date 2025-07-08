@@ -9,6 +9,50 @@ const schema = z.object({
   chestType: z.string(),
 });
 
+export async function getChestWithLeastPendingTrades(
+  userId: string,
+  chestType: string
+) {
+  const chests = await prisma.chest.findMany({
+    where: {
+      User: {
+        id: userId,
+      },
+      type: {
+        name: chestType,
+      },
+      opened: false,
+    },
+    include: {
+      type: {
+        include: {
+          ChestDropRate: true,
+        },
+      },
+      senderTradeOffered: true,
+      receiverTradeOffered: true,
+    },
+  });
+
+  const sortedChests = chests
+    .map((chest) => {
+      const pendingSender = chest.senderTradeOffered.filter(
+        (t) => t.status === 'PENDING'
+      ).length;
+      const pendingReceiver = chest.receiverTradeOffered.filter(
+        (t) => t.status === 'PENDING'
+      ).length;
+
+      return {
+        ...chest,
+        totalPendingTrades: pendingSender + pendingReceiver,
+      };
+    })
+    .sort((a, b) => a.totalPendingTrades - b.totalPendingTrades);
+
+  return sortedChests[0] ?? null;
+}
+
 export async function POST(request: Request) {
   const json = await request.json();
   const body = schema.safeParse(json);
@@ -30,25 +74,7 @@ export async function POST(request: Request) {
     data: { chestType },
   } = body;
 
-  //Find a chest that the user has with this type
-  const chest = await prisma.chest.findFirst({
-    where: {
-      User: {
-        id: user.id,
-      },
-      type: {
-        name: chestType,
-      },
-      opened: false,
-    },
-    include: {
-      type: {
-        include: {
-          ChestDropRate: true,
-        },
-      },
-    },
-  });
+  const chest = await getChestWithLeastPendingTrades(user.id, chestType);
 
   if (!chest) {
     return NextResponse.json(
@@ -78,46 +104,99 @@ export async function POST(request: Request) {
     });
   }
 
-  await prisma.$transaction([
-    prisma.userRoom.create({
-      data: {
-        room: {
-          connect: {
-            id: room.id,
+  const tradesChestOffered = await prisma.trade.findMany({
+    where: {
+      OR: [
+        {
+          senderChests: {
+            some: {
+              id: chest.id,
+            },
           },
         },
-        user: {
-          connect: {
-            id: user.id,
+        {
+          receiverChests: {
+            some: {
+              id: chest.id,
+            },
           },
         },
-      },
-    }),
-    prisma.chest.update({
-      where: {
-        id: chest.id,
-      },
-      data: {
-        opened: true,
-      },
-    }),
-    prisma.notification.create({
-      data: {
-        user: {
-          connect: {
-            id: user.id,
+      ],
+      status: 'PENDING',
+    },
+  });
+
+  await prisma.$transaction(
+    async (tx) => {
+      await tx.userRoom.create({
+        data: {
+          room: {
+            connect: {
+              id: room.id,
+            },
+          },
+          user: {
+            connect: {
+              id: user.id,
+            },
           },
         },
-        room: {
-          connect: {
-            id: room.id,
-          },
+      });
+
+      await tx.chest.update({
+        where: {
+          id: chest.id,
         },
-        message: `You unlocked ${room.name}`,
-        type: 'ROOM_RECEIVED',
-      },
-    }),
-  ]);
+        data: {
+          opened: true,
+        },
+      });
+
+      await tx.notification.create({
+        data: {
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+          room: {
+            connect: {
+              id: room.id,
+            },
+          },
+          message: `You unlocked ${room.name}`,
+          type: 'ROOM_RECEIVED',
+        },
+      });
+
+      for (const trade of tradesChestOffered) {
+        await tx.trade.update({
+          where: {
+            id: trade.id,
+          },
+          data: {
+            receiverReady: false,
+            senderReady: false,
+            senderConfirmed: false,
+            receiverConfirmed: false,
+            receiverChests: {
+              disconnect: {
+                id: chest.id,
+              },
+            },
+            senderChests: {
+              disconnect: {
+                id: chest.id,
+              },
+            },
+          },
+        });
+      }
+    },
+    {
+      timeout: 10000,
+    }
+  );
 
   //Room Explorer achievement
   const roomsAfter = await prisma.userRoom.findMany({
