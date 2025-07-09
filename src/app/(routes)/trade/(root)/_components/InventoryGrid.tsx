@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import ChestCard from '@/app/(routes)/profile/_components/ChestCard';
 import RoomCard from '@/app/(routes)/profile/_components/RoomCard';
 import Link from 'next/link';
+import { RoomCategory } from '@/generated/prisma';
 
 type Item = {
   type: 'chest';
@@ -71,7 +72,7 @@ const InventoryGrid: React.FC<InventoryGridProps> = ({ items }) => {
                 name={item.data.name}
                 image={item.data.image}
                 rarity={item.data.rarity}
-                category={item.data.category as any}
+                category={item.data.category as unknown as RoomCategory}
                 count={item.data.count}
               />
             </Link>

@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import type { RoomCategory } from '@/generated/prisma';
 import FullscreenModal from './FullscreenModal';
 import { Minus, Plus } from 'lucide-react';
 import ChestCard from '@/app/(routes)/profile/_components/ChestCard';
@@ -170,6 +170,19 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose }) => {
   );
 };
 
+type TradeItemBase = { selected: number };
+
+type IncFn = <T extends TradeItemBase>(
+  setArr: React.Dispatch<React.SetStateAction<T[]>>,
+  idx: number,
+  max: number
+) => void;
+
+type DecFn = <T extends TradeItemBase>(
+  setArr: React.Dispatch<React.SetStateAction<T[]>>,
+  idx: number
+) => void;
+
 interface ItemSelectionGridProps {
   cols: number;
   chests: {
@@ -196,15 +209,8 @@ interface ItemSelectionGridProps {
   setChests: React.Dispatch<React.SetStateAction<TradeOfferingChests[]>>;
   setRooms: React.Dispatch<React.SetStateAction<TradeOfferingRooms[]>>;
 
-  inc: (
-    setArr: React.Dispatch<React.SetStateAction<any>>,
-    idx: number,
-    max: number
-  ) => void;
-  dec: (
-    setArr: React.Dispatch<React.SetStateAction<any>>,
-    idx: number
-  ) => void;
+  inc: IncFn;
+  dec: DecFn;
 }
 
 const ItemSelectionGrid: React.FC<ItemSelectionGridProps> = ({
@@ -273,7 +279,7 @@ const ItemSelectionGrid: React.FC<ItemSelectionGridProps> = ({
               name={r.data.name}
               image={r.data.image}
               rarity={r.data.rarity}
-              category={r.data.category as any}
+              category={r.data.category as unknown as RoomCategory}
               count={r.data.count}
               countMessage={'You own'}
             />

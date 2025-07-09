@@ -44,8 +44,8 @@ const CompletedUserInventory: React.FC<Props> = async ({ tradeId }) => {
     const chests = isSender ? trade.senderChests : trade.receiverChests;
     const rooms = isSender ? trade.senderRooms : trade.receiverRooms;
 
-    const chestAgg = aggregateChests(chests as any);
-    const roomAgg = aggregateRooms(rooms as any);
+    const chestAgg = aggregateChests(chests);
+    const roomAgg = aggregateRooms(rooms);
     const items = [...chestAgg, ...roomAgg];
 
     return (
