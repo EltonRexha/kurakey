@@ -92,9 +92,9 @@
     appearance: none;
   }
 
-  input[type=number] {
-    -webkit-appearance: none;  /* Chrome, Safari, Edge */
+  input[type='number'] {
+    -webkit-appearance: none; /* Chrome, Safari, Edge */
     -moz-appearance: textfield; /* Firefox */
-    appearance: none;           /* Standard syntax for future-proofing */
-}
+    appearance: none; /* Standard syntax for future-proofing */
+  }
 }

@@ -14,7 +14,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { useToastContext } from '@/context/ToastContext';
-import { useItemNotification } from '@/context/ItemNotificationContext';
 
 const MIN = 1;
 const MAX = 100;
@@ -40,7 +39,6 @@ const BuyChestModal: React.FC<Props> = ({
   price,
   userCoinBalance,
   chestId,
-  chestName,
 }) => {
   const mounted = useMounted();
   const [loading, setIsLoading] = useState(false);
@@ -60,11 +58,10 @@ const BuyChestModal: React.FC<Props> = ({
 
   const router = useRouter();
   const { addToast } = useToastContext();
-  const { addChest, addXP } = useItemNotification();
 
   const buyChestMutation = useMutation({
     mutationFn: buyChest,
-    onSuccess: ({ amount, xpGained }) => {
+    onSuccess: () => {
       setIsLoading(false);
    
       setIsOpen(false);

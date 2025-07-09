@@ -68,15 +68,15 @@ model Room {
 }
 
 model UserRoom {
-  id              String   @id @default(cuid())
-  user            User     @relation(fields: [userId], references: [id])
-  userId          String
-  room            Room     @relation(fields: [roomId], references: [id])
-  roomId          String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  offeredInTrades Trade[]  @relation("tradeSenderRooms")
-  wantedInTrades  Trade[]  @relation("tradeReceiverRooms")
+  id                   String   @id @default(cuid())
+  user                 User     @relation(fields: [userId], references: [id])
+  userId               String
+  room                 Room     @relation(fields: [roomId], references: [id])
+  roomId               String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  senderTradeOffered   Trade[]  @relation("tradeSenderRooms")
+  receiverTradeOffered Trade[]  @relation("tradeReceiverRooms")
 }
 
 model ChestType {
@@ -102,16 +102,16 @@ model ChestDropRate {
 }
 
 model Chest {
-  id              String    @id @default(cuid())
-  type            ChestType @relation(fields: [chestTypeId], references: [id])
-  User            User      @relation(fields: [userId], references: [id])
-  userId          String
-  opened          Boolean   @default(false)
-  offeredInTrades Trade[]   @relation("tradeSenderChests")
-  wantedInTrades  Trade[]   @relation("tradeReceiverChests")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  chestTypeId     String
+  id                   String    @id @default(cuid())
+  type                 ChestType @relation(fields: [chestTypeId], references: [id])
+  User                 User      @relation(fields: [userId], references: [id])
+  userId               String
+  opened               Boolean   @default(false)
+  senderTradeOffered   Trade[]   @relation("tradeSenderChests")
+  receiverTradeOffered Trade[]   @relation("tradeReceiverChests")
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  chestTypeId          String
 }
 
 model BundleType {
@@ -149,15 +149,23 @@ model Bundle {
 model Trade {
   id String @id @default(cuid())
 
-  sender        User        @relation("sender", fields: [senderId], references: [id])
-  senderId      String      @map("userAId")
-  receiver      User        @relation("receiver", fields: [receiverId], references: [id])
-  receiverId    String
-  offeredRooms  UserRoom[]  @relation("tradeSenderRooms")
-  wantedRooms   UserRoom[]  @relation("tradeReceiverRooms")
-  offeredChests Chest[]     @relation("tradeSenderChests")
-  wantedChests  Chest[]     @relation("tradeReceiverChests")
-  status        TradeStatus @default(PENDING)
+  sender            User       @relation("sender", fields: [senderId], references: [id])
+  senderId          String
+  receiver          User       @relation("receiver", fields: [receiverId], references: [id])
+  receiverId        String
+  senderRooms       UserRoom[] @relation("tradeSenderRooms")
+  receiverRooms     UserRoom[] @relation("tradeReceiverRooms")
+  senderChests      Chest[]    @relation("tradeSenderChests")
+  receiverChests    Chest[]    @relation("tradeReceiverChests")
+  senderReady       Boolean    @default(false)
+  receiverReady     Boolean    @default(false)
+  senderConfirmed   Boolean    @default(false)
+  receiverConfirmed Boolean    @default(false)
+
+  status       TradeStatus    @default(PENDING)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Notification Notification[]
 }
 
 model CoinTransaction {
@@ -191,6 +199,7 @@ model Notification {
   chestType     ChestType?       @relation(fields: [chestTypeId], references: [id])
   room          Room?            @relation(fields: [roomId], references: [id])
   achievement   Achievement?     @relation(fields: [achievementId], references: [id])
+  trade         Trade?           @relation(fields: [tradeId], references: [id], onDelete: Cascade)
   xpAmount      Int?
   type          NotificationType
   isRead        Boolean          @default(false)
@@ -199,6 +208,7 @@ model Notification {
   chestTypeId   String?
   roomId        String?
   achievementId String?
+  tradeId       String?
 }
 
 model UserCoinPackage {
@@ -238,13 +248,14 @@ enum NotificationType {
   XP_GAIN
   FRIEND_REQUEST
   TRADE_INVITE
+  TRADE_COMPLETED
   ACHIEVEMENT
+  OTHER
 }
 
 enum TradeStatus {
   PENDING
   COMPLETED
-  REJECTED
 }
 
 enum CoinTransactionType {

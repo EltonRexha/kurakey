@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 export interface Toast {
   id: string;
   message: string;
-  type: 'success' | 'error';
+  type: 'success' | 'error' | 'warning';
 }
 
 interface ToastProps {
@@ -17,7 +17,9 @@ export const Toast: React.FC<ToastProps> = ({ toast, onRemove }) => {
   const bgColor =
     toast.type === 'success'
       ? 'bg-[#1a392b] border-[#55f279]'
-      : 'bg-[#3d1f1f] border-[#ff5f5f]';
+      : toast.type === 'error'
+        ? 'bg-[#3d1f1f] border-[#ff5f5f]'
+        : 'bg-[#3d1f1f] border-[#ff5f5f]';
 
   const textColor =
     toast.type === 'success' ? 'text-[#55f279]' : 'text-[#ff5f5f]';

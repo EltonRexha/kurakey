@@ -17,7 +17,8 @@ interface Props {
 const POLL_INTERVAL_MS = 5_000;
 
 const NotificationsProvider: React.FC<Props> = ({ children }) => {
-  const { addChest, addXP, addRoom, addAchievement } = useItemNotification();
+  const { addChest, addXP, addRoom, addAchievement, addTrade, addOther, addTradeCompleted } =
+    useItemNotification();
   const [isReady, setIsReady] = useState(false);
   const mounted = useMounted();
 
@@ -53,13 +54,23 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
           break;
         case 'ACHIEVEMENT':
           addAchievement(notification.message, notification.achievement.image);
+          break;
+        case 'TRADE_INVITE':
+          addTrade(notification.message, notification.trade.id);
+          break;
+        case 'TRADE_COMPLETED':
+          addTradeCompleted(notification.message, notification.trade.id);
+          break;
+        default:
+          addOther(notification.message);
+          break;
       }
     });
 
     data.map((n) => {
       markNotificationsAsShown(n.id);
     });
-  }, [data, addChest, addXP, addRoom, isReady, addAchievement]);
+  }, [data, addChest, addXP, addRoom, isReady, addAchievement, addTrade, addTradeCompleted, addOther]);
 
   return <>{children}</>;
 };

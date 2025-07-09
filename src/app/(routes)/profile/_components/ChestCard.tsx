@@ -5,9 +5,10 @@ import { getChestImage } from "@/utils/getChestImage";
 interface ChestCardProps {
   name: string;
   count: number;
+  countMessage?: string;
 }
 
-const ChestCard: React.FC<ChestCardProps> = ({ name, count }) => {
+const ChestCard: React.FC<ChestCardProps> = ({ name, count, countMessage }) => {
   return (
     <div className="relative w-full h-full bg-[#0d1024] border border-[#11142d] group rounded-md overflow-hidden flex flex-col items-center justify-center">
       {/* Image */}
@@ -21,7 +22,7 @@ const ChestCard: React.FC<ChestCardProps> = ({ name, count }) => {
       </div>
       {count > 1 && (
         <span className="absolute top-1 right-1 bg-[#008cff] text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-          x{count}
+          {countMessage ? countMessage : ''} {count}x
         </span>
       )}
       {/* Name */}

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const userRoutes = ["/room", "/chest", "/profile", "/rooms", "/buy-coins", "/room"];
+const userRoutes = ["/room", "/chest", "/profile", "/rooms", "/buy-coins", "/room", '/trade', '/users'];
 const guestRoutes = ["/log-in", "/sign-up", "/profile", "/rooms", "/room"];
 const OAuthRoutes = ["/finish-auth"];
 const AllRoutes = [...userRoutes, ...guestRoutes, ...OAuthRoutes];
