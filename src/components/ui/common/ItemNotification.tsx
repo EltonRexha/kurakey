@@ -57,15 +57,28 @@ export const ItemNotification: React.FC<Props> = ({
             {notification.message}
           </p>
         </div>
-        {notification.tradeId && (
-          <Link
-            href={`/trade?id=${notification.tradeId}`}
-            className="inline-block mt-2 w-full"
-          >
-            <FillButton type="button" className="h-8" fullWidth>
-              View Trade
-            </FillButton>
-          </Link>
+        {notification.tradeId ? (
+          notification.tradeCompleted ? (
+            <Link
+              href={`/trade/completed?id=${notification.tradeId}`}
+              className="inline-block mt-2 w-full"
+            >
+              <FillButton type="button" className="h-8" fullWidth>
+                View Trade
+              </FillButton>
+            </Link>
+          ) : (
+            <Link
+              href={`/trade?id=${notification.tradeId}`}
+              className="inline-block mt-2 w-full"
+            >
+              <FillButton type="button" className="h-8" fullWidth>
+                View Trade
+              </FillButton>
+            </Link>
+          )
+        ) : (
+          <></>
         )}
       </div>
 

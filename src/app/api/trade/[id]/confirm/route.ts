@@ -64,10 +64,19 @@ async function finishTrade(
       },
     });
 
+    //Remove notifications of the trade
+    await tx.notification.deleteMany({
+      where: {
+        trade: {
+          id: trade.id,
+        },
+      },
+    });
+
     await tx.notification.create({
       data: {
         message: `Trade Completed with ${trade.sender.username}`,
-        type: 'OTHER',
+        type: 'TRADE_COMPLETED',
         trade: {
           connect: {
             id: trade.id,
@@ -84,7 +93,7 @@ async function finishTrade(
     await tx.notification.create({
       data: {
         message: `Trade Completed with ${trade.receiver.username}`,
-        type: 'OTHER',
+        type: 'TRADE_COMPLETED',
         trade: {
           connect: {
             id: trade.id,

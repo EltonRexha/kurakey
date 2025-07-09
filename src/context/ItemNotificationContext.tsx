@@ -15,6 +15,7 @@ export interface ItemNotification {
   roomImage?: string;
   achievementImage?: string;
   tradeId?: string;
+  tradeCompleted?: boolean;
 }
 
 interface ItemNotificationContextType {
@@ -23,6 +24,7 @@ interface ItemNotificationContextType {
   addXP: (xpAmount: number) => void;
   addAchievement: (message: string, imageUrl: string) => void;
   addTrade: (message: string, tradeId: string) => void;
+  addTradeCompleted: (message: string, tradeId: string) => void;
   addOther: (message: string) => void;
 }
 
@@ -132,9 +134,18 @@ export const ItemNotificationProvider: React.FC<{
     [removeNotification]
   );
 
+  const addTradeCompleted = useCallback(
+    (message: string, tradeId: string) => {
+      const id = Math.random().toString(36).slice(2);
+      setNotifications((prev) => [...prev, { id, message, tradeId, tradeCompleted: true }]);
+      setTimeout(() => removeNotification(id), 10000);
+    },
+    [removeNotification]
+  );
+
   return (
     <ItemNotificationContext.Provider
-      value={{ addChest, addXP, addRoom, addAchievement, addTrade, addOther }}
+      value={{ addChest, addXP, addRoom, addAchievement, addTrade, addOther, addTradeCompleted }}
     >
       <ItemNotificationContainer
         notifications={notifications}

@@ -239,7 +239,34 @@ const NotificationDropdown = () => {
                 </div>
               );
             }
-            // Other notification types (XP_GAIN, FRIEND_REQUEST, etc)
+            if (notif.type === 'TRADE_COMPLETED') {
+              return (
+                <div
+                  key={notif.id}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                >
+                  <div>
+                    <div className="text-[#fbbf24] text-xs font-bold">
+                      {notif.message}
+                    </div>
+                    <div className="text-neutral-400 text-xs">
+                      {new Date(notif.createdAt).toLocaleString()}
+                    </div>
+                    <div className="mt-2 mb-2">
+                      <Link href={`/trade/completed?id=${notif.trade?.id}`}>
+                        <FillButton
+                          fullWidth
+                          className="h-8"
+                        >
+                          View Trade
+                        </FillButton>
+                      </Link>
+                    </div>
+                    {!notif.isRead && markRead}
+                  </div>
+                </div>
+              );
+            }
 
             return (
               <div
