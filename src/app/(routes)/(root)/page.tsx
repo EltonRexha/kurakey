@@ -10,6 +10,7 @@ import { ChestDropRatesResponse } from '../../../../libs/api/chests';
 import { getBaseUrl } from '@/utils/getBaseUrl';
 import GlowingButton from '@/components/ui/common/GlowingButton';
 import Link from 'next/link';
+import FloatingParticles from '@/components/ui/common/FloatingParticles';
 
 async function getChestTypes() {
   try {
@@ -90,7 +91,8 @@ const page = async () => {
           return (
             <div key={chest.id} className="flex flex-col items-stretch">
               <div className="group relative flex-1 flex flex-col">
-                <div className="bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
+                <FloatingParticles numParticles={80} />
+                <div className="relative z-10 bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
                   <div className="relative h-48 w-full">
                     {' '}
                     <Image
@@ -162,7 +164,8 @@ const page = async () => {
         {bundleTypes.map((bundle) => (
           <div key={bundle.id} className="flex flex-col items-stretch">
             <div className="group relative flex flex-col">
-              <div className="py-4 bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
+              <FloatingParticles numParticles={80} />
+              <div className="relative z-10 py-4 bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
                 <div className="relative h-48 w-full flex items-center justify-center">
                   {' '}
                   <Image

@@ -1,6 +1,7 @@
 import { $Enums } from "@/generated/prisma";
 import { getChestAnimation } from "@/utils/getChestAnimation";
 import { getChestImage } from "@/utils/getChestImage";
+import FloatingParticles from "@/components/ui/common/FloatingParticles";
 import Image from "next/image";
 import React, { useEffect } from "react";
 
@@ -45,7 +46,10 @@ const Chest = ({
   return (
     <div className="rounded-xl overflow-hidden">
       <div className="relative h-[300px] w-full sm:w-[400px] flex items-center justify-center">
+        <FloatingParticles numParticles={70} spread={30} />
+
         <div className="relative w-[250px] h-[250px] transform transition-transform hover:scale-105 duration-300">
+
           {isOpening ? (
             <Image
               src={getChestAnimation(chest.name)}
