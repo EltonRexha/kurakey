@@ -9,7 +9,7 @@ const schema = z.object({
   chestType: z.string(),
 });
 
-export async function getChestWithLeastPendingTrades(
+async function getChestWithLeastPendingTrades(
   userId: string,
   chestType: string
 ) {
