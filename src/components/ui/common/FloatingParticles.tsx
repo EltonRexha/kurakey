@@ -1,5 +1,6 @@
 'use client';
 
+import useMounted from '@/hooks/useMounted';
 import React, { useMemo } from 'react';
 
 interface FloatingParticlesProps {
@@ -17,6 +18,8 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({
     spread = 40,
     className = '',
 }) => {
+    const mounted = useMounted();
+
     // Generate particle data only once per mount to avoid hydration mismatch
     const particles = useMemo(
         () =>
@@ -29,6 +32,8 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({
             })),
         [numParticles]
     );
+
+    if (!mounted) return null;
 
     return (
         <div
