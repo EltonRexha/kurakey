@@ -9,7 +9,6 @@ import React, { useState } from 'react';
 import Chest from './Chest';
 import OpenChestBtn from './OpenChestBtn';
 import RoomUnlockedModal from '@/components/RoomUnlockedModal';
-import FloatingParticles from '@/components/ui/common/FloatingParticles';
 
 interface Props {
   chest: {
