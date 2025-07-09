@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { ItemNotification as ItemNotificationType } from '@/context/ItemNotificationContext';
 import Link from 'next/link';
-import ShineButton from './ShineButton';
 import FillButton from './FillButton';
 
 interface Props {
