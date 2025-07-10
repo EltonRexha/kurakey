@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useCallback, useEffect } from 'react';
 import {
   getUnShownNotifications,
   markNotificationsAsShown,
@@ -9,68 +8,71 @@ import {
 } from './api/notifications';
 import { useItemNotification } from '@/context/ItemNotificationContext';
 import useMounted from '@/hooks/useMounted';
+import { useSSE } from '@/hooks/useSSE';
+import { useQuery } from '@tanstack/react-query';
 
 interface Props {
   children: React.ReactNode;
 }
 
-const POLL_INTERVAL_MS = 5_000;
-
 const NotificationsProvider: React.FC<Props> = ({ children }) => {
   const { addChest, addXP, addRoom, addAchievement, addTrade, addOther, addTradeCompleted } =
     useItemNotification();
-  const [isReady, setIsReady] = useState(false);
+
   const mounted = useMounted();
 
-  const { data } = useQuery({
-    queryKey: ['un-shown-notifications'],
+  const handleNotification = useCallback(function handleNotification(notification: Notification) {
+    switch (notification.type) {
+      case 'CHEST_RECEIVED':
+        addChest(notification.message, notification.chestType?.name ?? '');
+        break;
+      case 'XP_GAIN':
+        addXP(notification.xpAmount ?? 0);
+        break;
+      case 'ROOM_RECEIVED':
+        if (notification.room?.previewImageUrl) {
+          addRoom(notification.message, notification.room.previewImageUrl);
+        }
+        break;
+      case 'ACHIEVEMENT':
+        addAchievement(notification.message, notification.achievement.image);
+        break;
+      case 'TRADE_INVITE':
+        addTrade(notification.message, notification.trade.id);
+        break;
+      case 'TRADE_COMPLETED':
+        addTradeCompleted(notification.message, notification.trade.id);
+        break;
+      default:
+        addOther(notification.message);
+        break;
+    }
+
+    // Mark as shown to avoid duplicate toasts across reloads
+    markNotificationsAsShown(notification.id);
+  }, [addChest, addXP, addRoom, addAchievement, addTrade, addTradeCompleted, addOther]);
+
+  const unseenNotificationsQuery = useQuery({
+    queryKey: ['unseen-notifications'],
     queryFn: getUnShownNotifications,
-    refetchInterval: POLL_INTERVAL_MS,
-    staleTime: 0,
+    enabled: false,
   });
 
   useEffect(() => {
-    if (mounted) {
-      const loadingElement = document.getElementById('loading');
-      setIsReady(!loadingElement);
+    if (unseenNotificationsQuery.data) {
+      unseenNotificationsQuery.data.forEach(handleNotification);
     }
-  }, [mounted, data]);
+  }, [unseenNotificationsQuery.data, handleNotification]);
 
-  useEffect(() => {
-    if (!data || data.length === 0 || !isReady) return;
-
-    data.forEach((notification: Notification) => {
-      switch (notification.type) {
-        case 'CHEST_RECEIVED':
-          addChest(notification.message, notification.chestType?.name ?? '');
-          break;
-        case 'XP_GAIN':
-          addXP(notification.xpAmount ?? 0);
-          break;
-        case 'ROOM_RECEIVED':
-          if (notification.room?.previewImageUrl) {
-            addRoom(notification.message, notification.room.previewImageUrl);
-          }
-          break;
-        case 'ACHIEVEMENT':
-          addAchievement(notification.message, notification.achievement.image);
-          break;
-        case 'TRADE_INVITE':
-          addTrade(notification.message, notification.trade.id);
-          break;
-        case 'TRADE_COMPLETED':
-          addTradeCompleted(notification.message, notification.trade.id);
-          break;
-        default:
-          addOther(notification.message);
-          break;
-      }
-    });
-
-    data.map((n) => {
-      markNotificationsAsShown(n.id);
-    });
-  }, [data, addChest, addXP, addRoom, isReady, addAchievement, addTrade, addTradeCompleted, addOther]);
+  useSSE({
+    url: '/api/sse/stream',
+    handlers: {
+      NEW_NOTIFICATION: async () => {
+        unseenNotificationsQuery.refetch();
+      },
+    },
+    maxRetries: 5,
+  });
 
   return <>{children}</>;
 };

@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useToastContext } from '@/context/ToastContext';
 import _ from 'lodash';
 import { useRouter } from 'next/navigation';
+import { useSSE } from '@/hooks/useSSE';
 
 export const TradeContext = createContext<{ trade: TradeApiResponse | undefined, isLoading: boolean, userInventoryIsLoading: boolean, setUserInventoryIsLoading: (isLoading: boolean) => void }>({ trade: undefined, isLoading: true, userInventoryIsLoading: false, setUserInventoryIsLoading: () => { } });
 
@@ -17,7 +18,16 @@ export const TradeProvider: React.FC<{ children: React.ReactNode, tradeId: strin
   const tradeQuery = useQuery({
     queryKey: ['trade', tradeId],
     queryFn: () => fetchTrade(tradeId),
-    refetchInterval: 3000,
+  });
+
+  useSSE({
+    url: '/api/sse/stream',
+    handlers: {
+      TRADE_UPDATE: () => {
+        tradeQuery.refetch();
+      },
+    },
+    maxRetries: 3,
   });
 
   const { addToast } = useToastContext();
