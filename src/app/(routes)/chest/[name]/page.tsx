@@ -107,7 +107,7 @@ const ChestPage = async ({ params }: ChestPageProps) => {
           Possible Rooms
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {possibleRooms.map((room) => {
+          {possibleRooms.filter((room) => !room.isSecret && room.rarity !== 'SECRET').map((room) => {
             return (
               <Link href={`/room?id=${room.id}`} key={room.id}>
                 <div className="group relative flex flex-col">
