@@ -77,6 +77,9 @@ model UserRoom {
   updatedAt            DateTime @updatedAt
   senderTradeOffered   Trade[]  @relation("tradeSenderRooms")
   receiverTradeOffered Trade[]  @relation("tradeReceiverRooms")
+
+  @@index([userId])
+  @@index([roomId])
 }
 
 model ChestType {
@@ -112,6 +115,9 @@ model Chest {
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   chestTypeId          String
+
+  @@index([userId])
+  @@index([chestTypeId])
 }
 
 model BundleType {
@@ -133,6 +139,8 @@ model BundleTypeChestType {
   amount       Int //amount of chests being stored
 
   @@unique([bundleTypeId, chestTypeId])
+  @@index([bundleTypeId])
+  @@index([chestTypeId])
 }
 
 model Bundle {
@@ -144,6 +152,9 @@ model Bundle {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([bundleTypeId])
 }
 
 model Trade {
@@ -166,6 +177,10 @@ model Trade {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   Notification Notification[]
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([status])
 }
 
 model CoinTransaction {
@@ -179,6 +194,9 @@ model CoinTransaction {
   UserCoinPackage UserCoinPackage[]
   chestType       ChestType?          @relation(fields: [chestTypeId], references: [id])
   chestTypeId     String?
+
+  @@index([userId])
+  @@index([chestTypeId])
 }
 
 model FriendInvite {
@@ -209,6 +227,11 @@ model Notification {
   roomId        String?
   achievementId String?
   tradeId       String?
+
+  @@index([userId])
+  @@index([type])
+  @@index([tradeId])
+  @@index([isRead])
 }
 
 model UserCoinPackage {
@@ -220,6 +243,10 @@ model UserCoinPackage {
   coinPackageId     String
   transaction       CoinTransaction @relation(fields: [coinTransactionId], references: [id])
   coinTransactionId String
+
+  @@index([userId])
+  @@index([coinPackageId])
+  @@index([coinTransactionId])
 }
 
 model CoinPackage {

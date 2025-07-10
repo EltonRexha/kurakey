@@ -7,7 +7,6 @@ import {
   Notification,
 } from './api/notifications';
 import { useItemNotification } from '@/context/ItemNotificationContext';
-import useMounted from '@/hooks/useMounted';
 import { useSSE } from '@/hooks/useSSE';
 import { useQuery } from '@tanstack/react-query';
 
@@ -18,8 +17,6 @@ interface Props {
 const NotificationsProvider: React.FC<Props> = ({ children }) => {
   const { addChest, addXP, addRoom, addAchievement, addTrade, addOther, addTradeCompleted } =
     useItemNotification();
-
-  const mounted = useMounted();
 
   const handleNotification = useCallback(function handleNotification(notification: Notification) {
     switch (notification.type) {
@@ -55,7 +52,6 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
   const unseenNotificationsQuery = useQuery({
     queryKey: ['unseen-notifications'],
     queryFn: getUnShownNotifications,
-    enabled: false,
   });
 
   useEffect(() => {
@@ -68,7 +64,12 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
     url: '/api/sse/stream',
     handlers: {
       NEW_NOTIFICATION: async () => {
-        unseenNotificationsQuery.refetch();
+        const unseenNotifications = await unseenNotificationsQuery.refetch();
+        if (unseenNotifications.data?.length === 0) {
+          setTimeout(() => {
+            unseenNotificationsQuery.refetch();
+          }, 1000);
+        }
       },
     },
     maxRetries: 5,
