@@ -45,7 +45,7 @@ const rarityAsc = Object.keys($Enums.Rarity);
 const rarityDesc = [...rarityAsc].reverse();
 
 const SecretRoomCard = () => (
-  <div className="w-full sm:w-[250px] bg-[#0d0c1f] border border-[#23224a] rounded-lg overflow-hidden flex items-center justify-center h-[212px] text-purple-500 text-3xl font-bold tracking-widest select-none shadow-[0_0_15px_#8b5cf6]/40">
+  <div className="w-full aspect-square sm:w-[250px] bg-[#0d0c1f] border border-[#23224a] rounded-lg overflow-hidden flex items-center justify-center h-[212px] text-purple-500 text-3xl font-bold tracking-widest select-none shadow-[0_0_15px_#8b5cf6]/40">
     ???
   </div>
 );
@@ -55,50 +55,53 @@ const RoomCard = ({ room }: { room: Room }) => {
   return (
     <Link
       href={`/room?id=${id}`}
-      className="block w-full sm:w-[250px] bg-[#11142d] rounded-lg overflow-hidden hover:scale-[1.02] transition-transform duration-200"
+      className="block w-full aspect-square sm:w-[250px] bg-[#11142d] rounded-lg overflow-hidden hover:scale-[1.02] transition-transform duration-200"
     >
-      <div className="relative h-[170px] w-full">
-        <Image
-          src={previewImageUrl}
-          alt={name}
-          className="object-cover"
-          fill
-          sizes="350px"
-          quality={90}
-        />
-      </div>
-      <div className="p-2">
-        <h3
-          className="text-white font-medium text-lg mb-1 truncate"
-          title={name}
-        >
-          {name}
-        </h3>
-        <div className="flex flex-wrap gap-1">
-          {category && (
-            <span
-              className="text-[10px] font-semibold px-2 py-1 rounded"
-              style={{
-                color: categoryColors[category] ?? '#fff',
-                background: `${categoryColors[category] ?? '#fff'}22`,
-              }}
-            >
-              {category[0] + category.slice(1).toLowerCase()}
-            </span>
-          )}
-          {rarity && (
-            <span
-              className="text-[10px] font-semibold px-2 py-1 rounded"
-              style={{
-                color: rarityColors[rarity],
-                background: `${rarityColors[rarity]}22`,
-              }}
-            >
-              {rarity[0] + rarity.slice(1).toLowerCase()}
-            </span>
-          )}
+      <div className="flex flex-col h-full w-full">
+        <div className="relative flex-1 sm:h-[170px] w-full">
+          <Image
+            src={previewImageUrl}
+            alt={name}
+            className="object-cover"
+            fill
+            sizes="350px"
+            quality={90}
+          />
+        </div>
+        <div className="p-2">
+          <h3
+            className="text-white font-medium text-lg mb-1 truncate"
+            title={name}
+          >
+            {name}
+          </h3>
+          <div className="flex flex-wrap gap-1">
+            {category && (
+              <span
+                className="text-[10px] font-semibold px-2 py-1 rounded"
+                style={{
+                  color: categoryColors[category] ?? '#fff',
+                  background: `${categoryColors[category] ?? '#fff'}22`,
+                }}
+              >
+                {category[0] + category.slice(1).toLowerCase()}
+              </span>
+            )}
+            {rarity && (
+              <span
+                className="text-[10px] font-semibold px-2 py-1 rounded"
+                style={{
+                  color: rarityColors[rarity],
+                  background: `${rarityColors[rarity]}22`,
+                }}
+              >
+                {rarity[0] + rarity.slice(1).toLowerCase()}
+              </span>
+            )}
+          </div>
         </div>
       </div>
+
     </Link>
   );
 };
@@ -110,7 +113,7 @@ const RoomContainer = async ({ searchParams }: RoomContainerProps) => {
 
   const filterOrder =
     typeof searchParams?.filter === 'string' &&
-    searchParams.filter === 'rare_to_common'
+      searchParams.filter === 'rare_to_common'
       ? 'rare_to_common'
       : 'common_to_rare';
 
@@ -149,11 +152,11 @@ const RoomContainer = async ({ searchParams }: RoomContainerProps) => {
             <div className="flex flex-wrap gap-4">
               {rarityKey === 'SECRET'
                 ? [...sectionRooms].map((_, idx) => (
-                    <SecretRoomCard key={idx} />
-                  ))
+                  <SecretRoomCard key={idx} />
+                ))
                 : sectionRooms.map((room) => (
-                    <RoomCard key={room.id} room={room} />
-                  ))}
+                  <RoomCard key={room.id} room={room} />
+                ))}
             </div>
           </section>
         );

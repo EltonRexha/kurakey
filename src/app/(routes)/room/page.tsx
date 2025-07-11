@@ -298,8 +298,8 @@ const page = async ({ searchParams }: PageProps) => {
             {similarRooms.map((similarRoom: Room) => (
               <Link href={`/room?id=${similarRoom.id}`} key={similarRoom.id}>
                 <div className="group relative flex flex-col">
-                  <div className="bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
-                    <div className="relative h-48 w-full">
+                  <div className="flex flex-col aspect-square bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
+                    <div className="relative flex-1 sm:min-h-48 w-full">
                       {' '}
                       <Image
                         src={similarRoom.previewImageUrl}
