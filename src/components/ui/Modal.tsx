@@ -32,7 +32,7 @@ const Modal: React.FC<ModalProps> = ({
       >
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-neutral-400 hover:text-white text-xl font-bold rounded transition-colors duration-200 focus:outline-none"
+          className="absolute top-3 right-3 text-neutral-400 hover:text-white text-xl font-bold rounded transition-colors duration-200 focus:outline-none cursor-pointer"
           aria-label="Close modal"
         >
           ×
