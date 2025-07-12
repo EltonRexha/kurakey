@@ -41,6 +41,7 @@ model User {
   Notification    Notification[]
   UserCoinPackage UserCoinPackage[]
   Bundle          Bundle[]
+  StripePayments  StripePayments[]
 }
 
 model Session {
@@ -144,17 +145,46 @@ model BundleTypeChestType {
 }
 
 model Bundle {
-  id           String     @id @default(cuid())
-  type         BundleType @relation(fields: [bundleTypeId], references: [id])
-  User         User       @relation(fields: [userId], references: [id])
-  bundleTypeId String
-  userId       String
+  id            String     @id @default(cuid())
+  type          BundleType @relation(fields: [bundleTypeId], references: [id])
+  User          User       @relation(fields: [userId], references: [id])
+  bundleTypeId  String
+  userId        String
+  stripePriceId String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  StripePayments StripePayments[]
 
   @@index([userId])
   @@index([bundleTypeId])
+}
+
+model StripePayments {
+  id          String              @id @default(cuid())
+  status      StripePaymentStatus
+  userId      String
+  user        User                @relation(fields: [userId], references: [id])
+  coinPackage CoinPackage?        @relation(fields: [coinPackageId], references: [id])
+  bundle      Bundle?             @relation(fields: [bundleId], references: [id])
+  sessionId   String              @unique
+
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  coinPackageId        String?
+  bundleId             String?
+  StripeProcessedEvent StripeProcessedEvent[]
+
+  @@index([userId])
+}
+
+model StripeProcessedEvent {
+  id               String         @id @default(cuid())
+  eventId          String         @unique
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  StripePayments   StripePayments @relation(fields: [stripePaymentsId], references: [id])
+  stripePaymentsId String
 }
 
 model Trade {
@@ -252,12 +282,14 @@ model UserCoinPackage {
 model CoinPackage {
   id              String            @id @default(cuid())
   price           Int
+  stripePriceId   String?
   baseCoins       Int
   bonusCoins      Int
   name            String            @unique
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   UserCoinPackage UserCoinPackage[]
+  StripePayments  StripePayments[]
 }
 
 model Achievement {
@@ -267,6 +299,12 @@ model Achievement {
   unlockMessage String
   users         User[]
   Notification  Notification[]
+}
+
+enum StripePaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
 }
 
 enum NotificationType {
