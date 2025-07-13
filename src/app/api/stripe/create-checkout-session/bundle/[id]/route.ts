@@ -14,15 +14,15 @@ export async function POST(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const bundle = await prisma.bundle.findUnique({
+  const bundleType = await prisma.bundleType.findUnique({
     where: { id },
   });
 
-  if (!bundle) {
+  if (!bundleType) {
     return NextResponse.json({ error: 'Bundle not found' }, { status: 404 });
   }
 
-  if (!bundle.stripePriceId) {
+  if (!bundleType.stripePriceId) {
     return NextResponse.json(
       { error: 'Bundle has no stripe price id' },
       { status: 400 }
@@ -32,7 +32,7 @@ export async function POST(
   const stripeSession = await stripeApi.checkout.sessions.create({
     line_items: [
       {
-        price: bundle.stripePriceId,
+        price: bundleType.stripePriceId,
         quantity: 1,
       },
     ],
@@ -41,7 +41,7 @@ export async function POST(
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/store?success=false&session_id={CHECKOUT_SESSION_ID}`,
     metadata: {
       userId: user.id,
-      bundleId: bundle.id,
+      bundleTypeId: bundleType.id,
     },
   });
 
@@ -52,9 +52,9 @@ export async function POST(
           id: user.id,
         },
       },
-      bundle: {
+      bundleType: {
         connect: {
-          id: bundle.id,
+          id: bundleType.id,
         },
       },
       sessionId: stripeSession.id,

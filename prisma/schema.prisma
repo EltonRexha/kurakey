@@ -126,8 +126,10 @@ model BundleType {
   name                String                @unique
   price               Float // Price in real dollars
   coinAmount          Int
+  stripePriceId       String?
   Bundle              Bundle[]
   BundleTypeChestType BundleTypeChestType[]
+  StripePayments      StripePayments[]
 }
 
 model BundleTypeChestType {
@@ -145,16 +147,16 @@ model BundleTypeChestType {
 }
 
 model Bundle {
-  id            String     @id @default(cuid())
-  type          BundleType @relation(fields: [bundleTypeId], references: [id])
-  User          User       @relation(fields: [userId], references: [id])
-  bundleTypeId  String
-  userId        String
-  stripePriceId String?
+  id           String     @id @default(cuid())
+  type         BundleType @relation(fields: [bundleTypeId], references: [id])
+  User         User       @relation(fields: [userId], references: [id])
+  bundleTypeId String
+  userId       String
 
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  StripePayments StripePayments[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  CoinTransaction   CoinTransaction? @relation(fields: [coinTransactionId], references: [id])
+  coinTransactionId String?
 
   @@index([userId])
   @@index([bundleTypeId])
@@ -166,14 +168,14 @@ model StripePayments {
   userId      String
   user        User                @relation(fields: [userId], references: [id])
   coinPackage CoinPackage?        @relation(fields: [coinPackageId], references: [id])
-  bundle      Bundle?             @relation(fields: [bundleId], references: [id])
+  bundleType  BundleType?         @relation(fields: [bundleTypeId], references: [id])
   sessionId   String              @unique
 
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
   coinPackageId        String?
-  bundleId             String?
   StripeProcessedEvent StripeProcessedEvent[]
+  bundleTypeId         String?
 
   @@index([userId])
 }
@@ -221,7 +223,8 @@ model CoinTransaction {
   type            CoinTransactionType
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
-  UserCoinPackage UserCoinPackage[]
+  UserCoinPackage UserCoinPackage?
+  bundle          Bundle[]
   chestType       ChestType?          @relation(fields: [chestTypeId], references: [id])
   chestTypeId     String?
 
@@ -249,6 +252,7 @@ model Notification {
   achievement   Achievement?     @relation(fields: [achievementId], references: [id])
   trade         Trade?           @relation(fields: [tradeId], references: [id], onDelete: Cascade)
   xpAmount      Int?
+  coinAmount    Int?
   type          NotificationType
   isRead        Boolean          @default(false)
   createdAt     DateTime         @default(now())
@@ -272,7 +276,7 @@ model UserCoinPackage {
   package           CoinPackage     @relation(fields: [coinPackageId], references: [id])
   coinPackageId     String
   transaction       CoinTransaction @relation(fields: [coinTransactionId], references: [id])
-  coinTransactionId String
+  coinTransactionId String          @unique
 
   @@index([userId])
   @@index([coinPackageId])
@@ -305,6 +309,7 @@ enum StripePaymentStatus {
   PENDING
   COMPLETED
   FAILED
+  CANCELLED
 }
 
 enum NotificationType {
@@ -315,6 +320,7 @@ enum NotificationType {
   TRADE_INVITE
   TRADE_COMPLETED
   ACHIEVEMENT
+  COIN_RECEIVED
   OTHER
 }
 

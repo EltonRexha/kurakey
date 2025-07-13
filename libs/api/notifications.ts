@@ -20,6 +20,7 @@ export interface Notification {
   trade: {
     id: string
   }
+  coinAmount?: number;
 }
 
 export async function getUnShownNotifications() {

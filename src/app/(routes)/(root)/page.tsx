@@ -4,13 +4,13 @@ import Image from 'next/image';
 import coinIcon from '@/assets/images/icons/coin.png';
 import { ChestType } from '@/generated/prisma';
 import { getBundleImage } from '@/utils/getBundleImage';
-import ShineButton from '@/components/ui/common/ShineButton';
 import prisma from '../../../../prisma/prisma';
 import { ChestDropRatesResponse } from '../../../../libs/api/chests';
 import { getBaseUrl } from '@/utils/getBaseUrl';
 import GlowingButton from '@/components/ui/common/GlowingButton';
 import Link from 'next/link';
 import FloatingParticles from '@/components/ui/common/FloatingParticles';
+import BuyBundleBtn from './_components/BuyBundleBtn';
 
 async function getChestTypes() {
   try {
@@ -185,7 +185,7 @@ const page = async () => {
                       ${bundle.price}
                     </span>
                   </div>
-                  <ShineButton>Buy</ShineButton>
+                  <BuyBundleBtn bundleId={bundle.id} />
                 </div>
               </div>
             </div>

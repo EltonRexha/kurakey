@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import { ItemNotification as ItemNotificationType } from '@/context/ItemNotificationContext';
 import Link from 'next/link';
 import FillButton from './FillButton';
+import coinIcon from '@/assets/images/icons/coin.png';
 
 interface Props {
   notification: ItemNotificationType;
@@ -23,7 +24,7 @@ export const ItemNotification: React.FC<Props> = ({
       exit={{ opacity: 0, y: -20, scale: 0.9 }}
       className={`bg-[#18173a] border border-[#008cff] shadow-lg rounded-lg p-4 mb-4 flex items-center justify-between min-w-[320px] max-w-xs backdrop-blur-sm backdrop-filter`}
     >
-      <div className='flex-1'>
+      <div className="flex-1">
         <div className="flex items-center gap-3">
           {notification.chestImage && notification.chestTypeName && (
             <Image
@@ -46,6 +47,15 @@ export const ItemNotification: React.FC<Props> = ({
           {notification.achievementImage && (
             <Image
               src={notification.achievementImage}
+              alt={''}
+              width={40}
+              height={40}
+              className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
+            />
+          )}
+          {notification.coinAmount && (
+            <Image
+              src={coinIcon}
               alt={''}
               width={40}
               height={40}
