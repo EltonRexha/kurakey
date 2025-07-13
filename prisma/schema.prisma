@@ -171,16 +171,16 @@ model StripePayments {
   bundleType  BundleType?         @relation(fields: [bundleTypeId], references: [id])
   sessionId   String              @unique
 
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  coinPackageId        String?
-  StripeProcessedEvent StripeProcessedEvent[]
-  bundleTypeId         String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  coinPackageId String?
+  StripeEvents  StripeEvents[]
+  bundleTypeId  String?
 
   @@index([userId])
 }
 
-model StripeProcessedEvent {
+model StripeEvents {
   id               String         @id @default(cuid())
   eventId          String         @unique
   createdAt        DateTime       @default(now())
