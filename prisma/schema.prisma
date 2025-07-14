@@ -130,6 +130,7 @@ model BundleType {
   stripePriceId       String?
   Bundle              Bundle[]
   BundleTypeChestType BundleTypeChestType[]
+  StripePayments      StripePayments[]
 }
 
 model BundleTypeChestType {
@@ -168,17 +169,21 @@ model StripePayments {
   status          StripePaymentStatus
   userId          String
   user            User                @relation(fields: [userId], references: [id])
-  userCoinPackage UserCoinPackage     @relation(fields: [userCoinPackageId], references: [id])
-  bundle          Bundle              @relation(fields: [bundleId], references: [id])
+  userCoinPackage UserCoinPackage?    @relation(fields: [userCoinPackageId], references: [id])
+  bundle          Bundle?             @relation(fields: [bundleId], references: [id])
+  bundleType      BundleType?         @relation(fields: [bundleTypeId], references: [id])
+  coinPackage     CoinPackage?        @relation(fields: [coinPackageId], references: [id])
   sessionId       String              @unique
-  paymentIntentId String?
-  chargeId        String?
+  paymentIntentId String?             @unique
+  chargeId        String?             @unique
 
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
   StripeEvents      StripeEvents[]
-  userCoinPackageId String
-  bundleId          String
+  userCoinPackageId String?
+  bundleId          String?
+  bundleTypeId      String?
+  coinPackageId     String?
 
   @@index([userId])
 }
@@ -297,6 +302,7 @@ model CoinPackage {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   UserCoinPackage UserCoinPackage[]
+  StripePayments  StripePayments[]
 }
 
 model Achievement {

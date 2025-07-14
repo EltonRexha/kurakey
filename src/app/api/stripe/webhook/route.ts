@@ -153,6 +153,11 @@ const handleBundlePurchase = async (
           status: 'COMPLETED',
           paymentIntentId,
           chargeId,
+          bundle: {
+            connect: {
+              id: bundle.id,
+            },
+          },
         },
       });
 
@@ -169,7 +174,7 @@ const handleBundlePurchase = async (
       });
     },
     {
-      timeout: 10000,
+      timeout: 20000,
     }
   );
 };
@@ -232,7 +237,7 @@ const handleCoinPackagePurchase = async (
       });
 
       //Create user coin package
-      await tx.userCoinPackage.create({
+      const userCoinPackage = await tx.userCoinPackage.create({
         data: {
           user: {
             connect: {
@@ -275,6 +280,11 @@ const handleCoinPackagePurchase = async (
           status: 'COMPLETED',
           paymentIntentId,
           chargeId,
+          userCoinPackage: {
+            connect: {
+              id: userCoinPackage.id,
+            },
+          },
         },
       });
 
@@ -291,7 +301,7 @@ const handleCoinPackagePurchase = async (
       });
     },
     {
-      timeout: 10000,
+      timeout: 20000,
     }
   );
 };
@@ -320,7 +330,7 @@ export async function POST(request: NextRequest) {
     return new Response('Unhandled event type', { status: 200 });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
+  const session = event.data.object;
   const userId = session.metadata?.userId;
   const bundleTypeId = session.metadata?.bundleTypeId;
   const coinPackageId = session.metadata?.coinPackageId;
@@ -348,7 +358,14 @@ export async function POST(request: NextRequest) {
       }
 
       if (bundleTypeId) {
-        await handleBundlePurchase(userId, bundleTypeId, session.id, event.id, paymentIntentId, chargeId);
+        await handleBundlePurchase(
+          userId,
+          bundleTypeId,
+          session.id,
+          event.id,
+          paymentIntentId,
+          chargeId
+        );
       } else if (coinPackageId) {
         await handleCoinPackagePurchase(
           userId,
