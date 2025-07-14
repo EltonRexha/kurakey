@@ -31,7 +31,9 @@ const page = async () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {coinPackages.map((pkg: CoinPackage) => (
           <div key={pkg.id} className="relative">
-            <FloatingParticles numParticles={70} spread={30} />
+            <div className="hidden sm:block">
+              <FloatingParticles numParticles={70} spread={30} />
+            </div>
 
             <div className="flex flex-col items-stretch w-full bg-[#191838] scale-100 border-[#11142d] py-8 px-4 border rounded-xl overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-[0_0_20px_#008cff]">
               <div className="group relative flex flex-col">

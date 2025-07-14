@@ -95,7 +95,9 @@ const page = async () => {
           return (
             <div key={chest.id} className="flex flex-col items-stretch">
               <div className="group relative flex-1 flex flex-col">
-                <FloatingParticles numParticles={80} />
+                <div className="hidden sm:block">
+                  <FloatingParticles numParticles={80} />
+                </div>
                 <div className="relative z-10 bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
                   <div className="relative h-48 w-full">
                     {' '}
@@ -168,7 +170,9 @@ const page = async () => {
         {bundleTypes.map((bundle) => (
           <div key={bundle.id} className="flex flex-col items-stretch">
             <div className="group relative flex flex-col">
-              <FloatingParticles numParticles={80} />
+              <div className="hidden sm:block">
+                <FloatingParticles numParticles={80} />
+              </div>
               <div className="relative z-10 py-4 bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
                 <div className="relative h-48 w-full flex items-center justify-center">
                   {' '}
