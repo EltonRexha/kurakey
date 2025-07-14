@@ -7,7 +7,9 @@ const handleBundlePurchase = async (
   userId: string,
   bundleTypeId: string,
   sessionId: string,
-  eventId: string
+  eventId: string,
+  paymentIntentId: string,
+  chargeId: string
 ) => {
   const bundleType = await prisma.bundleType.findUnique({
     where: {
@@ -149,6 +151,8 @@ const handleBundlePurchase = async (
         },
         data: {
           status: 'COMPLETED',
+          paymentIntentId,
+          chargeId,
         },
       });
 
@@ -174,7 +178,9 @@ const handleCoinPackagePurchase = async (
   userId: string,
   coinPackageId: string,
   sessionId: string,
-  eventId: string
+  eventId: string,
+  paymentIntentId: string,
+  chargeId: string
 ) => {
   const coinPackage = await prisma.coinPackage.findUnique({
     where: {
@@ -267,6 +273,8 @@ const handleCoinPackagePurchase = async (
         },
         data: {
           status: 'COMPLETED',
+          paymentIntentId,
+          chargeId,
         },
       });
 
@@ -318,13 +326,11 @@ export async function POST(request: NextRequest) {
   const coinPackageId = session.metadata?.coinPackageId;
 
   const paymentIntentId = session.payment_intent as string;
-  console.log({paymentIntentId});
 
   const paymentIntent = await stripeApi.paymentIntents.retrieve(
     paymentIntentId
   );
   const chargeId = paymentIntent.latest_charge as string;
-  console.log({chargeId});
 
   const stripeResponse = new Response('OK', { status: 200 });
 
@@ -342,13 +348,15 @@ export async function POST(request: NextRequest) {
       }
 
       if (bundleTypeId) {
-        await handleBundlePurchase(userId, bundleTypeId, session.id, event.id);
+        await handleBundlePurchase(userId, bundleTypeId, session.id, event.id, paymentIntentId, chargeId);
       } else if (coinPackageId) {
         await handleCoinPackagePurchase(
           userId,
           coinPackageId,
           session.id,
-          event.id
+          event.id,
+          paymentIntentId,
+          chargeId
         );
       } else {
         throw new Error('Missing bundleTypeId or coinPackageId');

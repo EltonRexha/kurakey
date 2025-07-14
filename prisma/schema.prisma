@@ -15,19 +15,20 @@ datasource db {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  firstName     String
-  lastName      String?
-  username      String        @unique
-  password      String?
-  email         String        @unique
-  emailVerified DateTime?
-  image         String?
-  isActive      Boolean       @default(true)
-  coinBalance   Int           @default(500)
-  xp            Int           @default(0)
-  sessions      Session[]
-  achievements  Achievement[]
+  id               String        @id @default(cuid())
+  stripeCustomerId String?
+  firstName        String
+  lastName         String?
+  username         String        @unique
+  password         String?
+  email            String        @unique
+  emailVerified    DateTime?
+  image            String?
+  isActive         Boolean       @default(true)
+  coinBalance      Int           @default(500)
+  xp               Int           @default(0)
+  sessions         Session[]
+  achievements     Achievement[]
 
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -129,7 +130,6 @@ model BundleType {
   stripePriceId       String?
   Bundle              Bundle[]
   BundleTypeChestType BundleTypeChestType[]
-  StripePayments      StripePayments[]
 }
 
 model BundleTypeChestType {
@@ -157,25 +157,28 @@ model Bundle {
   updatedAt         DateTime         @updatedAt
   CoinTransaction   CoinTransaction? @relation(fields: [coinTransactionId], references: [id])
   coinTransactionId String?
+  StripePayments    StripePayments[]
 
   @@index([userId])
   @@index([bundleTypeId])
 }
 
 model StripePayments {
-  id          String              @id @default(cuid())
-  status      StripePaymentStatus
-  userId      String
-  user        User                @relation(fields: [userId], references: [id])
-  coinPackage CoinPackage?        @relation(fields: [coinPackageId], references: [id])
-  bundleType  BundleType?         @relation(fields: [bundleTypeId], references: [id])
-  sessionId   String              @unique
+  id              String              @id @default(cuid())
+  status          StripePaymentStatus
+  userId          String
+  user            User                @relation(fields: [userId], references: [id])
+  userCoinPackage UserCoinPackage     @relation(fields: [userCoinPackageId], references: [id])
+  bundle          Bundle              @relation(fields: [bundleId], references: [id])
+  sessionId       String              @unique
+  paymentIntentId String?
+  chargeId        String?
 
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  coinPackageId String?
-  StripeEvents  StripeEvents[]
-  bundleTypeId  String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  StripeEvents      StripeEvents[]
+  userCoinPackageId String
+  bundleId          String
 
   @@index([userId])
 }
@@ -271,12 +274,13 @@ model Notification {
 model UserCoinPackage {
   id String @id @default(cuid())
 
-  user              User            @relation(fields: [userId], references: [id])
+  user              User             @relation(fields: [userId], references: [id])
   userId            String
-  package           CoinPackage     @relation(fields: [coinPackageId], references: [id])
+  package           CoinPackage      @relation(fields: [coinPackageId], references: [id])
   coinPackageId     String
-  transaction       CoinTransaction @relation(fields: [coinTransactionId], references: [id])
-  coinTransactionId String          @unique
+  transaction       CoinTransaction  @relation(fields: [coinTransactionId], references: [id])
+  coinTransactionId String           @unique
+  StripePayments    StripePayments[]
 
   @@index([userId])
   @@index([coinPackageId])
@@ -293,7 +297,6 @@ model CoinPackage {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   UserCoinPackage UserCoinPackage[]
-  StripePayments  StripePayments[]
 }
 
 model Achievement {

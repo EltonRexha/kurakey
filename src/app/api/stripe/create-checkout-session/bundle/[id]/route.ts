@@ -24,12 +24,20 @@ export async function POST(
 
   if (!bundleType.stripePriceId) {
     return NextResponse.json(
-      { error: 'Bundle has no stripe price id' },
+      { error: 'Bundle Type has no stripe price id' },
+      { status: 400 }
+    );
+  }
+
+  if (!user.stripeCustomerId) {
+    return NextResponse.json(
+      { error: 'User has no stripe customer id' },
       { status: 400 }
     );
   }
 
   const stripeSession = await stripeApi.checkout.sessions.create({
+    customer: user.stripeCustomerId,
     line_items: [
       {
         price: bundleType.stripePriceId,

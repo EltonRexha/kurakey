@@ -32,7 +32,12 @@ export async function POST(
     );
   }
 
+  if (!user.stripeCustomerId) {
+    return NextResponse.json({ error: 'User has no stripe customer id' }, { status: 400 });
+  }
+
   const stripeSession = await stripeApi.checkout.sessions.create({
+    customer: user.stripeCustomerId,
     line_items: [
       {
         price: coinPackage.stripePriceId,

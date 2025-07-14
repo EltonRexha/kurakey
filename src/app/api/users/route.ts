@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { UserSchema } from '@/schemas/userSchema';
 import bcrypt from 'bcrypt';
 import prisma from '../../../../prisma/prisma';
+import { User } from '@/generated/prisma';
+import { stripeApi } from '../../../../libs/stripe/stripe-server';
 
 export async function POST(request: Request) {
   const jsonBody = await request.json();
@@ -43,21 +45,43 @@ export async function POST(request: Request) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const createdUser = await prisma.user.create({
-    data: {
-      email,
-      firstName,
-      lastName,
-      username,
-      password: hashedPassword,
-      image,
-    },
-  });
+  let createdUser: User | undefined;
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      createdUser = await tx.user.create({
+        data: {
+          email,
+          firstName,
+          lastName,
+          username,
+          password: hashedPassword,
+          image,
+        },
+      });
+
+      const customer = await stripeApi.customers.create({
+        email: createdUser.email,
+        metadata: { internalUserId: createdUser.id },
+      });
+
+      await tx.user.update({
+        where: { id: createdUser.id },
+        data: { stripeCustomerId: customer.id },
+      });
+    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 
   return NextResponse.json(
     {
       message: 'User successfully created',
-      email: createdUser.email,
+      email: createdUser?.email,
     },
     {
       status: 201,
