@@ -15,7 +15,7 @@ interface Props {
 }
 
 const NotificationsProvider: React.FC<Props> = ({ children }) => {
-  const { addChest, addXP, addRoom, addAchievement, addTrade, addOther, addTradeCompleted } =
+  const { addChest, addXP, addRoom, addAchievement, addTrade, addOther, addTradeCompleted, addCoin } =
     useItemNotification();
 
   const handleNotification = useCallback(function handleNotification(notification: Notification) {
@@ -40,6 +40,9 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
       case 'TRADE_COMPLETED':
         addTradeCompleted(notification.message, notification.trade.id);
         break;
+      case 'COIN_RECEIVED':
+        addCoin(notification.message, notification.coinAmount ?? 0);
+        break;
       default:
         addOther(notification.message);
         break;
@@ -47,7 +50,7 @@ const NotificationsProvider: React.FC<Props> = ({ children }) => {
 
     // Mark as shown to avoid duplicate toasts across reloads
     markNotificationsAsShown(notification.id);
-  }, [addChest, addXP, addRoom, addAchievement, addTrade, addTradeCompleted, addOther]);
+  }, [addChest, addXP, addRoom, addAchievement, addTrade, addTradeCompleted, addOther, addCoin]);
 
   const unseenNotificationsQuery = useQuery({
     queryKey: ['unseen-notifications'],

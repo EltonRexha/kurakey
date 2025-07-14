@@ -6,6 +6,7 @@ import { getChestImage } from '@/utils/getChestImage';
 import axios from '../../libs/axios';
 import FillButton from './ui/common/FillButton';
 import Link from 'next/link';
+import coinIcon from '@/assets/images/icons/coin.png';
 
 interface Room {
   name: string;
@@ -27,6 +28,7 @@ interface Notification {
   trade?: {
     id: string;
   };
+  coinAmount?: number;
 }
 
 interface NotificationApiResponse {
@@ -225,10 +227,7 @@ const NotificationDropdown = () => {
                     </div>
                     <div className="mt-2 mb-2">
                       <Link href={`/trade?id=${notif.trade?.id}`}>
-                        <FillButton
-                          fullWidth
-                          className="h-8"
-                        >
+                        <FillButton fullWidth className="h-8">
                           View Trade
                         </FillButton>
                       </Link>
@@ -254,16 +253,38 @@ const NotificationDropdown = () => {
                     </div>
                     <div className="mt-2 mb-2">
                       <Link href={`/trade/completed?id=${notif.trade?.id}`}>
-                        <FillButton
-                          fullWidth
-                          className="h-8"
-                        >
+                        <FillButton fullWidth className="h-8">
                           View Trade
                         </FillButton>
                       </Link>
                     </div>
                     {!notif.isRead && markRead}
                   </div>
+                </div>
+              );
+            }
+            if (notif.type === 'COIN_RECEIVED') {
+              return (
+                <div
+                  key={notif.id}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                >
+                  <div className="mr-auto">
+                    <div className="text-[#fbbf24] text-xs">
+                      {notif.message}
+                    </div>
+                    <div className="text-neutral-400 text-xs">
+                      {new Date(notif.createdAt).toLocaleString()}
+                    </div>
+                    {!notif.isRead && markRead}
+                  </div>
+                  <Image
+                    src={coinIcon}
+                    alt={''}
+                    width={52}
+                    height={52}
+                    className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
+                  />
                 </div>
               );
             }

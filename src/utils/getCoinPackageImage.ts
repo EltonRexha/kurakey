@@ -5,12 +5,10 @@ import gold2 from '@/assets/images/coin-packages/gold2.png';
 import { StaticImageData } from 'next/image';
 
 const coinPackageImages: Record<string, StaticImageData> = {
-  starter,
-  silver,
-  'gold i': gold1,
-  'gold 1': gold1,
-  'gold ii': gold2,
-  'gold 2': gold2,
+  'starter package': starter,
+  'silver package': silver,
+  'gold package i': gold1,
+  'gold package ii': gold2,
 };
 
 export const getCoinPackageImage = (packageName: string) => {

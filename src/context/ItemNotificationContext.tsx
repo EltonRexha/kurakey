@@ -16,6 +16,7 @@ export interface ItemNotification {
   achievementImage?: string;
   tradeId?: string;
   tradeCompleted?: boolean;
+  coinAmount?: number;
 }
 
 interface ItemNotificationContextType {
@@ -26,6 +27,7 @@ interface ItemNotificationContextType {
   addTrade: (message: string, tradeId: string) => void;
   addTradeCompleted: (message: string, tradeId: string) => void;
   addOther: (message: string) => void;
+  addCoin: (message: string, coinAmount: number) => void;
 }
 
 const ItemNotificationContext = createContext<
@@ -125,10 +127,7 @@ export const ItemNotificationProvider: React.FC<{
   const addOther = useCallback(
     (message: string) => {
       const id = Math.random().toString(36).slice(2);
-      setNotifications((prev) => [
-        ...prev,
-        { id, message },
-      ]);
+      setNotifications((prev) => [...prev, { id, message }]);
       setTimeout(() => removeNotification(id), 5000);
     },
     [removeNotification]
@@ -137,15 +136,36 @@ export const ItemNotificationProvider: React.FC<{
   const addTradeCompleted = useCallback(
     (message: string, tradeId: string) => {
       const id = Math.random().toString(36).slice(2);
-      setNotifications((prev) => [...prev, { id, message, tradeId, tradeCompleted: true }]);
+      setNotifications((prev) => [
+        ...prev,
+        { id, message, tradeId, tradeCompleted: true },
+      ]);
       setTimeout(() => removeNotification(id), 10000);
+    },
+    [removeNotification]
+  );
+
+  const addCoin = useCallback(
+    (message: string, coinAmount: number) => {
+      const id = Math.random().toString(36).slice(2);
+      setNotifications((prev) => [...prev, { id, message, coinAmount }]);
+      setTimeout(() => removeNotification(id), 5000);
     },
     [removeNotification]
   );
 
   return (
     <ItemNotificationContext.Provider
-      value={{ addChest, addXP, addRoom, addAchievement, addTrade, addOther, addTradeCompleted }}
+      value={{
+        addChest,
+        addXP,
+        addRoom,
+        addAchievement,
+        addTrade,
+        addOther,
+        addTradeCompleted,
+        addCoin,
+      }}
     >
       <ItemNotificationContainer
         notifications={notifications}

@@ -15,19 +15,20 @@ datasource db {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  firstName     String
-  lastName      String?
-  username      String        @unique
-  password      String?
-  email         String        @unique
-  emailVerified DateTime?
-  image         String?
-  isActive      Boolean       @default(true)
-  coinBalance   Int           @default(500)
-  xp            Int           @default(0)
-  sessions      Session[]
-  achievements  Achievement[]
+  id               String        @id @default(cuid())
+  stripeCustomerId String?
+  firstName        String
+  lastName         String?
+  username         String        @unique
+  password         String?
+  email            String        @unique
+  emailVerified    DateTime?
+  image            String?
+  isActive         Boolean       @default(true)
+  coinBalance      Int           @default(500)
+  xp               Int           @default(0)
+  sessions         Session[]
+  achievements     Achievement[]
 
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -41,6 +42,7 @@ model User {
   Notification    Notification[]
   UserCoinPackage UserCoinPackage[]
   Bundle          Bundle[]
+  StripePayments  StripePayments[]
 }
 
 model Session {
@@ -115,9 +117,12 @@ model Chest {
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   chestTypeId          String
+  Bundle               Bundle?   @relation(fields: [bundleId], references: [id])
+  bundleId             String?
 
   @@index([userId])
   @@index([chestTypeId])
+  @@index([bundleId])
 }
 
 model BundleType {
@@ -125,8 +130,10 @@ model BundleType {
   name                String                @unique
   price               Float // Price in real dollars
   coinAmount          Int
+  stripePriceId       String?
   Bundle              Bundle[]
   BundleTypeChestType BundleTypeChestType[]
+  StripePayments      StripePayments[]
 }
 
 model BundleTypeChestType {
@@ -147,14 +154,55 @@ model Bundle {
   id           String     @id @default(cuid())
   type         BundleType @relation(fields: [bundleTypeId], references: [id])
   User         User       @relation(fields: [userId], references: [id])
+  chests       Chest[]
   bundleTypeId String
   userId       String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  CoinTransaction   CoinTransaction? @relation(fields: [coinTransactionId], references: [id])
+  coinTransactionId String?
+  StripePayments    StripePayments[]
 
   @@index([userId])
   @@index([bundleTypeId])
+}
+
+model StripePayments {
+  id              String              @id @default(cuid())
+  status          StripePaymentStatus
+  userId          String
+  user            User                @relation(fields: [userId], references: [id])
+  userCoinPackage UserCoinPackage?    @relation(fields: [userCoinPackageId], references: [id])
+  bundle          Bundle?             @relation(fields: [bundleId], references: [id])
+  bundleType      BundleType?         @relation(fields: [bundleTypeId], references: [id])
+  coinPackage     CoinPackage?        @relation(fields: [coinPackageId], references: [id])
+  sessionId       String              @unique
+  paymentIntentId String?             @unique
+  chargeId        String?             @unique
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  StripeEvents      StripeEvents[]
+  userCoinPackageId String?
+  bundleId          String?
+  bundleTypeId      String?
+  coinPackageId     String?
+
+  @@index([userId])
+  @@index([bundleId])
+  @@index([bundleTypeId])
+  @@index([coinPackageId])
+  @@index([paymentIntentId])
+}
+
+model StripeEvents {
+  id               String         @id @default(cuid())
+  eventId          String         @unique
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  StripePayments   StripePayments @relation(fields: [stripePaymentsId], references: [id])
+  stripePaymentsId String
 }
 
 model Trade {
@@ -191,7 +239,8 @@ model CoinTransaction {
   type            CoinTransactionType
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
-  UserCoinPackage UserCoinPackage[]
+  UserCoinPackage UserCoinPackage?
+  bundle          Bundle[]
   chestType       ChestType?          @relation(fields: [chestTypeId], references: [id])
   chestTypeId     String?
 
@@ -219,6 +268,7 @@ model Notification {
   achievement   Achievement?     @relation(fields: [achievementId], references: [id])
   trade         Trade?           @relation(fields: [tradeId], references: [id], onDelete: Cascade)
   xpAmount      Int?
+  coinAmount    Int?
   type          NotificationType
   isRead        Boolean          @default(false)
   createdAt     DateTime         @default(now())
@@ -237,12 +287,13 @@ model Notification {
 model UserCoinPackage {
   id String @id @default(cuid())
 
-  user              User            @relation(fields: [userId], references: [id])
+  user              User             @relation(fields: [userId], references: [id])
   userId            String
-  package           CoinPackage     @relation(fields: [coinPackageId], references: [id])
+  package           CoinPackage      @relation(fields: [coinPackageId], references: [id])
   coinPackageId     String
-  transaction       CoinTransaction @relation(fields: [coinTransactionId], references: [id])
-  coinTransactionId String
+  transaction       CoinTransaction  @relation(fields: [coinTransactionId], references: [id])
+  coinTransactionId String           @unique
+  StripePayments    StripePayments[]
 
   @@index([userId])
   @@index([coinPackageId])
@@ -252,12 +303,14 @@ model UserCoinPackage {
 model CoinPackage {
   id              String            @id @default(cuid())
   price           Int
+  stripePriceId   String?
   baseCoins       Int
   bonusCoins      Int
   name            String            @unique
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   UserCoinPackage UserCoinPackage[]
+  StripePayments  StripePayments[]
 }
 
 model Achievement {
@@ -269,6 +322,11 @@ model Achievement {
   Notification  Notification[]
 }
 
+enum StripePaymentStatus {
+  COMPLETED
+  FAILED
+}
+
 enum NotificationType {
   ROOM_RECEIVED
   CHEST_RECEIVED
@@ -277,6 +335,7 @@ enum NotificationType {
   TRADE_INVITE
   TRADE_COMPLETED
   ACHIEVEMENT
+  COIN_RECEIVED
   OTHER
 }
 

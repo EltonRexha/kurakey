@@ -4,17 +4,21 @@ import Image from 'next/image';
 import coinIcon from '@/assets/images/icons/coin.png';
 import { ChestType } from '@/generated/prisma';
 import { getBundleImage } from '@/utils/getBundleImage';
-import ShineButton from '@/components/ui/common/ShineButton';
 import prisma from '../../../../prisma/prisma';
 import { ChestDropRatesResponse } from '../../../../libs/api/chests';
 import { getBaseUrl } from '@/utils/getBaseUrl';
 import GlowingButton from '@/components/ui/common/GlowingButton';
 import Link from 'next/link';
 import FloatingParticles from '@/components/ui/common/FloatingParticles';
+import BuyBundleBtn from './_components/BuyBundleBtn';
 
 async function getChestTypes() {
   try {
-    const chestTypes = await prisma.chestType.findMany();
+    const chestTypes = await prisma.chestType.findMany({
+      orderBy: {
+        price: 'asc',
+      },
+    });
     return chestTypes;
   } catch (error) {
     console.error('Error fetching chest types:', error);
@@ -33,6 +37,9 @@ async function getBundleTypes() {
           },
         },
       },
+      orderBy: {
+        price: 'asc',
+      },
     });
     return bundleTypes;
   } catch (error) {
@@ -47,12 +54,9 @@ const page = async () => {
   const baseUrl = await getBaseUrl();
 
   // Fetch drop rates from API using fetch (server-side)
-  const res = await fetch(
-    `${baseUrl || ''}/api/chests/drop-rates`,
-    {
-      cache: 'no-store',
-    }
-  );
+  const res = await fetch(`${baseUrl || ''}/api/chests/drop-rates`, {
+    cache: 'no-store',
+  });
   if (!res.ok) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[40vh] text-center">
@@ -91,7 +95,9 @@ const page = async () => {
           return (
             <div key={chest.id} className="flex flex-col items-stretch">
               <div className="group relative flex-1 flex flex-col">
-                <FloatingParticles numParticles={80} />
+                <div className="hidden sm:block">
+                  <FloatingParticles numParticles={80} />
+                </div>
                 <div className="relative z-10 bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
                   <div className="relative h-48 w-full">
                     {' '}
@@ -164,7 +170,9 @@ const page = async () => {
         {bundleTypes.map((bundle) => (
           <div key={bundle.id} className="flex flex-col items-stretch">
             <div className="group relative flex flex-col">
-              <FloatingParticles numParticles={80} />
+              <div className="hidden sm:block">
+                <FloatingParticles numParticles={80} />
+              </div>
               <div className="relative z-10 py-4 bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
                 <div className="relative h-48 w-full flex items-center justify-center">
                   {' '}
@@ -185,7 +193,7 @@ const page = async () => {
                       ${bundle.price}
                     </span>
                   </div>
-                  <ShineButton>Buy</ShineButton>
+                  <BuyBundleBtn bundleId={bundle.id} />
                 </div>
               </div>
             </div>
