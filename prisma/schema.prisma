@@ -117,9 +117,12 @@ model Chest {
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   chestTypeId          String
+  Bundle               Bundle?   @relation(fields: [bundleId], references: [id])
+  bundleId             String?
 
   @@index([userId])
   @@index([chestTypeId])
+  @@index([bundleId])
 }
 
 model BundleType {
@@ -151,6 +154,7 @@ model Bundle {
   id           String     @id @default(cuid())
   type         BundleType @relation(fields: [bundleTypeId], references: [id])
   User         User       @relation(fields: [userId], references: [id])
+  chests       Chest[]
   bundleTypeId String
   userId       String
 
@@ -186,6 +190,10 @@ model StripePayments {
   coinPackageId     String?
 
   @@index([userId])
+  @@index([bundleId])
+  @@index([bundleTypeId])
+  @@index([coinPackageId])
+  @@index([paymentIntentId])
 }
 
 model StripeEvents {
@@ -315,10 +323,8 @@ model Achievement {
 }
 
 enum StripePaymentStatus {
-  PENDING
   COMPLETED
   FAILED
-  CANCELLED
 }
 
 enum NotificationType {

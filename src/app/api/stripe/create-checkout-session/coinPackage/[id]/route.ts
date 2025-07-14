@@ -53,22 +53,5 @@ export async function POST(
     },
   });
 
-  await prisma.stripePayments.create({
-    data: {
-      user: {
-        connect: {
-          id: user.id,
-        },
-      },
-      coinPackage: {
-        connect: {
-          id: coinPackage.id,
-        },
-      },
-      sessionId: stripeSession.id,
-      status: 'PENDING',
-    },
-  });
-
   return NextResponse.json({ checkoutSessionId: stripeSession.id });
 }

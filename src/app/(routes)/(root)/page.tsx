@@ -14,7 +14,11 @@ import BuyBundleBtn from './_components/BuyBundleBtn';
 
 async function getChestTypes() {
   try {
-    const chestTypes = await prisma.chestType.findMany();
+    const chestTypes = await prisma.chestType.findMany({
+      orderBy: {
+        price: 'asc',
+      },
+    });
     return chestTypes;
   } catch (error) {
     console.error('Error fetching chest types:', error);
@@ -33,6 +37,9 @@ async function getBundleTypes() {
           },
         },
       },
+      orderBy: {
+        price: 'asc',
+      },
     });
     return bundleTypes;
   } catch (error) {
@@ -47,12 +54,9 @@ const page = async () => {
   const baseUrl = await getBaseUrl();
 
   // Fetch drop rates from API using fetch (server-side)
-  const res = await fetch(
-    `${baseUrl || ''}/api/chests/drop-rates`,
-    {
-      cache: 'no-store',
-    }
-  );
+  const res = await fetch(`${baseUrl || ''}/api/chests/drop-rates`, {
+    cache: 'no-store',
+  });
   if (!res.ok) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[40vh] text-center">
