@@ -223,10 +223,10 @@ async function main() {
   // --- CoinPackage seeding ---
   console.log('🌱 Seeding coin packages...');
   const coinPackages = [
-    { price: 5, baseCoins: 500, bonusCoins: 0, name: 'starter' },
-    { price: 10, baseCoins: 1000, bonusCoins: 100, name: 'silver' },
-    { price: 20, baseCoins: 2000, bonusCoins: 300, name: 'gold I' },
-    { price: 50, baseCoins: 5000, bonusCoins: 1000, name: 'gold II' },
+    { price: 5, baseCoins: 500, bonusCoins: 0, name: 'Starter Package' },
+    { price: 10, baseCoins: 1000, bonusCoins: 100, name: 'Silver Package' },
+    { price: 20, baseCoins: 2000, bonusCoins: 300, name: 'Gold Package I' },
+    { price: 50, baseCoins: 5000, bonusCoins: 1000, name: 'Gold Package II' },
   ];
   for (const pkg of coinPackages) {
     const existing = await prisma.coinPackage.findFirst({

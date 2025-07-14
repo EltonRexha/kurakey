@@ -45,8 +45,8 @@ export async function POST(
       },
     ],
     mode: 'payment',
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/store?success=true&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/store?success=false&session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}&bundleTypeId=${bundleType.id}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/failed?session_id={CHECKOUT_SESSION_ID}&bundleTypeId=${bundleType.id}`,
     metadata: {
       userId: user.id,
       bundleTypeId: bundleType.id,
