@@ -1,5 +1,7 @@
 import prisma from '../../../../../../prisma/prisma';
 
+const COIN_PACKAGE_XP_AMOUNT = 100;
+
 export default async function handleCoinPackagePurchase(
   userId: string,
   coinPackageId: string,
@@ -45,6 +47,9 @@ export default async function handleCoinPackagePurchase(
         data: {
           coinBalance: {
             increment: coinAmount,
+          },
+          xp: {
+            increment: COIN_PACKAGE_XP_AMOUNT,
           },
         },
       });
@@ -94,6 +99,18 @@ export default async function handleCoinPackagePurchase(
           coinAmount: coinAmount,
           type: 'COIN_RECEIVED',
           message: `You have received ${coinAmount} coins!`,
+        },
+      });
+
+      //Xp notification
+      await tx.notification.create({
+        data: {
+          user: {
+            connect: { id: userId },
+          },
+          type: 'XP_GAIN',
+          message: `${COIN_PACKAGE_XP_AMOUNT}xp has been added to your account`,
+          xpAmount: COIN_PACKAGE_XP_AMOUNT,
         },
       });
 

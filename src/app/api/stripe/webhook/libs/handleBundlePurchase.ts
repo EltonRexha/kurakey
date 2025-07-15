@@ -1,5 +1,7 @@
 import prisma from '../../../../../../prisma/prisma';
 
+const BUNDLE_XP_AMOUNT = 100;
+
 export default async function handleBundlePurchase(
   userId: string,
   bundleTypeId: string,
@@ -77,6 +79,9 @@ export default async function handleBundlePurchase(
           coinBalance: {
             increment: bundleType.coinAmount,
           },
+          xp: {
+            increment: BUNDLE_XP_AMOUNT,
+          },
         },
       });
 
@@ -132,6 +137,18 @@ export default async function handleBundlePurchase(
           coinAmount: bundleType.coinAmount,
           type: 'COIN_RECEIVED',
           message: `You have received ${bundleType.coinAmount} coins!`,
+        },
+      });
+
+      //Xp notification
+      await tx.notification.create({
+        data: {
+          user: {
+            connect: { id: userId },
+          },
+          type: 'XP_GAIN',
+          message: `${BUNDLE_XP_AMOUNT}xp has been added to your account`,
+          xpAmount: BUNDLE_XP_AMOUNT,
         },
       });
 
