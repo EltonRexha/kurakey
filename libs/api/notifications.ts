@@ -7,6 +7,7 @@ export interface Notification {
   type: $Enums.NotificationType;
   chestType?: {
     name: string;
+    chestImageUrl: string;
   };
   xpAmount?: number;
   room?: {
@@ -14,8 +15,8 @@ export interface Notification {
     name: string;
   };
   achievement: {
-    image: string;
-    unlockedImage: string;
+    imageUrl: string;
+    unlockMessage: string;
   };
   trade: {
     id: string

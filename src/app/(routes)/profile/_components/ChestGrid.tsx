@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ChestCard from "./ChestCard";
 
 interface ChestGridProps {
-  chests: { id: string; name: string; count: number }[];
+  chests: { id: string; name: string; count: number; chestImageUrl: string }[];
 }
 
 const ChestGrid: React.FC<ChestGridProps> = ({ chests }) => {
@@ -38,7 +38,11 @@ const ChestGrid: React.FC<ChestGridProps> = ({ chests }) => {
           ))}
         {chests.map((c) => (
           <div key={c.id} className="aspect-square w-full">
-            <ChestCard name={c.name} count={c.count} />
+            <ChestCard
+              name={c.name}
+              count={c.count}
+              chestImageUrl={c.chestImageUrl}
+            />
           </div>
         ))}
         {Array.from({ length: placeholders }).map((_, i) => (

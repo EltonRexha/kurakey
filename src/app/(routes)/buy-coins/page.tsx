@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-import { getCoinPackageImage } from '@/utils/getCoinPackageImage';
 import coinIcon from '@/assets/images/icons/coin.png';
 import prisma from '../../../../prisma/prisma';
 import { CoinPackage } from '@/generated/prisma';
@@ -40,7 +39,7 @@ const page = async () => {
                 <div>
                   <div className="relative h-40 w-full flex items-center justify-center">
                     <Image
-                      src={getCoinPackageImage(pkg.name)}
+                      src={pkg.imageUrl}
                       alt={pkg.name}
                       className="object-contain h-28 w-auto mx-auto"
                       fill

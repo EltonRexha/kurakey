@@ -13,13 +13,13 @@ async function getUserChests(userId: string) {
     },
   });
 
-  const chestMap: Record<string, { id: string; name: string; count: number }> =
+  const chestMap: Record<string, { id: string; name: string; count: number; chestImageUrl: string }> =
     {};
 
   chests.forEach((chest) => {
-    const { id, name } = chest.type;
+    const { id, name, chestImageUrl } = chest.type;
     if (!chestMap[id]) {
-      chestMap[id] = { id, name, count: 0 };
+      chestMap[id] = { id, name, count: 0, chestImageUrl };
     }
     chestMap[id].count += 1;
   });

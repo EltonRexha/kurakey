@@ -1,9 +1,7 @@
 import React from 'react';
-import { getChestImage } from '@/utils/getChestImage';
 import Image from 'next/image';
 import coinIcon from '@/assets/images/icons/coin.png';
 import { ChestType } from '@/generated/prisma';
-import { getBundleImage } from '@/utils/getBundleImage';
 import prisma from '../../../../prisma/prisma';
 import { ChestDropRatesResponse } from '../../../../libs/api/chests';
 import { getBaseUrl } from '@/utils/getBaseUrl';
@@ -102,7 +100,7 @@ const page = async () => {
                   <div className="relative h-48 w-full">
                     {' '}
                     <Image
-                      src={getChestImage(chest.name)}
+                      src={chest.chestImageUrl}
                       alt={chest.name}
                       fill
                       priority
@@ -177,7 +175,7 @@ const page = async () => {
                 <div className="relative h-48 w-full flex items-center justify-center">
                   {' '}
                   <Image
-                    src={getBundleImage(bundle.name)}
+                    src={bundle.bundleImageUrl}
                     alt={bundle.name}
                     className="object-contain h-32 w-auto mx-auto"
                     fill
@@ -212,7 +210,7 @@ const page = async () => {
                   <div className="flex items-center gap-1.5">
                     {' '}
                     <Image
-                      src={getChestImage(bundleTypeChestType.ChestType.name)}
+                      src={bundleTypeChestType.ChestType.chestImageUrl}
                       alt="Coins"
                       width={20}
                       height={20}

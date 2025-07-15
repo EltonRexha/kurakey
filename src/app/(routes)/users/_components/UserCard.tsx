@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import LevelBar from '@/app/(routes)/profile/_components/LevelBar';
 import getLevel, { MAX_LEVEL } from '@/../libs/getLevel';
-import { getChestImage } from '@/utils/getChestImage';
 import { rarityColors } from '@/utils/colors';
 
 export interface UserCardData {
@@ -11,7 +10,7 @@ export interface UserCardData {
   username: string;
   xp: number;
   image: string | null;
-  chests: Record<string, number>;
+  chests: Record<string, { count: number; chestImageUrl: string }>;
   rarities: Record<string, number>;
 }
 
@@ -46,21 +45,23 @@ const UserCard: React.FC<{ user: UserCardData }> = ({ user }) => {
         {/* Chests row */}
         {Object.keys(user.chests).length > 0 && (
           <div className="flex flex-wrap gap-1 mt-3 self-start">
-            {Object.entries(user.chests).map(([chestName, count]) => (
-              <div
-                key={chestName}
-                className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded bg-[#23224a] text-[#008cff]"
-              >
-                <span>{count}x</span>
-                <Image
-                  src={getChestImage(chestName)}
-                  alt={chestName}
-                  width={18}
-                  height={18}
-                  className="object-contain"
-                />
-              </div>
-            ))}
+            {Object.entries(user.chests).map(
+              ([chestName, { count, chestImageUrl }]) => (
+                <div
+                  key={chestName}
+                  className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded bg-[#23224a] text-[#008cff]"
+                >
+                  <span>{count}x</span>
+                  <Image
+                    src={chestImageUrl}
+                    alt={chestName}
+                    width={18}
+                    height={18}
+                    className="object-contain"
+                  />
+                </div>
+              )
+            )}
           </div>
         )}
         {/* Rarities row */}

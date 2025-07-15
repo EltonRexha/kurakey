@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getChestImage } from '@/utils/getChestImage';
 import axios from '../../libs/axios';
 import FillButton from './ui/common/FillButton';
 import Link from 'next/link';
@@ -19,10 +18,10 @@ interface Notification {
   message: string;
   createdAt: string;
   isRead: boolean;
-  chestType?: { name: string } | null;
+  chestType?: { name: string; chestImageUrl: string } | null;
   room?: Room | null;
   achievement?: {
-    image: string;
+    imageUrl: string;
     unlockMessage: string;
   };
   trade?: {
@@ -39,13 +38,7 @@ interface NotificationApiResponse {
   pageSize: number;
 }
 
-function getChestImageByName(name: string) {
-  try {
-    return getChestImage(name);
-  } catch {
-    return undefined;
-  }
-}
+
 
 async function markNotificationAsRead(id: string) {
   const res = await axios.post('/notification/mark-read', { id });
@@ -134,7 +127,7 @@ const NotificationDropdown = () => {
               </p>
             );
             if (notif.type === 'CHEST_RECEIVED' && notif.chestType) {
-              const chestImg = getChestImageByName(notif.chestType.name);
+              const chestImg = notif.chestType.chestImageUrl;
               return (
                 <div
                   key={notif.id}
@@ -202,7 +195,7 @@ const NotificationDropdown = () => {
                     {!notif.isRead && markRead}
                   </div>
                   <Image
-                    src={notif.achievement.image}
+                    src={notif.achievement.imageUrl}
                     alt={notif.achievement.unlockMessage}
                     width={52}
                     height={52}

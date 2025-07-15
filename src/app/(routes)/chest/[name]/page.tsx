@@ -88,6 +88,9 @@ const ChestPage = async ({ params }: ChestPageProps) => {
     name: chestType.name,
     price: chestType.price,
     rarity: chestType.ChestDropRate[0]?.rarity,
+    chestOpeningGifUrl: chestType.chestOpeningGifUrl,
+    chestOpenedImageUrl: chestType.chestOpenedImageUrl,
+    chestImageUrl: chestType.chestImageUrl,
     dropRates: chestType.ChestDropRate.map((rate) => ({
       rarity: rate.rarity,
       chance: rate.chance,
@@ -107,52 +110,54 @@ const ChestPage = async ({ params }: ChestPageProps) => {
           Possible Rooms
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {possibleRooms.filter((room) => !room.isSecret && room.rarity !== 'SECRET').map((room) => {
-            return (
-              <Link href={`/room?id=${room.id}`} key={room.id}>
-                <div className="group relative flex flex-col">
-                  <div className="bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
-                    <div className="relative h-48 w-full">
-                      <Image
-                        src={room.previewImageUrl}
-                        alt={room.name}
-                        fill
-                        sizes="(max-width: 640px) 90vw, (max-width: 768px) 45vw, (max-width: 1024px) 30vw, 25vw"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-xl font-semibold text-neutral-100 mb-2">
-                        {room.name}
-                      </h3>
-                      <span
-                        className="inline-block text-xs font-semibold px-2 py-1 rounded transition-all duration-200 mb-2"
-                        style={{
-                          color: rarityColors[room.rarity],
-                          backgroundColor: `${rarityColors[room.rarity]}22`,
-                        }}
-                      >
-                        {room.rarity.charAt(0) +
-                          room.rarity.slice(1).toLowerCase()}
-                      </span>
-                      <div className="mt-2">
+          {possibleRooms
+            .filter((room) => !room.isSecret && room.rarity !== 'SECRET')
+            .map((room) => {
+              return (
+                <Link href={`/room?id=${room.id}`} key={room.id}>
+                  <div className="group relative flex flex-col">
+                    <div className="bg-[#191838] border border-[#11142d] rounded-xl overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_#008cff]">
+                      <div className="relative h-48 w-full">
+                        <Image
+                          src={room.previewImageUrl}
+                          alt={room.name}
+                          fill
+                          sizes="(max-width: 640px) 90vw, (max-width: 768px) 45vw, (max-width: 1024px) 30vw, 25vw"
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-xl font-semibold text-neutral-100 mb-2">
+                          {room.name}
+                        </h3>
                         <span
-                          className="inline-block text-xs font-bold px-2 py-1 rounded"
+                          className="inline-block text-xs font-semibold px-2 py-1 rounded transition-all duration-200 mb-2"
                           style={{
                             color: rarityColors[room.rarity],
+                            backgroundColor: `${rarityColors[room.rarity]}22`,
                           }}
                         >
-                          {Math.round(room.odds * 10) / 10 === 0
-                            ? '<0% Chance'
-                            : `${Math.round(room.odds * 10) / 10}% Chance`}
+                          {room.rarity.charAt(0) +
+                            room.rarity.slice(1).toLowerCase()}
                         </span>
+                        <div className="mt-2">
+                          <span
+                            className="inline-block text-xs font-bold px-2 py-1 rounded"
+                            style={{
+                              color: rarityColors[room.rarity],
+                            }}
+                          >
+                            {Math.round(room.odds * 10) / 10 === 0
+                              ? '<0% Chance'
+                              : `${Math.round(room.odds * 10) / 10}% Chance`}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
         </div>
       </div>
     </div>

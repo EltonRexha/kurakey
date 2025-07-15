@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
 import Room3D from '@/components/ui/3DRoom';
-import { getChestImage } from '@/utils/getChestImage';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
 import { notFound } from 'next/navigation';
@@ -22,6 +21,7 @@ interface ChestOdds {
   name: string;
   chance: number;
   rarity: Rarity;
+  chestImageUrl: string;
 }
 
 // Server functions to fetch data
@@ -80,6 +80,7 @@ async function calculateRoomOdds(room: Room): Promise<ChestOdds[]> {
       name: chest.name,
       rarity: dropRate.rarity,
       chance: dropRate.chance * (1 / rarityRoomAmount),
+      chestImageUrl: chest.chestImageUrl,
     };
   });
 }
@@ -251,7 +252,7 @@ const page = async ({ searchParams }: PageProps) => {
                         }}
                       />{' '}
                       <Image
-                        src={getChestImage(chest.name)}
+                        src={chest.chestImageUrl}
                         alt={chest.name}
                         fill
                         sizes="64px"

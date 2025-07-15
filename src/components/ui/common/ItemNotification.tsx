@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { ItemNotification as ItemNotificationType } from '@/context/ItemNotificationContext';
@@ -26,9 +26,9 @@ export const ItemNotification: React.FC<Props> = ({
     >
       <div className="flex-1">
         <div className="flex items-center gap-3">
-          {notification.chestImage && notification.chestTypeName && (
+          {notification.chestImageUrl && notification.chestTypeName && (
             <Image
-              src={notification.chestImage as StaticImageData}
+              src={notification.chestImageUrl}
               alt={notification.chestTypeName}
               width={40}
               height={40}

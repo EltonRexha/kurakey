@@ -9,10 +9,10 @@ interface AchievementGridProps {
 const AchievementGrid: React.FC<AchievementGridProps> = ({ achievements }) => {
   return (
     <div className="flex flex-wrap justify-center space-x-2 mt-4">
-      {achievements.map(({ image, id, unlockMessage }) => (
+      {achievements.map(({ imageUrl, id, unlockMessage }) => (
         <div key={id} className="w-15 aspect-square relative rounded-md group">
           <Image
-            src={image}
+            src={imageUrl}
             alt="achievement"
             fill
             className="object-contain"

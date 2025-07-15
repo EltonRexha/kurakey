@@ -32,7 +32,7 @@ async function getUsersData(
     username: string;
     image: string | null;
     xp: number;
-    Chest: { type: { name: string } }[];
+    Chest: { type: { name: string; chestImageUrl: string } }[];
     userRoom: { room: { rarity: string } }[];
   };
 
@@ -54,7 +54,7 @@ async function getUsersData(
           where: { opened: false },
           select: {
             type: {
-              select: { name: true },
+              select: { name: true, chestImageUrl: true },
             },
           },
         },
@@ -87,7 +87,7 @@ async function getUsersData(
         xp: true,
         Chest: {
           where: { opened: false },
-          select: { type: { select: { name: true } } },
+          select: { type: { select: { name: true, chestImageUrl: true } } },
         },
         userRoom: {
           select: { room: { select: { rarity: true } } },
@@ -112,7 +112,7 @@ async function getUsersData(
         xp: true,
         Chest: {
           where: { opened: false },
-          select: { type: { select: { name: true } } },
+          select: { type: { select: { name: true, chestImageUrl: true } } },
         },
         userRoom: {
           select: { room: { select: { rarity: true } } },
@@ -127,10 +127,13 @@ async function getUsersData(
   }
 
   return users.map<UserCardData>((user) => {
-    const chests: Record<string, number> = {};
+    const chests: Record<string, { count: number; chestImageUrl: string}> = {};
     user.Chest.forEach((c) => {
       const name = c.type.name.toLowerCase();
-      chests[name] = (chests[name] || 0) + 1;
+      chests[name] = {
+        count: (chests[name]?.count || 0) + 1,
+        chestImageUrl: c.type.chestImageUrl,
+      };
     });
 
     const rarities: Record<string, number> = {};

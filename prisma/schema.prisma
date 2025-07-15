@@ -87,6 +87,9 @@ model UserRoom {
 model ChestType {
   id                  String                @id @default(cuid())
   name                String                @unique
+  chestImageUrl       String
+  chestOpeningGifUrl  String
+  chestOpenedImageUrl String
   price               Int
   xpGain              Int
   Chests              Chest[]
@@ -134,6 +137,7 @@ model BundleType {
   Bundle              Bundle[]
   BundleTypeChestType BundleTypeChestType[]
   StripePayments      StripePayments[]
+  bundleImageUrl      String
 }
 
 model BundleTypeChestType {
@@ -309,14 +313,15 @@ model CoinPackage {
   name            String            @unique
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
+  imageUrl        String
   UserCoinPackage UserCoinPackage[]
   StripePayments  StripePayments[]
 }
 
 model Achievement {
   id            String         @id @default(cuid())
-  image         String
   type          String         @unique
+  imageUrl      String
   unlockMessage String
   users         User[]
   Notification  Notification[]

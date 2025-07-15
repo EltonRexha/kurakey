@@ -1,9 +1,7 @@
-import { $Enums } from "@/generated/prisma";
-import { getChestAnimation } from "@/utils/getChestAnimation";
-import { getChestImage } from "@/utils/getChestImage";
-import FloatingParticles from "@/components/ui/common/FloatingParticles";
-import Image from "next/image";
-import React, { useEffect } from "react";
+import { $Enums } from '@/generated/prisma';
+import FloatingParticles from '@/components/ui/common/FloatingParticles';
+import Image from 'next/image';
+import React, { useEffect } from 'react';
 
 export const OPENING_TIME_MS = 3000;
 
@@ -18,6 +16,9 @@ interface Props {
       chance: number;
     }[];
     owned: number;
+    chestOpeningGifUrl: string;
+    chestOpenedImageUrl: string;
+    chestImageUrl: string;
   };
   isOpening: boolean;
   setChestIsOpening: (isOpening: boolean) => void;
@@ -49,10 +50,9 @@ const Chest = ({
         <FloatingParticles numParticles={70} spread={30} />
 
         <div className="relative w-[250px] h-[250px] transform transition-transform hover:scale-105 duration-300">
-
           {isOpening ? (
             <Image
-              src={getChestAnimation(chest.name)}
+              src={chest.chestOpeningGifUrl}
               alt={chest.name}
               fill
               sizes="350px"
@@ -62,7 +62,7 @@ const Chest = ({
             />
           ) : chestIsOpen ? (
             <Image
-              src={getChestImage(chest.name, true)}
+              src={chest.chestOpenedImageUrl}
               alt={chest.name}
               fill
               sizes="350px"
@@ -72,7 +72,7 @@ const Chest = ({
             />
           ) : (
             <Image
-              src={getChestImage(chest.name)}
+              src={chest.chestImageUrl}
               alt={chest.name}
               fill
               sizes="350px"

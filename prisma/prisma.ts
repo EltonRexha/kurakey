@@ -9,9 +9,8 @@ const globalForPrisma = global as unknown as {
 const prisma =
   globalForPrisma.prisma ||
   new PrismaClient()
-    .$extends(withAccelerate()) // keep Accelerate
+    .$extends(withAccelerate())
     .$extends({
-      // NEW: query extension
       query: {
         notification: {
           async create({ args, query }) {
@@ -26,7 +25,6 @@ const prisma =
         trade: {
           async update({ args, query }) {
             const result = await query(args);
-            // notify both participants of the trade
             notificationEmitter.emit(
               `notify:${result.senderId}`,
               'TRADE_UPDATE'

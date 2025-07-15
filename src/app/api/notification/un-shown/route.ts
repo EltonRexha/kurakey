@@ -24,6 +24,7 @@ export async function GET(request: Request) {
       chestType: {
         select: {
           name: true,
+          chestImageUrl: true,
         },
       },
       room: {
@@ -34,7 +35,7 @@ export async function GET(request: Request) {
       },
       achievement: {
         select: {
-          image: true,
+          imageUrl: true,
           unlockMessage: true,
         },
       },

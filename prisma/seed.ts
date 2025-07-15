@@ -1,78 +1,97 @@
-import { PrismaClient, Rarity, RoomCategory } from '../src/generated/prisma';
+import { PrismaClient, RoomCategory } from '../src/generated/prisma';
+import chestDropRates from './data/chestDropRates';
+import roomsData from './data/rooms';
+import achievementsData from './data/achievements';
+import chestTypes from './data/chestTypes';
+import coinPackages from './data/coinPackages';
+import { v2 as cloudinary } from 'cloudinary';
+import path from 'path';
+import fs from 'fs';
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const IMAGE_BASE_PATH = path.join(__dirname, 'data', 'images');
+
+function sanitizeLocalPath(p?: string) {
+  if (!p) {
+    throw new Error('❌ sanitizeLocalPath received an undefined path');
+  }
+  return p.replace(/^\/+/, '');
+}
+
+async function uploadAndOptimize(
+  localRelativePath: string,
+  context?: string
+): Promise<string> {
+  if (!localRelativePath) {
+    throw new Error(
+      `❌ uploadAndOptimize received an empty path${
+        context ? ' for ' + context : ''
+      }`
+    );
+  }
+  const sanitized = sanitizeLocalPath(localRelativePath);
+  const absolutePath = path.join(IMAGE_BASE_PATH, sanitized);
+  if (!fs.existsSync(absolutePath)) {
+    console.warn(
+      `⚠️  Image file not found at ${absolutePath}. Skipping upload for ${
+        context ?? sanitized
+      }`
+    );
+    return '';
+  }
+  const uploadResult = await cloudinary.uploader.upload(absolutePath, {
+    folder: `kurakey/${path.dirname(sanitized)}`,
+    public_id: path.parse(sanitized).name,
+    overwrite: true,
+    resource_type: 'image',
+  });
+  return uploadResult.secure_url.replace('/upload/', '/upload/f_auto,q_auto/');
+}
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const chestTypes = [
-    {
-      name: 'Starter',
-      price: 100,
-      xpGain: 20,
-    },
-    {
-      name: 'Advanced',
-      price: 250,
-      xpGain: 40,
-    },
-    {
-      name: 'Elite',
-      price: 500,
-      xpGain: 80,
-    },
-    {
-      name: 'Mythic',
-      price: 1500,
-      xpGain: 160,
-    },
-  ];
-
   console.log('🌱 Starting to seed chest types and drop rates...');
 
-  // Chest odds data from screenshot
-  const chestDropRates: Record<string, { rarity: Rarity; chance: number }[]> = {
-    Starter: [
-      { rarity: 'COMMON', chance: 70 },
-      { rarity: 'UNCOMMON', chance: 20 },
-      { rarity: 'RARE', chance: 8.5 },
-      { rarity: 'EPIC', chance: 1.4 },
-      { rarity: 'LEGENDARY', chance: 0.1 },
-      { rarity: 'SECRET', chance: 0.05 },
-    ],
-    Advanced: [
-      { rarity: 'COMMON', chance: 55 },
-      { rarity: 'UNCOMMON', chance: 25 },
-      { rarity: 'RARE', chance: 12 },
-      { rarity: 'EPIC', chance: 7.5 },
-      { rarity: 'LEGENDARY', chance: 0.5 },
-      { rarity: 'SECRET', chance: 0.1 },
-    ],
-    Elite: [
-      { rarity: 'COMMON', chance: 40 },
-      { rarity: 'UNCOMMON', chance: 30 },
-      { rarity: 'RARE', chance: 20 },
-      { rarity: 'EPIC', chance: 8.9 },
-      { rarity: 'LEGENDARY', chance: 1.1 },
-      { rarity: 'SECRET', chance: 0.25 },
-    ],
-    Mythic: [
-      { rarity: 'COMMON', chance: 10 },
-      { rarity: 'UNCOMMON', chance: 20 },
-      { rarity: 'RARE', chance: 30 },
-      { rarity: 'EPIC', chance: 30 },
-      { rarity: 'LEGENDARY', chance: 10 },
-      { rarity: 'SECRET', chance: 1 },
-    ],
-  };
+  for (const chestTypeData of chestTypes) {
+    const chestImageUrl = await uploadAndOptimize(
+      chestTypeData.chestImageUrl,
+      `${chestTypeData.name} → chestImageUrl`
+    );
+    const chestOpeningGifUrl = await uploadAndOptimize(
+      chestTypeData.chestOpeningGifUrl,
+      `${chestTypeData.name} → chestOpeningGifUrl`
+    );
+    const chestOpenedImageUrl = await uploadAndOptimize(
+      chestTypeData.chestOpenedImageUrl,
+      `${chestTypeData.name} → chestOpenedImageUrl`
+    );
 
-  for (const chestType of chestTypes) {
     const createdChestType = await prisma.chestType.upsert({
-      where: { name: chestType.name },
-      update: {},
-      create: chestType,
+      where: { name: chestTypeData.name },
+      update: {
+        price: chestTypeData.price,
+        xpGain: chestTypeData.xpGain,
+        chestImageUrl,
+        chestOpeningGifUrl,
+        chestOpenedImageUrl,
+      },
+      create: {
+        name: chestTypeData.name,
+        price: chestTypeData.price,
+        xpGain: chestTypeData.xpGain,
+        chestImageUrl,
+        chestOpeningGifUrl,
+        chestOpenedImageUrl,
+      },
     });
 
-    // Seed drop rates for each chest type
-    const dropRates = chestDropRates[chestType.name];
+    const dropRates = chestDropRates[chestTypeData.name];
     for (const drop of dropRates) {
       await prisma.chestDropRate.upsert({
         where: {
@@ -114,6 +133,7 @@ async function main() {
     throw new Error('One or more required chest types not found.');
   }
 
+  //We cannot move this to a separate file because we need to get the chest type ids
   const bundleTypes = [
     {
       name: 'Starter Bundle',
@@ -152,18 +172,33 @@ async function main() {
     },
   ];
 
+  const bundleImageMap: Record<string, string> = {
+    'Starter Bundle': 'bundles/blueBundle.png',
+    'Pro Bundle': 'bundles/greenBundle.png',
+    'Elite Bundle': 'bundles/orangeBundle.png',
+    'Mythic Bundle': 'bundles/yellowBundle.png',
+  };
+
   for (const bundle of bundleTypes) {
+    const imagePath = bundleImageMap[bundle.name];
+    const bundleImageUrl = await uploadAndOptimize(
+      imagePath,
+      `${bundle.name} → bundleImage`
+    );
+
     // Upsert the bundle type
     const createdBundleType = await prisma.bundleType.upsert({
       where: { name: bundle.name },
       update: {
         price: bundle.price,
         coinAmount: bundle.coinAmount,
+        bundleImageUrl,
       },
       create: {
         name: bundle.name,
         price: bundle.price,
         coinAmount: bundle.coinAmount,
+        bundleImageUrl,
       },
     });
 
@@ -190,9 +225,18 @@ async function main() {
 
   // --- Room seeding ---
   console.log('🌱 Seeding rooms...');
-  const roomsData = (await import('./data/rooms')).default;
   for (const [category, roomsArr] of Object.entries(roomsData)) {
     for (const room of roomsArr) {
+      const previewImageUrl = await uploadAndOptimize(
+        (room as { imagePreviewUrl?: string }).imagePreviewUrl ?? '',
+        `${room.name} preview`
+      );
+      if (!previewImageUrl) {
+        console.warn(
+          `⚠️  Skipping room "${room.name}" because preview image is missing.`
+        );
+        continue;
+      }
       await prisma.room.upsert({
         where: {
           name_category: {
@@ -204,7 +248,7 @@ async function main() {
           rarity: room.rarity,
           category: category as RoomCategory,
           assetUrl: room.assetUrl,
-          previewImageUrl: room.imagePreviewUrl,
+          previewImageUrl,
           isSecret: room.isSecret,
         },
         create: {
@@ -212,7 +256,7 @@ async function main() {
           rarity: room.rarity,
           category: category as RoomCategory,
           assetUrl: room.assetUrl,
-          previewImageUrl: room.imagePreviewUrl,
+          previewImageUrl,
           isSecret: room.isSecret,
         },
       });
@@ -222,13 +266,12 @@ async function main() {
 
   // --- CoinPackage seeding ---
   console.log('🌱 Seeding coin packages...');
-  const coinPackages = [
-    { price: 5, baseCoins: 500, bonusCoins: 0, name: 'Starter Package' },
-    { price: 10, baseCoins: 1000, bonusCoins: 100, name: 'Silver Package' },
-    { price: 20, baseCoins: 2000, bonusCoins: 300, name: 'Gold Package I' },
-    { price: 50, baseCoins: 5000, bonusCoins: 1000, name: 'Gold Package II' },
-  ];
+
   for (const pkg of coinPackages) {
+    const optimizedImageUrl = await uploadAndOptimize(
+      pkg.imageUrl,
+      `${pkg.name} coin package`
+    );
     const existing = await prisma.coinPackage.findFirst({
       where: { price: pkg.price },
     });
@@ -239,27 +282,39 @@ async function main() {
           baseCoins: pkg.baseCoins,
           bonusCoins: pkg.bonusCoins,
           name: pkg.name,
+          imageUrl: optimizedImageUrl,
         },
       });
     } else {
-      await prisma.coinPackage.create({ data: pkg });
+      await prisma.coinPackage.create({
+        data: {
+          price: pkg.price,
+          baseCoins: pkg.baseCoins,
+          bonusCoins: pkg.bonusCoins,
+          name: pkg.name,
+          imageUrl: optimizedImageUrl,
+        },
+      });
     }
   }
   console.log('✅ Coin packages seeded successfully!');
 
   // --- Achievement seeding ---
   console.log('🌱 Seeding achievements...');
-  const achievementsData = (await import('./data/achievements')).default;
   for (const ach of achievementsData) {
+    const achievementImageUrl = await uploadAndOptimize(
+      ach.image,
+      `${ach.type} achievement`
+    );
     await prisma.achievement.upsert({
       where: { type: ach.type },
       update: {
-        image: ach.image,
+        imageUrl: achievementImageUrl,
         unlockMessage: ach.unlockMessage,
       },
       create: {
         type: ach.type,
-        image: ach.image,
+        imageUrl: achievementImageUrl,
         unlockMessage: ach.unlockMessage,
       },
     });

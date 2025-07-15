@@ -1,20 +1,25 @@
 "use client";
 import Image from "next/image";
-import { getChestImage } from "@/utils/getChestImage";
 
 interface ChestCardProps {
   name: string;
   count: number;
   countMessage?: string;
+  chestImageUrl: string;
 }
 
-const ChestCard: React.FC<ChestCardProps> = ({ name, count, countMessage }) => {
+const ChestCard: React.FC<ChestCardProps> = ({
+  name,
+  count,
+  countMessage,
+  chestImageUrl,
+}) => {
   return (
     <div className="relative w-full h-full bg-[#0d1024] border border-[#11142d] group rounded-md overflow-hidden flex flex-col items-center justify-center">
       {/* Image */}
       <div className="absolute inset-0 flex items-center group-hover:scale-105 transition-transform duration-200 justify-center p-2 mb-10">
         <Image
-          src={getChestImage(name)}
+          src={chestImageUrl}
           alt={name}
           fill
           className="object-contain"

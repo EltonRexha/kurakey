@@ -12,6 +12,7 @@ type Item = {
     name: string;
     count: number;
     id: string;
+    chestImageUrl: string;
   };
 } | {
   type: 'room';
@@ -63,7 +64,11 @@ const InventoryGrid: React.FC<InventoryGridProps> = ({ items }) => {
       {items.map((item) => (
         <div key={item.data.id} className="aspect-square w-full">
           {item.type === 'chest' ? (
-            <ChestCard name={item.data.name} count={item.data.count} />
+            <ChestCard
+              name={item.data.name}
+              count={item.data.count}
+              chestImageUrl={item.data.chestImageUrl}
+            />
           ) : (
             <Link href={`/room?id=${item.data.roomId}`}>
               <RoomCard

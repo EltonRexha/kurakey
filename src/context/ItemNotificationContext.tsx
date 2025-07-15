@@ -1,17 +1,12 @@
 'use client';
 import React, { createContext, useContext, useCallback, useState } from 'react';
-import { getChestImage } from '@/utils/getChestImage';
-import { StaticImageData } from 'next/image';
 import { ItemNotificationContainer } from '@/components/ui/common/ItemNotificationContainer';
-
-//FUTURE: IF YOU HAVE IMPLEMENTED ADDING IMAGES OF CHEST TO DATABASE, THIS USES THE FUNCTIONS TO GET THE IMAGES
-//YOU NEED TO USE THE DATABASE TO GET THE IMAGE NOW!
 
 export interface ItemNotification {
   id: string;
   message: string;
   chestTypeName?: string;
-  chestImage?: StaticImageData;
+  chestImageUrl?: string;
   roomImage?: string;
   achievementImage?: string;
   tradeId?: string;
@@ -21,7 +16,11 @@ export interface ItemNotification {
 
 interface ItemNotificationContextType {
   addRoom: (message: string, roomPreviewUrl: string) => void;
-  addChest: (message: string, chestTypeName: string) => Promise<void>;
+  addChest: (
+    message: string,
+    chestTypeName: string,
+    chestImageUrl: string
+  ) => Promise<void>;
   addXP: (xpAmount: number) => void;
   addAchievement: (message: string, imageUrl: string) => void;
   addTrade: (message: string, tradeId: string) => void;
@@ -44,8 +43,7 @@ export const ItemNotificationProvider: React.FC<{
   }, []);
 
   const addChest = useCallback(
-    async (message: string, chestTypeName: string) => {
-      const chestImage = getChestImage(chestTypeName);
+    async (message: string, chestTypeName: string, chestImageUrl: string) => {
       const id = Math.random().toString(36).slice(2);
       setNotifications((prev) => [
         ...prev,
@@ -53,7 +51,7 @@ export const ItemNotificationProvider: React.FC<{
           id,
           message,
           chestTypeName,
-          chestImage,
+          chestImageUrl,
         },
       ]);
       setTimeout(() => removeNotification(id), 5000);
