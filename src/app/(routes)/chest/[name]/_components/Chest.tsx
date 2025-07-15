@@ -3,7 +3,7 @@ import FloatingParticles from '@/components/ui/common/FloatingParticles';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 
-export const OPENING_TIME_MS = 3000;
+export const OPENING_TIME_MS = 1400;
 
 interface Props {
   chest: {
@@ -37,12 +37,11 @@ const Chest = ({
     if (isOpening) {
       setTimeout(() => {
         setChestIsOpen(true);
-        setTimeout(() => {
-          setChestIsOpening(false);
-        }, 100);
+        setChestIsOpening(false);
       }, OPENING_TIME_MS);
     }
   }, [isOpening, setChestIsOpen, setChestIsOpening]);
+  console.log({isOpening, chestIsOpen})
 
   return (
     <div className="rounded-xl overflow-hidden">
@@ -50,9 +49,9 @@ const Chest = ({
         <FloatingParticles numParticles={70} spread={30} />
 
         <div className="relative w-[250px] h-[250px] transform transition-transform hover:scale-105 duration-300">
-          {isOpening ? (
+          {chestIsOpen ? (
             <Image
-              src={chest.chestOpeningGifUrl}
+              src={chest.chestOpenedImageUrl}
               alt={chest.name}
               fill
               sizes="350px"
@@ -60,9 +59,9 @@ const Chest = ({
               className="object-contain drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]"
               priority
             />
-          ) : chestIsOpen ? (
+          ) : isOpening ? (
             <Image
-              src={chest.chestOpenedImageUrl}
+              src={chest.chestOpeningGifUrl}
               alt={chest.name}
               fill
               sizes="350px"

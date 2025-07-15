@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState, ReactNode } from 'react';
 import Image from 'next/image';
-import { BounceLoader } from 'react-spinners';
+import { Loader2 } from 'lucide-react';
 
 interface Props {
   images: string[];
@@ -48,8 +48,8 @@ export default function PreloadProvider({ images, children }: Props) {
             sizes="(max-width: 768px) 80px, 120px"
             priority
           />
-          <div className="mt-4">
-            <BounceLoader color="#008cff" speedMultiplier={0.9} size={100} />
+          <div className="mt-4 flex items-center justify-center">
+            <Loader2 className="animate-spin text-[#008cff]" size={100} />
           </div>
         </div>
       )}

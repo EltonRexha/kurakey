@@ -1,6 +1,6 @@
+import { Loader2 } from 'lucide-react';
 import Image from "next/image";
 import React from "react";
-import { BounceLoader } from "react-spinners";
 
 const Loader = () => {
   return (
@@ -14,8 +14,8 @@ const Loader = () => {
         sizes="(max-width: 768px) 80px, 120px"
         priority
       />
-      <div className="mt-4">
-        <BounceLoader color="#008cff" speedMultiplier={0.9} size={100} />
+      <div className="mt-4 flex items-center justify-center">
+        <Loader2 className="animate-spin text-[#008cff]" size={100} />
       </div>
       {/* This is here as a indicator */}
       <div className="hidden" id="loading"></div>
