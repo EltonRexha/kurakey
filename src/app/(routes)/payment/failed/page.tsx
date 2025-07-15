@@ -2,8 +2,6 @@ import React from 'react';
 import { StaticImageData } from 'next/image';
 import FailedPayment from './_components/FailedPayment';
 import prisma from '../../../../../prisma/prisma';
-import { getBundleImage } from '@/utils/getBundleImage';
-import { getCoinPackageImage } from '@/utils/getCoinPackageImage';
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -32,7 +30,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   type Product = {
     name: string;
-    image: StaticImageData;
+    image: string;
     type: 'bundle' | 'coin';
   } | null;
 
@@ -45,7 +43,7 @@ export default async function Page({ searchParams }: PageProps) {
     if (bundleType) {
       product = {
         name: bundleType.name,
-        image: getBundleImage(bundleType.name),
+        image: bundleType.bundleImageUrl,
         type: 'bundle',
       };
     }
@@ -56,7 +54,7 @@ export default async function Page({ searchParams }: PageProps) {
     if (coinPackage) {
       product = {
         name: coinPackage.name,
-        image: getCoinPackageImage(coinPackage.name),
+        image: coinPackage.imageUrl,
         type: 'coin',
       };
     }

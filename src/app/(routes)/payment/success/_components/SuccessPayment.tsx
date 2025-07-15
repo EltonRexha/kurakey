@@ -2,12 +2,12 @@
 
 import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 
 export interface SuccessPaymentProps {
   product: {
     name: string;
-    image: StaticImageData;
+    image: string;
     type: 'bundle' | 'coin';
   } | null;
 }

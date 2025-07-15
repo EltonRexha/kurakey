@@ -2,13 +2,13 @@
 
 import { motion } from 'framer-motion';
 import { XCircle } from 'lucide-react';
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export interface FailedPaymentProps {
   product: {
     name: string;
-    image: StaticImageData;
+    image: string;
     type: 'bundle' | 'coin';
   } | null;
 }
