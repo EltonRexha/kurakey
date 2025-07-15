@@ -183,7 +183,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
         Joined: {new Date(joined).toLocaleDateString()}
       </p>
       {!isLoggedUser &&
-        currentUserXp &&
+        currentUserXp !== undefined &&
         (getLevel(currentUserXp) >= MIN_LEVEL_TRADE ? (
           <TradeBtn receiverId={profileId} />
         ) : (
