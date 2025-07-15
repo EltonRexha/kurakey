@@ -40,12 +40,22 @@ export async function GET(
       sender: true,
       receiverChests: {
         include: {
-          type: true,
+          type: {
+            select: {
+              name: true,
+              chestImageUrl: true,
+            },
+          },
         },
       },
       senderChests: {
         include: {
-          type: true,
+          type: {
+            select: {
+              name: true,
+              chestImageUrl: true,
+            },
+          },
         },
       },
       receiverRooms: {

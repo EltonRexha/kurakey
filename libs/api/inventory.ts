@@ -27,6 +27,7 @@ interface InventoryApiResponse {
         id: string;
         price: number;
         xpGain: number;
+        chestImageUrl: string;
       };
     } & {
       id: string;

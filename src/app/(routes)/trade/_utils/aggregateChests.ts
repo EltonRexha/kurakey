@@ -7,6 +7,7 @@ export interface AggregatedChest {
     count: number;
     id: string;
     chestTypeId: string;
+    chestImageUrl: string;
   };
 }
 
@@ -16,7 +17,7 @@ export default function aggregateChests(
 ): AggregatedChest[] {
   const map = new Map<
     string,
-    { name: string; count: number; id: string; chestTypeId: string }
+    { name: string; count: number; id: string; chestTypeId: string; chestImageUrl: string }
   >();
   chests.forEach((c) => {
     const key = c.type.name;
@@ -25,6 +26,7 @@ export default function aggregateChests(
       count: 0,
       id: c.id,
       chestTypeId: c.type.id,
+      chestImageUrl: c.type.chestImageUrl,
     };
     entry.count += 1;
     map.set(key, entry);
@@ -36,6 +38,7 @@ export default function aggregateChests(
       count: c.count,
       id: c.id,
       chestTypeId: c.chestTypeId,
+      chestImageUrl: c.chestImageUrl,
     },
   }));
 }

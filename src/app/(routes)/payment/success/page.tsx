@@ -1,5 +1,4 @@
 import React from 'react';
-import { StaticImageData } from 'next/image';
 import prisma from '../../../../../prisma/prisma';
 import SuccessPayment from './_components/SuccessPayment';
 import { redirect } from 'next/navigation';

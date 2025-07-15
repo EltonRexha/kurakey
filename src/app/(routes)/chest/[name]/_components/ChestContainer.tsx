@@ -21,6 +21,9 @@ interface Props {
       chance: number;
     }[];
     owned: number;
+    chestOpeningGifUrl: string;
+    chestOpenedImageUrl: string;
+    chestImageUrl: string;
   };
   userCoinBalance?: number;
 }

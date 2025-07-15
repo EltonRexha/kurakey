@@ -187,16 +187,17 @@ interface ItemSelectionGridProps {
   cols: number;
   chests: {
     selected: number;
-    type: "chest";
+    type: 'chest';
     data: {
       name: string;
       count: number;
       id: string;
+      chestImageUrl: string;
     };
   }[];
   rooms: {
     selected: number;
-    type: "room";
+    type: 'room';
     data: {
       name: string;
       image: string;
@@ -235,7 +236,7 @@ const ItemSelectionGrid: React.FC<ItemSelectionGridProps> = ({
       {chests.map((c, idx) => (
         <div key={c.data.id} className="flex flex-col items-center">
           <div className="aspect-square min-w-full">
-            <ChestCard name={c.data.name} count={c.data.count} countMessage={'You own'} />
+            <ChestCard name={c.data.name} count={c.data.count} countMessage={'You own'} chestImageUrl={c.data.chestImageUrl} />
           </div>
           <div className="flex items-center gap-2 mt-2">
             {c.selected > 0 ? <button

@@ -18,6 +18,7 @@ export interface ChestType {
   name: string;
   price: number;
   xpGain: number;
+  chestImageUrl: string;
 }
 
 export interface TradeChest {
