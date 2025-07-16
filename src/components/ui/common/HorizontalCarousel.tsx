@@ -40,7 +40,7 @@ const HorizontalCarousel = ({ children, speedSeconds = 35 }: CarouselProps) => {
       `}</style>
 
       <div
-        className="marquee flex w-max whitespace-nowrap gap-10"
+        className="marquee flex w-max whitespace-nowrap gap-7"
         style={{ animation: `slide ${speedSeconds}s linear infinite` }}
       >
         {duplicated.map((child, idx) => (
