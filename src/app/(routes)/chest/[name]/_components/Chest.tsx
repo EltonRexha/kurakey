@@ -41,7 +41,6 @@ const Chest = ({
       }, OPENING_TIME_MS);
     }
   }, [isOpening, setChestIsOpen, setChestIsOpening]);
-  console.log({isOpening, chestIsOpen})
 
   return (
     <div className="rounded-xl overflow-hidden">

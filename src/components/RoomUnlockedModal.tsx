@@ -5,7 +5,7 @@ import useMounted from '@/hooks/useMounted';
 import Room3D from './ui/3DRoom';
 import { rarityColors, categoryColors } from '@/utils/colors';
 import GlowingButton from './ui/common/GlowingButton';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Room } from '@/generated/prisma';
 import Link from 'next/link';
 
@@ -21,127 +21,94 @@ const RoomUnlockedModal: React.FC<RoomUnlockedModalProps> = ({
   setIsOpen,
   room,
 }) => {
-  const confettiRef = useRef<HTMLCanvasElement>(null);
   const mounted = useMounted();
   const modalElement =
     typeof window !== 'undefined' ? document.getElementById('modal') : null;
-  // Add a portal target for confetti overlay
-  const [confettiOverlay, setConfettiOverlay] = useState<HTMLElement | null>(
-    null
-  );
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      let overlay = document.getElementById('confetti-overlay');
-      if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'confetti-overlay';
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100vw';
-        overlay.style.height = '100vh';
-        overlay.style.pointerEvents = 'none';
-        overlay.style.zIndex = '9999';
-        document.body.appendChild(overlay);
-      }
-      setConfettiOverlay(overlay);
+    if (!mounted || !isOpen) return;
+
+    // Create overlay + canvas if not present
+    let overlay = document.getElementById(
+      'confetti-overlay'
+    ) as HTMLDivElement | null;
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'confetti-overlay';
+      overlay.style.position = 'fixed';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100vw';
+      overlay.style.height = '100vh';
+      overlay.style.pointerEvents = 'none';
+      overlay.style.zIndex = '1100'; // above modal (1000)
+      document.body.appendChild(overlay);
     }
-  }, []);
 
-  useEffect(() => {
-    if (!mounted || !isOpen || !confettiOverlay) return;
-    const canvas = confettiRef.current;
+    let canvas = canvasRef.current;
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      overlay.appendChild(canvas);
+      canvasRef.current = canvas;
+    }
+
     import('canvas-confetti').then((module) => {
-      const confetti = module.default;
-      if (canvas) {
-        // Create a confetti instance bound to the canvas
-        const confettiInstance = confetti.create(canvas, {
-          resize: true,
-          useWorker: true,
-        });
-        confettiInstance({
-          particleCount: 80,
-          angle: 60,
-          spread: 70,
-          origin: { x: 0, y: 1 },
-          colors: ['#fbbf24', '#008cff', '#fff', '#a78bfa'],
-          scalar: 1.2,
-          zIndex: 0,
-          disableForReducedMotion: true,
-          ticks: 200,
-          shapes: ['circle'],
-          startVelocity: 45,
-          gravity: 0.7,
-          drift: 0.5,
-        });
-        confettiInstance({
-          particleCount: 80,
-          angle: 120,
-          spread: 70,
-          origin: { x: 1, y: 1 },
-          colors: ['#fbbf24', '#008cff', '#fff', '#a78bfa'],
-          scalar: 1.2,
-          zIndex: 0,
-          disableForReducedMotion: true,
-          ticks: 200,
-          shapes: ['circle'],
-          startVelocity: 45,
-          gravity: 0.7,
-          drift: -0.5,
-        });
-        // Top left corner
-        confettiInstance({
-          particleCount: 80,
-          angle: 120,
-          spread: 70,
-          origin: { x: 0, y: 0 },
-          colors: ['#fbbf24', '#008cff', '#fff', '#a78bfa'],
-          scalar: 1.2,
-          zIndex: 0,
-          disableForReducedMotion: true,
-          ticks: 200,
-          shapes: ['circle'],
-          startVelocity: 45,
-          gravity: 0.7,
-          drift: 0.5,
-        });
-        // Top right corner
-        confettiInstance({
-          particleCount: 80,
-          angle: 60,
-          spread: 70,
-          origin: { x: 1, y: 0 },
-          colors: ['#fbbf24', '#008cff', '#fff', '#a78bfa'],
-          scalar: 1.2,
-          zIndex: 0,
-          disableForReducedMotion: true,
-          ticks: 200,
-          shapes: ['circle'],
-          startVelocity: 45,
-          gravity: 0.7,
-          drift: -0.5,
-        });
-      }
-    });
-  }, [isOpen, mounted, confettiOverlay]);
+      const confetti = module.default.create(canvas!, {
+        resize: true,
+        useWorker: false,
+      });
 
-  if (!mounted) return null;
-  if (!modalElement) return null;
+      const common = {
+        colors: ['#fbbf24', '#008cff', '#fff', '#a78bfa'] as string[],
+        scalar: 1.2,
+        ticks: 200,
+        disableForReducedMotion: false,
+        startVelocity: 45,
+        gravity: 0.7,
+      } as const;
+
+      confetti({
+        particleCount: 80,
+        angle: 60,
+        spread: 70,
+        origin: { x: 0, y: 1 },
+        drift: 0.5,
+        ...common,
+      });
+      confetti({
+        particleCount: 80,
+        angle: 120,
+        spread: 70,
+        origin: { x: 1, y: 1 },
+        drift: -0.5,
+        ...common,
+      });
+      confetti({
+        particleCount: 80,
+        angle: 120,
+        spread: 70,
+        origin: { x: 0, y: 0 },
+        drift: 0.5,
+        ...common,
+      });
+      confetti({
+        particleCount: 80,
+        angle: 60,
+        spread: 70,
+        origin: { x: 1, y: 0 },
+        drift: -0.5,
+        ...common,
+      });
+    });
+  }, [isOpen, mounted]);
+
+  if (!mounted || !modalElement) return null;
 
   return (
     <>
-      {/* Confetti Canvas Overlay (full screen, outside modal) */}
-      {confettiOverlay &&
-        isOpen &&
-        createPortal(
-          <canvas
-            ref={confettiRef}
-            className="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[9999]"
-            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
-            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
-          />,
-          confettiOverlay
-        )}
       {createPortal(
         <Modal
           isOpen={isOpen}
