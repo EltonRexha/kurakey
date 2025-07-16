@@ -7,6 +7,8 @@ import { ItemNotificationProvider } from '@/context/ItemNotificationContext';
 import NotificationsProvider from '../../libs/NotificationsProvider';
 import PreloadProvider from '@/components/PreloadProvider';
 import { PrismaClient } from '../generated/prisma';
+import { Metadata } from 'next';
+import Head from 'next/head';
 
 // Server-side helper to collect CDN image URLs for preload
 async function collectCdnImages(): Promise<string[]> {
@@ -26,9 +28,7 @@ async function collectCdnImages(): Promise<string[]> {
   await prisma.$disconnect();
 
   const urls = [
-    ...chestTypes.flatMap((c) => [
-      c.chestImageUrl,
-    ]),
+    ...chestTypes.flatMap((c) => [c.chestImageUrl]),
     ...coinPackages.map((c) => c.imageUrl),
     ...bundles.map((b) => b.bundleImageUrl),
     ...rooms.map((r) => r.previewImageUrl),
@@ -47,6 +47,12 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+export const metadata: Metadata = {
+  title: 'KuraKey',
+  description:
+    'Unlock immersive 3D rooms by opening mysterious chests. Collect, view, and trade animated rooms. Buy coin bundles to get chests and uncover rare experiences.',
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -59,6 +65,21 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Head>
+          <link
+            rel="icon"
+            type="image/png"
+            href="/favicon-96x96.png"
+            sizes="96x96"
+          />
+          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+          <link rel="shortcut icon" href="/favicon.ico" />
+          <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/apple-touch-icon.png"
+          />
+        </Head>
         <UserSessionProvider>
           <ReactQuery>
             <ToastProvider>

@@ -7,9 +7,10 @@ import { useSearchParams } from "next/navigation";
 
 interface Props {
   setAccountIsInactive: (active: boolean) => void;
+  disabled?: boolean;
 }
 
-const GoogleSignInButton = ({ setAccountIsInactive }: Props) => {
+const GoogleSignInButton = ({ setAccountIsInactive, disabled }: Props) => {
   const searchParams = useSearchParams();
 
   // If NextAuth redirects back with ?error=Callback, mark the account as active
@@ -29,6 +30,7 @@ const GoogleSignInButton = ({ setAccountIsInactive }: Props) => {
           callbackUrl: "/",
         });
       }}
+      disabled={disabled}
     >
       <div className="flex items-center justify-center gap-2">
         <FaGoogle className="text-xl" />

@@ -1,16 +1,17 @@
-"use client";
-import React, { useState } from "react";
-import { User, Mail, Lock } from "lucide-react";
-import { FormInput, GoogleSignInButton, OrDivider } from "@/components/ui/auth";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UserSchema } from "@/schemas/userSchema";
-import { useMutation } from "@tanstack/react-query";
-import { signIn } from "next-auth/react";
-import { useToastContext } from "@/context/ToastContext";
-import GlowingButton from "@/components/ui/common/GlowingButton";
-import { createUser } from "../../../../../../../libs/api/user";
+'use client';
+import React, { useState } from 'react';
+import { User, Mail, Lock } from 'lucide-react';
+import Link from 'next/link';
+import { FormInput, GoogleSignInButton, OrDivider } from '@/components/ui/auth';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { UserSchema } from '@/schemas/userSchema';
+import { useMutation } from '@tanstack/react-query';
+import { signIn } from 'next-auth/react';
+import { useToastContext } from '@/context/ToastContext';
+import GlowingButton from '@/components/ui/common/GlowingButton';
+import { createUser } from '../../../../../../../libs/api/user';
 
 type FormData = z.infer<typeof UserSchema>;
 
@@ -26,9 +27,10 @@ const SignupForm = () => {
 
   const [error, setError] = useState<null | string>(null);
   const [userIsBanned, setUserIsBanned] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
-  const email = watch("email");
-  const password = watch("password");
+  const email = watch('email');
+  const password = watch('password');
 
   const { addToast } = useToastContext();
 
@@ -36,13 +38,13 @@ const SignupForm = () => {
     mutationFn: (data: FormData) => createUser(data),
 
     onSuccess: () => {
-      signIn("credentials", {
+      signIn('credentials', {
         email,
         password,
-        callbackUrl: "/",
+        callbackUrl: '/',
         redirect: true,
       });
-      addToast("Successfully created account", "success");
+      addToast('Successfully created account', 'success');
     },
     onError: (e: { response: { data: { message: string } } }) => {
       setError(e.response.data.message);
@@ -65,14 +67,14 @@ const SignupForm = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
                   delay: 0.1,
-                  type: "spring",
+                  type: 'spring',
                   stiffness: 100,
                   damping: 12,
                 }}
                 placeholder="First Name"
                 autoComplete="firstName"
                 icon={<User />}
-                {...register("firstName")}
+                {...register('firstName')}
               />
               {errors.firstName && (
                 <p className="my-2 text-sm text-[#ff5f5f]">
@@ -88,7 +90,7 @@ const SignupForm = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
                   delay: 0.1,
-                  type: "spring",
+                  type: 'spring',
                   stiffness: 100,
                   damping: 12,
                 }}
@@ -96,7 +98,7 @@ const SignupForm = () => {
                 autoComplete="lastName"
                 icon={<User />}
                 required={false}
-                {...register("lastName")}
+                {...register('lastName')}
               />
               {errors.lastName && (
                 <p className="my-2 text-sm text-[#ff5f5f]">
@@ -113,11 +115,11 @@ const SignupForm = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 delay: 0.1,
-                type: "spring",
+                type: 'spring',
                 stiffness: 100,
                 damping: 12,
               }}
-              {...register("username")}
+              {...register('username')}
               placeholder="Choose a username"
               autoComplete="name"
               icon={<User />}
@@ -136,11 +138,11 @@ const SignupForm = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 delay: 0.2,
-                type: "spring",
+                type: 'spring',
                 stiffness: 100,
                 damping: 12,
               }}
-              {...register("email")}
+              {...register('email')}
               placeholder="Enter your email address"
               autoComplete="email"
               required
@@ -160,11 +162,11 @@ const SignupForm = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 delay: 0.3,
-                type: "spring",
+                type: 'spring',
                 stiffness: 100,
                 damping: 12,
               }}
-              {...register("password")}
+              {...register('password')}
               placeholder="Create a password"
               autoComplete="new-password"
               type="password"
@@ -185,11 +187,11 @@ const SignupForm = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 delay: 0.4,
-                type: "spring",
+                type: 'spring',
                 stiffness: 100,
                 damping: 12,
               }}
-              {...register("confirmPassword")}
+              {...register('confirmPassword')}
               placeholder="Confirm your password"
               autoComplete="new-password"
               type="password"
@@ -202,17 +204,53 @@ const SignupForm = () => {
               </p>
             )}
           </div>
+          {/* Terms & Privacy agreement */}
+          <div className="flex items-center space-x-3 pt-2">
+            <input
+              type="checkbox"
+              id="agree"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className="h-5 w-5 cursor-pointer rounded border-gray-600 bg-transparent accent-primary-500 focus:ring-primary-400"
+            />
+            <label
+              htmlFor="agree"
+              className="text-xs sm:text-sm text-gray-300 select-none cursor-pointer"
+            >
+              By continuing, I agree to the{' '}
+              <Link
+                href="/terms-of-service"
+                target="_blank"
+                className="text-blue-400 hover:underline"
+              >
+                Terms&nbsp;of&nbsp;Service
+              </Link>{' '}
+              and{' '}
+              <Link
+                href="/privacy-policy"
+                target="_blank"
+                className="text-blue-400 hover:underline"
+              >
+                Privacy&nbsp;Policy
+              </Link>
+              .
+            </label>
+          </div>
           {error && <p className="mt-1 text-sm text-[#ff5f5f]">{error}</p>}
           {userIsBanned && (
             <p className="mt-1 text-sm text-[#ff5f5f]">
               This user is no longer active
             </p>
           )}
-          <GlowingButton type="submit" fullWidth disabled={isSubmitting}>
-            {isSubmitting ? "SIGNING UP..." : "SIGN UP"}
+          <GlowingButton
+            type="submit"
+            fullWidth
+            disabled={isSubmitting || !agreed}
+          >
+            {isSubmitting ? 'SIGNING UP...' : 'SIGN UP'}
           </GlowingButton>
           <OrDivider />
-          <GoogleSignInButton setAccountIsInactive={setUserIsBanned} />
+          <GoogleSignInButton setAccountIsInactive={setUserIsBanned} disabled={!agreed} />
         </form>
       </div>
     </div>

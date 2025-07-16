@@ -64,7 +64,7 @@ export default function FinishAuthPage() {
 
   if (session.status === 'loading') {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-[#0f1923]">
+      <div className="fixed inset-0 flex items-center justify-center bg-[#080c1c]">
         <ClipLoader color="#008cff" speedMultiplier={0.7} size={130} />
       </div>
     );
@@ -77,7 +77,7 @@ export default function FinishAuthPage() {
 
   if (!session.data?.user) {
     return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center gap-4 bg-[#0f1923] text-[#ff5f5f]">
+      <div className="fixed inset-0 flex flex-col items-center justify-center gap-4 bg-[#080c1c] text-[#ff5f5f]">
         <p className="text-xl font-medium">Something went wrong</p>
         <p className="text-white/50">Unable to retrieve user session</p>
       </div>

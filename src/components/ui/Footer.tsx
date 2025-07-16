@@ -16,9 +16,8 @@ const Footer = () => {
     {
       title: 'Information',
       links: [
-        { name: 'Terms of service', href: '/terms' },
-        { name: 'Privacy policy', href: '/privacy' },
-        { name: 'About us', href: '/about' },
+        { name: 'Terms of service', href: '/terms-of-service' },
+        { name: 'Privacy policy', href: '/privacy-policy' },
       ],
     },
     {
