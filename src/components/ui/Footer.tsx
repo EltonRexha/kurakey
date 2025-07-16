@@ -84,6 +84,9 @@ const Footer = () => {
             </div>
           ))}
         </div>
+        <p className="text-neutral-400 text-sm text-center mt-8">
+          &copy; {new Date().getFullYear()} KuraKey. All rights reserved.
+        </p>
       </div>
     </footer>
   );
