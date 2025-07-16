@@ -100,7 +100,7 @@ const rooms: Record<
       name: 'Secret Room',
       rarity: 'SECRET',
       assetUrl: 'https://playcanv.as/b/343773c3',
-      imagePreviewUrl: '/room-previews/secretRoom.png',
+      imagePreviewUrl: '/room-previews/secretRoom.jpg',
       isSecret: true,
     },
   ],
