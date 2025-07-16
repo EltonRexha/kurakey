@@ -53,8 +53,6 @@ export async function POST(request: NextRequest) {
 
   const stripeResponse = new Response('OK', { status: 200 });
 
-  console.log('JUST GOT CALLED', event.id);
-
   // Then process in background (not blocking Stripe)
   (async () => {
     try {
@@ -92,7 +90,7 @@ export async function POST(request: NextRequest) {
         throw new Error('Missing bundleTypeId or coinPackageId');
       }
     } catch (error) {
-      console.log(error);
+      console.log('Error in stripe webhook', error);
       //Update or create the stripe payment
       await prisma.stripePayments.upsert({
         where: { sessionId: session.id },
