@@ -104,7 +104,7 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
   });
 
   return (
-    <div className="fixed sm:absolute inset-0 sm:inset-auto sm:right-0 sm:mt-10 w-[100vw] sm:w-80 bg-[#23224a] border border-[#23224a] rounded-lg shadow-lg z-50 pb-2 flex flex-col">
+    <div className="fixed sm:absolute top-0 inset-0 sm:inset-auto sm:top-0 sm:right-0 sm:mt-10 w-[100vw] sm:w-80 bg-[#23224a] border border-[#23224a] rounded-lg shadow-lg z-50 pb-2 flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[#191838]">
         <span className="text-neutral-300 text-sm font-semibold">

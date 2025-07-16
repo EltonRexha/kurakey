@@ -14,15 +14,21 @@ const Notification: React.FC<NotificationProps> = ({ hasNew = false }) => {
 
   const mounted = useMounted();
 
-  // lock body scroll when mobile dropdown is open
+  // lock body scroll ONLY on mobile when the dropdown covers the full screen
   useEffect(() => {
     if (!mounted) return;
+
+    // Tailwind's `sm` breakpoint is 640px. We only lock the body scroll
+    // below that width, where the dropdown is rendered with `fixed` + `inset-0`.
+    const isMobile = window.innerWidth < 640;
     const originalOverflow = document.body.style.overflow;
-    if (open) {
+
+    if (open && isMobile) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = originalOverflow;
     }
+
     return () => {
       document.body.style.overflow = originalOverflow;
     };
