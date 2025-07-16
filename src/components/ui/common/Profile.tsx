@@ -47,7 +47,7 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
         <Avatar src={imageUrl} />
       </button>
       {open && (
-        <ul className="absolute left-0 top-0 bottom-0 sm:top-auto sm:bottom-auto sm:left-auto right-0 sm:mt-2 sm:w-40 bg-[#1f1e3f] border border-[#008cff]/50 rounded-md py-1 text-sm shadow-lg z-50">
+        <ul className="fixed sm:absolute left-0 top-0 bottom-0 sm:top-auto sm:bottom-auto sm:left-auto right-0 sm:mt-2 sm:w-40 bg-[#1f1e3f] border border-[#008cff]/50 rounded-md py-1 text-sm shadow-lg z-50">
           {/* Close button (mobile only) */}
           <li
             className="flex justify-end px-4 py-3 sm:hidden text-neutral-200 text-xl cursor-pointer hover:text-red-400"

@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from '../../libs/axios';
 import FillButton from './ui/common/FillButton';
 import Link from 'next/link';
+import { X } from 'lucide-react';
 import coinIcon from '@/assets/images/icons/coin.png';
 
 interface Room {
@@ -38,8 +39,6 @@ interface NotificationApiResponse {
   pageSize: number;
 }
 
-
-
 async function markNotificationAsRead(id: string) {
   const res = await axios.post('/notification/mark-read', { id });
   return res.data;
@@ -55,7 +54,11 @@ const fetchNotifications = async (
   return res.data as NotificationApiResponse;
 };
 
-const NotificationDropdown = () => {
+interface Props {
+  onClose: () => void;
+}
+
+const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
   const [page, setPage] = useState(1);
   const [allLoaded, setAllLoaded] = useState(false);
   const [allNotifications, setAllNotifications] = useState<Notification[]>([]);
@@ -101,11 +104,22 @@ const NotificationDropdown = () => {
   });
 
   return (
-    <div className="absolute -right-28 sm:right-0 top-0 mt-10 w-[90vw] sm:w-80 bg-[#23224a] border border-[#23224a] rounded-lg shadow-lg z-50 py-2">
-      <div className="px-4 py-2 text-neutral-300 text-sm font-semibold border-b border-[#191838]">
-        Notifications
+    <div className="fixed sm:absolute inset-0 sm:inset-auto sm:right-0 sm:mt-10 w-[100vw] sm:w-80 bg-[#23224a] border border-[#23224a] rounded-lg shadow-lg z-50 pb-2 flex flex-col">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#191838]">
+        <span className="text-neutral-300 text-sm font-semibold">
+          Notifications
+        </span>
+        <button
+          type="button"
+          aria-label="Close notifications"
+          onClick={onClose}
+          className="sm:hidden text-neutral-400 hover:text-red-400 transition-colors"
+        >
+          <X size={24} />
+        </button>
       </div>
-      <div className="max-h-80 overflow-y-auto flex flex-col gap-2">
+      <div className="sm:max-h-80 overflow-y-auto flex flex-col gap-2">
         {isLoading && page === 1 ? (
           <div className="px-4 py-3 text-neutral-400 text-sm">Loading...</div>
         ) : isError ? (
@@ -301,9 +315,12 @@ const NotificationDropdown = () => {
           })
         )}
       </div>
-      <div className="px-4 py-2 text-center text-xs text-[#008cff] hover:underline">
+      <div className="mt-auto px-4 py-4 text-center">
         {hasMore && (
-          <button onClick={handleViewMore} className="cursor-pointer">
+          <button
+            onClick={handleViewMore}
+            className="cursor-pointer text-[#008cff] hover:underline text-base font-medium"
+          >
             View More
           </button>
         )}

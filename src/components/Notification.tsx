@@ -14,6 +14,20 @@ const Notification: React.FC<NotificationProps> = ({ hasNew = false }) => {
 
   const mounted = useMounted();
 
+  // lock body scroll when mobile dropdown is open
+  useEffect(() => {
+    if (!mounted) return;
+    const originalOverflow = document.body.style.overflow;
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = originalOverflow;
+    }
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [open, mounted]);
+
   useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
@@ -33,7 +47,7 @@ const Notification: React.FC<NotificationProps> = ({ hasNew = false }) => {
   }
 
   return (
-    <div className="relative flex items-center" ref={containerRef}>
+    <div className="sm:relative flex items-center" ref={containerRef}>
       <button
         type="button"
         className="relative p-2 rounded-full transition-colors"
@@ -45,7 +59,7 @@ const Notification: React.FC<NotificationProps> = ({ hasNew = false }) => {
           <span className="absolute top-1 right-1 block w-2 h-2 bg-[#ff5f5f] rounded-full ring-2 ring-[#191838]" />
         )}
       </button>
-      {open && <NotificationDropdown />}
+      {open && <NotificationDropdown onClose={() => setOpen(false)} />}
     </div>
   );
 };
