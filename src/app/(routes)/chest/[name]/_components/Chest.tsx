@@ -3,7 +3,7 @@ import FloatingParticles from '@/components/ui/common/FloatingParticles';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 
-export const OPENING_TIME_MS = 1400;
+export const OPENING_TIME_MS = 1200;
 
 interface Props {
   chest: {
