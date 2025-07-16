@@ -68,6 +68,7 @@ export async function POST(request: Request) {
       createdAt: {
         gte: threeDaysAgo,
       },
+      status: 'PENDING',
     },
   });
 
