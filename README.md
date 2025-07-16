@@ -1,6 +1,6 @@
 # Kurakey
 
-Collect, trade, and explore unique **3D Rooms** in a web-based gacha economy. Earn coins, open chests of varying rarities, unlock achievements
+Collect, trade, and explore unique **3D Rooms** in a web-based economy. Earn coins, open chests of varying rarities, unlock achievements
 
 ---
 
