@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import prisma from '../../../../prisma/prisma';
+import { isAllowedRemoteImage } from '../../../../libs/isAllowedRemoteImage';
 
 export async function PATCH(request: Request) {
   const session = await getServerSession(authOptions);
@@ -13,6 +14,10 @@ export async function PATCH(request: Request) {
   const jsonBody = await request.json();
 
   if (!jsonBody.image || typeof jsonBody.image !== 'string') {
+    return NextResponse.json({ message: 'Invalid image' }, { status: 400 });
+  }
+
+  if (!isAllowedRemoteImage(jsonBody.image)) {
     return NextResponse.json({ message: 'Invalid image' }, { status: 400 });
   }
 

@@ -12,6 +12,7 @@ import { RoomCategory, Rarity, Achievement } from '@/generated/prisma';
 import { updateProfileImage } from '../../../../../libs/api/user';
 import { useRouter } from 'next/navigation';
 import TradeBtn from './TradeBtn';
+import { useToastContext } from '@/context/ToastContext';
 
 interface ProfileSidebarProps {
   username: string;
@@ -51,6 +52,8 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
     },
   });
 
+  const { addToast } = useToastContext();
+
   return (
     <aside className="w-full bg-[#191838] border border-[#11142d] rounded-xl p-4 flex flex-col items-center h-max">
       <CldUploadWidget
@@ -61,6 +64,9 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
             apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
             cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
           },
+        }}
+        onError={() => {
+          addToast('Something went wrong, please try again later', 'error');
         }}
         options={{
           sources: ['local', 'camera'],

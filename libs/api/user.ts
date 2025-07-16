@@ -41,11 +41,13 @@ interface SearchParams extends Record<string, string | number | undefined> {
   limit?: number;
 }
 
-export async function updateProfileImage(image: string): Promise<{ message: string; user: { id: string; image: string } }> {
-  const response = await axios.patch<{ message: string; user: { id: string; image: string } }>(
-    '/user',
-    { image }
-  );
+export async function updateProfileImage(
+  image: string
+): Promise<{ message: string; user: { id: string; image: string } }> {
+  const response = await axios.patch<{
+    message: string;
+    user: { id: string; image: string };
+  }>('/user', { image });
   return response.data;
 }
 
