@@ -1,41 +1,54 @@
 'use client';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import 'swiper/css';
+import React from 'react';
 
 interface CarouselProps {
+  /**
+   * Slides to render inside the marquee. Each ReactNode is wrapped in a span so you
+   * can pass <img> or any component.
+   */
   children: React.ReactNode[];
+  /** Total seconds for one full loop (default 35s like the reference) */
+  speedSeconds?: number;
 }
 
-const HorizontalCarousel = ({ children }: CarouselProps) => {
-  // Duplicate the items 3 times for continuous scrolling
-  const duplicatedChildren = [...children, ...children, ...children];
+/**
+ * Horizontal Carousel implemented with pure CSS keyframe animation instead of Swiper.
+ * It duplicates the children once, then translates `-50%` to create an infinite loop.
+ * Hovering pauses the animation (uses Tailwind arbitrary `animation-play-state`).
+ */
+const HorizontalCarousel = ({ children, speedSeconds = 35 }: CarouselProps) => {
+  // Duplicate the list once so we can scroll continuously
+  const duplicated = [...children, ...children];
 
   return (
-    <div
-      style={{
-        opacity: 1,
-        transition: 'opacity 0.5s ease-in-out',
-      }}
-    >
-      <Swiper
-        modules={[Autoplay]}
-        spaceBetween={16}
-        slidesPerView="auto"
-        loop={true}
-        speed={2000}
-        autoplay={{
-          delay: 0,
-          disableOnInteraction: false,
-        }}
-        className="w-full select-none"
+    <div className="relative overflow-hidden py-6 group">
+      {/* Animation styles */}
+      <style jsx global>{`
+        @keyframes slide {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+          /* pause on hover handled via .group:hover .marquee */
+        }
+
+        .group:hover .marquee {
+          animation-play-state: paused;
+        }
+      `}</style>
+
+      <div
+        className="marquee flex w-max whitespace-nowrap gap-10"
+        style={{ animation: `slide ${speedSeconds}s linear infinite` }}
       >
-        {duplicatedChildren.map((child, index) => (
-          <SwiperSlide key={index} className="!w-auto" style={{ opacity: 1 }}>
+        {duplicated.map((child, idx) => (
+          <span key={idx} className="inline-block">
             {child}
-          </SwiperSlide>
+          </span>
         ))}
-      </Swiper>
+      </div>
     </div>
   );
 };
