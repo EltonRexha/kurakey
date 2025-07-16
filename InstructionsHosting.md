@@ -30,7 +30,7 @@ This app uses **Server-Sent Events (SSE)**. You must use a host that supports lo
 
 1. Create a PostgreSQL database using your host or a service like Supabase or Railway.
 2. Get the **connection string**.
-3. Add it to your \`.env\` file:
+3. Add it to your `.env` file:
 
 ```env
 DATABASE_URL=your_connection_string_here
@@ -38,7 +38,7 @@ DATABASE_URL=your_connection_string_here
 
 ---
 
-## 🔐 4. Generate \`NEXTAUTH_SECRET\`
+## 🔐 4. Generate `NEXTAUTH_SECRET`
 
 Generate a random secret:
 
@@ -64,7 +64,7 @@ NEXTAUTH_SECRET=your_generated_secret
 https://your-app-url.com/api/auth/callback/google
 ```
 
-4. Add the following to your \`.env\`:
+4. Add the following to your `.env`:
 
 ```env
 GOOGLE_CLIENT_ID=your_google_client_id
@@ -86,9 +86,9 @@ NEXT_PUBLIC_APP_URL=https://your-app-url.com
 
 1. Create a free account at [Cloudinary](https://cloudinary.com/).
 2. In the Media Library:
-   - Create an **upload preset** called \`profile_images\`
+   - Create an **upload preset** called `profile_images`
    - Make it **signed**
-3. Add the credentials to \`.env\`:
+3. Add the credentials to `.env`:
 
 ```env
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
@@ -120,7 +120,7 @@ STRIPE_WEBHOOK_SIGNING_SECRET=your_webhook_secret
 
 ## 🚀 9. Deploy the App
 
-- Set environment variables via your host dashboard using values from your \`.env\` file.
+- Set environment variables via your host dashboard using values from your `.env` file.
 - On the first deployment, the **database seeder** will run to populate default data.
 
 ---
