@@ -7,12 +7,12 @@ interface CarouselProps {
    * can pass <img> or any component.
    */
   children: React.ReactNode[];
-  /** Total seconds for one full loop (default 35s like the reference) */
+  /** Total seconds for one full loop */
   speedSeconds?: number;
 }
 
 /**
- * Horizontal Carousel implemented with pure CSS keyframe animation instead of Swiper.
+ * Horizontal Carousel implemented with pure CSS keyframe animation.
  * It duplicates the children once, then translates `-50%` to create an infinite loop.
  * Hovering pauses the animation (uses Tailwind arbitrary `animation-play-state`).
  */
