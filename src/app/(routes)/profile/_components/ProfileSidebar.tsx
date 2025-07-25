@@ -69,6 +69,10 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
           addToast('Something went wrong, please try again later', 'error');
         }}
         options={{
+          croppingAspectRatio: 1,
+          croppingShowDimensions: true,
+          clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
+          maxFileSize: 2_000_000, //2mb
           sources: ['local', 'camera'],
           multiple: false,
           maxFiles: 1,
