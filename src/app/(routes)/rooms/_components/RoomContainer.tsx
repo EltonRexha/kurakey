@@ -14,7 +14,7 @@ interface RoomContainerProps {
  */
 async function fetchRooms(nameQuery: string) {
   const where: Prisma.RoomWhereInput | undefined = nameQuery
-    ? { name: { contains: nameQuery, mode: 'insensitive' } }
+    ? { name: { contains: nameQuery, mode: 'insensitive' }, isSecret: false, category: { not: 'SECRET' } }
     : undefined;
 
   const rooms = await prisma.room.findMany({
@@ -45,7 +45,8 @@ const rarityAsc = Object.keys($Enums.Rarity);
 const rarityDesc = [...rarityAsc].reverse();
 
 const SecretRoomCard = () => (
-  <div className="w-full aspect-square sm:w-[250px] bg-[#0d0c1f] border border-[#23224a] rounded-lg overflow-hidden flex items-center justify-center h-[212px] text-purple-500 text-3xl font-bold tracking-widest select-none shadow-[0_0_15px_#8b5cf6]/40">
+  //block w-full aspect-square sm:w-[250px] bg-[#11142d] rounded-lg overflow-hidden hover:scale-[1.02] transition-transform duration-200
+  <div className="w-full aspect-square sm:w-[250px] bg-[#0d0c1f] border border-[#23224a] rounded-lg overflow-hidden flex items-center justify-center text-purple-500 text-3xl font-bold tracking-widest select-none shadow-[0_0_15px_#8b5cf6]/40">
     ???
   </div>
 );
