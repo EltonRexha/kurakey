@@ -81,15 +81,13 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
 
   const itemVariants = {
     closed: {
-      opacity: 0,
-      x: -20,
+      opacity: 0.2,
       transition: {
         duration: 0.15,
       },
     },
     open: {
       opacity: 1,
-      x: 0,
       transition: {
         duration: 0.2,
         ease: 'easeOut',
@@ -132,11 +130,8 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
           >
             {/* Close button (mobile only) */}
             <motion.li
-              variants={itemVariants}
               className="flex justify-end px-4 py-3 sm:hidden text-neutral-200 text-xl cursor-pointer hover:text-red-400 transition-colors duration-200"
               onClick={() => setOpen(false)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               <X size={24} />
             </motion.li>
@@ -191,7 +186,13 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
               className={`px-4 py-3 text-xl sm:text-base cursor-pointer flex items-center gap-2 transition-all duration-200 sm:hidden ${'text-neutral-200 hover:bg-[#2b2a55] hover:text-[#008cff]'}`}
             >
               <div
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  signOut({
+                    callbackUrl: '/log-in',
+                    redirect: true,
+                  });
+                }}
                 className="flex items-center gap-2 w-full"
               >
                 <LogOut size={16} />
