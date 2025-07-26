@@ -7,6 +7,7 @@ import FillButton from './ui/common/FillButton';
 import Link from 'next/link';
 import { X } from 'lucide-react';
 import coinIcon from '@/assets/images/icons/coin.png';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Room {
   name: string;
@@ -103,49 +104,117 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
     },
   });
 
+  const dropdownVariants = {
+    closed: {
+      opacity: 0,
+      scale: 0.95,
+      y: -10,
+      transition: {
+        duration: 0.15,
+        ease: 'easeInOut',
+      },
+    },
+    open: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        duration: 0.2,
+        ease: 'easeOut',
+        staggerChildren: 0.02,
+        delayChildren: 0.03,
+      },
+    },
+  };
+
+  const itemVariants = {
+    closed: {
+      opacity: 0,
+      x: -20,
+      transition: {
+        duration: 0.15,
+      },
+    },
+    open: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.2,
+        ease: 'easeOut',
+      },
+    },
+  };
+
   return (
-    <div className="fixed sm:absolute top-0 inset-0 sm:inset-auto sm:top-0 sm:right-0 sm:mt-10 w-[100vw] sm:w-80 bg-[#23224a] border border-[#23224a] rounded-lg shadow-lg z-50 pb-2 flex flex-col">
+    <motion.div
+      variants={dropdownVariants}
+      initial="closed"
+      animate="open"
+      exit="closed"
+      className="fixed sm:absolute top-0 inset-0 sm:inset-auto sm:top-0 sm:right-0 sm:mt-10 w-[100vw] sm:w-80 bg-[#23224a] border border-[#23224a] rounded-lg shadow-lg z-50 pb-2 flex flex-col"
+    >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#191838]">
+      <motion.div
+        variants={itemVariants}
+        className="flex items-center justify-between px-4 py-3 border-b border-[#191838]"
+      >
         <span className="text-neutral-300 text-sm font-semibold">
           Notifications
         </span>
-        <button
+        <motion.button
           type="button"
           aria-label="Close notifications"
           onClick={onClose}
           className="sm:hidden text-neutral-400 hover:text-red-400 transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
         >
           <X size={24} />
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
       <div className="sm:max-h-80 overflow-y-auto flex flex-col gap-2">
         {isLoading && page === 1 ? (
-          <div className="px-4 py-3 text-neutral-400 text-sm">Loading...</div>
+          <motion.div
+            variants={itemVariants}
+            className="px-4 py-3 text-neutral-400 text-sm"
+          >
+            Loading...
+          </motion.div>
         ) : isError ? (
-          <div className="px-4 py-3 text-red-400 text-sm">
+          <motion.div
+            variants={itemVariants}
+            className="px-4 py-3 text-red-400 text-sm"
+          >
             Failed to load notifications.
-          </div>
+          </motion.div>
         ) : notifications.length === 0 ? (
-          <div className="px-4 py-3 text-neutral-400 text-sm">
+          <motion.div
+            variants={itemVariants}
+            className="px-4 py-3 text-neutral-400 text-sm"
+          >
             No notifications yet.
-          </div>
+          </motion.div>
         ) : (
-          notifications.map((notif) => {
+          notifications.map((notif, index) => {
             const markRead = (
-              <p
+              <motion.p
                 className="cursor-pointer py-1 text-xs rounded underline text-[#008cff] hover:text-[#005fa3] transition-colors"
                 onClick={() => markReadMutation.mutate(notif.id)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 Mark as read
-              </p>
+              </motion.p>
             );
             if (notif.type === 'CHEST_RECEIVED' && notif.chestType) {
               const chestImg = notif.chestType.chestImageUrl;
               return (
-                <div
+                <motion.div
                   key={notif.id}
+                  variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                  whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <div className="mr-auto">
                     <div className="text-[#fbbf24] text-xs">
@@ -157,22 +226,30 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                     {!notif.isRead && markRead}
                   </div>
                   {chestImg && (
-                    <Image
-                      src={chestImg}
-                      alt={notif.chestType.name}
-                      width={52}
-                      height={52}
-                      className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
-                    />
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Image
+                        src={chestImg}
+                        alt={notif.chestType.name}
+                        width={52}
+                        height={52}
+                        className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
+                      />
+                    </motion.div>
                   )}
-                </div>
+                </motion.div>
               );
             }
             if (notif.type === 'ROOM_RECEIVED' && notif.room) {
               return (
-                <div
+                <motion.div
                   key={notif.id}
+                  variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                  whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <div className="mr-auto">
                     <div className="text-[#fbbf24] text-xs font-bold">
@@ -183,21 +260,29 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                     </div>
                     {!notif.isRead && markRead}
                   </div>
-                  <Image
-                    src={notif.room.previewImageUrl}
-                    alt={notif.room.name}
-                    width={52}
-                    height={52}
-                    className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
-                  />
-                </div>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Image
+                      src={notif.room.previewImageUrl}
+                      alt={notif.room.name}
+                      width={52}
+                      height={52}
+                      className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
+                    />
+                  </motion.div>
+                </motion.div>
               );
             }
             if (notif.type === 'ACHIEVEMENT' && notif.achievement) {
               return (
-                <div
+                <motion.div
                   key={notif.id}
+                  variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                  whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <div className="mr-auto">
                     <div className="text-[#fbbf24] text-xs">
@@ -208,22 +293,30 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                     </div>
                     {!notif.isRead && markRead}
                   </div>
-                  <Image
-                    src={notif.achievement.imageUrl}
-                    alt={notif.achievement.unlockMessage}
-                    width={52}
-                    height={52}
-                    className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
-                  />
-                </div>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Image
+                      src={notif.achievement.imageUrl}
+                      alt={notif.achievement.unlockMessage}
+                      width={52}
+                      height={52}
+                      className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
+                    />
+                  </motion.div>
+                </motion.div>
               );
             }
 
             if (notif.type === 'TRADE_INVITE') {
               return (
-                <div
+                <motion.div
                   key={notif.id}
+                  variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                  whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <div>
                     <div className="text-[#fbbf24] text-xs font-bold">
@@ -234,22 +327,30 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                     </div>
                     <div className="mt-2 mb-2">
                       <Link href={`/trade?id=${notif.trade?.id}`}>
-                        <FillButton fullWidth className="h-8">
-                          View Trade
-                        </FillButton>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <FillButton fullWidth className="h-8">
+                            View Trade
+                          </FillButton>
+                        </motion.div>
                       </Link>
                     </div>
 
                     {!notif.isRead && markRead}
                   </div>
-                </div>
+                </motion.div>
               );
             }
             if (notif.type === 'TRADE_COMPLETED') {
               return (
-                <div
+                <motion.div
                   key={notif.id}
+                  variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                  whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <div>
                     <div className="text-[#fbbf24] text-xs font-bold">
@@ -260,21 +361,29 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                     </div>
                     <div className="mt-2 mb-2">
                       <Link href={`/trade/completed?id=${notif.trade?.id}`}>
-                        <FillButton fullWidth className="h-8">
-                          View Trade
-                        </FillButton>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <FillButton fullWidth className="h-8">
+                            View Trade
+                          </FillButton>
+                        </motion.div>
                       </Link>
                     </div>
                     {!notif.isRead && markRead}
                   </div>
-                </div>
+                </motion.div>
               );
             }
             if (notif.type === 'COIN_RECEIVED') {
               return (
-                <div
+                <motion.div
                   key={notif.id}
+                  variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                  whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <div className="mr-auto">
                     <div className="text-[#fbbf24] text-xs">
@@ -285,21 +394,29 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                     </div>
                     {!notif.isRead && markRead}
                   </div>
-                  <Image
-                    src={coinIcon}
-                    alt={''}
-                    width={52}
-                    height={52}
-                    className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
-                  />
-                </div>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Image
+                      src={coinIcon}
+                      alt={''}
+                      width={52}
+                      height={52}
+                      className="object-contain rounded-md border border-[#23224a] bg-[#23224a]"
+                    />
+                  </motion.div>
+                </motion.div>
               );
             }
 
             return (
-              <div
+              <motion.div
                 key={notif.id}
+                variants={itemVariants}
                 className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
+                whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
+                whileTap={{ scale: 0.98 }}
               >
                 <div>
                   <div className="text-[#fbbf24] text-xs font-bold">
@@ -310,22 +427,27 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                   </div>
                   {!notif.isRead && markRead}
                 </div>
-              </div>
+              </motion.div>
             );
           })
         )}
       </div>
-      <div className="mt-auto px-4 py-4 text-center">
+      <motion.div
+        variants={itemVariants}
+        className="mt-auto px-4 py-4 text-center"
+      >
         {hasMore && (
-          <button
+          <motion.button
             onClick={handleViewMore}
             className="cursor-pointer text-[#008cff] hover:underline text-base font-medium"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             View More
-          </button>
+          </motion.button>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

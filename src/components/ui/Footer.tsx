@@ -10,7 +10,7 @@ const Footer = () => {
       links: [
         { name: 'Chests', href: '/' },
         { name: 'Buy coins', href: '/buy-coins' },
-        { name: 'Rooms', href: '/Rooms' },
+        { name: 'Rooms', href: '/rooms' },
       ],
     },
     {
