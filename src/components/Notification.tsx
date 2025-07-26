@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Bell } from 'lucide-react';
 import NotificationDropdown from './NotificationDropdown';
 import useMounted from '@/hooks/useMounted';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface NotificationProps {
   hasNew?: boolean;
@@ -54,18 +55,31 @@ const Notification: React.FC<NotificationProps> = ({ hasNew = false }) => {
 
   return (
     <div className="sm:relative flex items-center" ref={containerRef}>
-      <button
+      <motion.button
         type="button"
         className="relative p-2 rounded-full transition-colors"
         onClick={() => setOpen((v) => !v)}
         aria-label="Show notifications"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
-        <Bell className="w-5 h-5 text-[#fbbf24]  cursor-pointer" />
+        <Bell className="w-5 h-5 text-[#fbbf24] cursor-pointer" />
         {hasNew && (
-          <span className="absolute top-1 right-1 block w-2 h-2 bg-[#ff5f5f] rounded-full ring-2 ring-[#191838]" />
+          <motion.span
+            className="absolute top-1 right-1 block w-2 h-2 bg-[#ff5f5f] rounded-full ring-2 ring-[#191838]"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: 'spring',
+              stiffness: 500,
+              damping: 30,
+            }}
+          />
         )}
-      </button>
-      {open && <NotificationDropdown onClose={() => setOpen(false)} />}
+      </motion.button>
+      <AnimatePresence>
+        {open && <NotificationDropdown onClose={() => setOpen(false)} />}
+      </AnimatePresence>
     </div>
   );
 };
