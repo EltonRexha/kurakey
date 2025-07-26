@@ -79,22 +79,6 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
     },
   };
 
-  const itemVariants = {
-    closed: {
-      opacity: 0.2,
-      transition: {
-        duration: 0.15,
-      },
-    },
-    open: {
-      opacity: 1,
-      transition: {
-        duration: 0.2,
-        ease: 'easeOut',
-      },
-    },
-  };
-
   const isCurrentRoute = (href: string) => {
     if (href === '/') {
       return pathname === '/';
@@ -142,7 +126,6 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
               return (
                 <motion.div
                   key={item.label}
-                  variants={itemVariants}
                   whileHover={{
                     x: 5,
                     backgroundColor: isSelected
@@ -178,7 +161,6 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
 
             {/* Mobile logout */}
             <motion.div
-              variants={itemVariants}
               whileHover={{
                 x: 5,
               }}
@@ -208,9 +190,8 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
               >
                 <User size={16} />
                 <motion.p
-                  variants={itemVariants}
                   className="hidden sm:block w-full"
-                  whileHover={{ x: 5 }}
+                  whileHover={{ x: 3 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   Profile
@@ -231,9 +212,8 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
             >
               <LogOut size={16} />
               <motion.p
-                variants={itemVariants}
                 className="w-full"
-                whileHover={{ x: 5 }}
+                whileHover={{ x: 3 }}
                 whileTap={{ scale: 0.98 }}
               >
                 Logout
