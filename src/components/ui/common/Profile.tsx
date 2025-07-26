@@ -181,6 +181,24 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
               );
             })}
 
+            {/* Mobile logout */}
+            <motion.div
+              variants={itemVariants}
+              whileHover={{
+                x: 5,
+              }}
+              whileTap={{ scale: 0.98 }}
+              className={`px-4 py-3 text-xl sm:text-base cursor-pointer flex items-center gap-2 transition-all duration-200 sm:hidden ${'text-neutral-200 hover:bg-[#2b2a55] hover:text-[#008cff]'}`}
+            >
+              <div
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2 w-full"
+              >
+                <LogOut size={16} />
+                Logout
+              </div>
+            </motion.div>
+
             <div className="px-4 py-3 text-xl sm:text-base hover:bg-[#2b2a55] cursor-pointer text-neutral-200 items-center gap-2 hover:text-[#008cff] transition-colors hidden sm:flex">
               <Link
                 href="/profile"
@@ -199,8 +217,9 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
               </Link>
             </div>
 
+            {/* Desktop logout */}
             <div
-              className="px-4 py-3 text-xl sm:text-base hover:bg-[#2b2a55] cursor-pointer text-neutral-200 flex items-center gap-2 hover:text-[#008cff] transition-colors"
+              className="px-4 py-3 text-xl sm:text-base hidden sm:flex hover:bg-[#2b2a55] cursor-pointer text-neutral-200 items-center gap-2 hover:text-[#008cff] transition-colors"
               onClick={() => {
                 setOpen(false);
                 signOut({
