@@ -2,7 +2,6 @@
 import Image from 'next/image';
 import { useMutation } from '@tanstack/react-query';
 import { UploadCloud } from 'lucide-react';
-import { CldUploadWidget } from 'next-cloudinary';
 import LevelBar from './LevelBar';
 import AchievementGrid from './AchievementGrid';
 import getLevel, { MAX_LEVEL, MIN_LEVEL_TRADE } from '@/../libs/getLevel';
@@ -13,6 +12,7 @@ import { updateProfileImage } from '../../../../../libs/api/user';
 import { useRouter } from 'next/navigation';
 import TradeBtn from './TradeBtn';
 import { useToastContext } from '@/context/ToastContext';
+import CustomUploadWidget from '@/components/ui/CustomUploadWidget';
 
 interface ProfileSidebarProps {
   username: string;
@@ -54,61 +54,20 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
 
   const { addToast } = useToastContext();
 
+  const handleUploadSuccess = (imageUrl: string) => {
+    updateMutation.mutate(imageUrl);
+  };
+
+  const handleUploadError = (message: string) => {
+    addToast(message, 'error');
+  };
+
   return (
     <aside className="w-full bg-[#191838] border border-[#11142d] rounded-xl p-4 flex flex-col items-center h-max">
-      <CldUploadWidget
-        uploadPreset="profile_images"
-        signatureEndpoint="/api/cloudinary-sign"
-        config={{
-          cloud: {
-            apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-            cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-          },
-        }}
-        onError={() => {
-          addToast('Something went wrong, please try again later', 'error');
-        }}
-        options={{
-          croppingAspectRatio: 1,
-          croppingShowDimensions: true,
-          clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
-          maxFileSize: 2_000_000, //2mb
-          sources: ['local', 'camera'],
-          multiple: false,
-          maxFiles: 1,
-          cropping: true,
-          folder: 'profile',
-          // Apply the dark theme used across the app
-          styles: {
-            palette: {
-              window: '#191838', // widget background
-              windowBorder: '#b0b0b0',
-              tabIcon: '#008cff', // primary accent (same as avatar ring)
-              menuIcons: '#d1d1d1',
-              textDark: '#ffffff',
-              textLight: '#b0b0b0',
-              link: '#008cff',
-              action: '#f59e0b', // gold action color (same as StarsButton)
-              inactiveTabIcon: '#4b5563',
-              error: '#ef4444',
-              inProgress: '#f59e0b',
-              complete: '#10b981',
-              sourceBg: '#11142d',
-            },
-            fonts: {
-              default: null,
-              "'Poppins', sans-serif":
-                'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap',
-            },
-          },
-        }}
-        onSuccess={(result) => {
-          if (result?.event === 'success' && result.info) {
-            const successResult = result as { info: { secure_url: string } };
-            const secureUrl = successResult.info.secure_url as string;
-            updateMutation.mutate(secureUrl);
-          }
-        }}
+      <CustomUploadWidget
+        onSuccess={handleUploadSuccess}
+        onError={handleUploadError}
+        disabled={!isLoggedUser}
       >
         {({ open }) => (
           <div className="relative">
@@ -137,7 +96,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
             </div>
           </div>
         )}
-      </CldUploadWidget>
+      </CustomUploadWidget>
       <h2 className="text-lg font-bold text-neutral-100 mb-3">{username}</h2>
       <LevelBar
         level={levelNum}
