@@ -7,7 +7,8 @@ import FillButton from './ui/common/FillButton';
 import Link from 'next/link';
 import { X } from 'lucide-react';
 import coinIcon from '@/assets/images/icons/coin.png';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import NotificationSkeleton from './NotificationSkeleton';
 
 interface Room {
   name: string;
@@ -172,14 +173,9 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
           <X size={24} />
         </motion.button>
       </motion.div>
-      <div className="sm:max-h-80 overflow-y-auto flex flex-col gap-2">
+      <div className="sm:max-h-80 overflow-y-auto overflow-x-hidden flex flex-col gap-2">
         {isLoading && page === 1 ? (
-          <motion.div
-            variants={itemVariants}
-            className="px-4 py-3 text-neutral-400 text-sm"
-          >
-            Loading...
-          </motion.div>
+          <NotificationSkeleton />
         ) : isError ? (
           <motion.div
             variants={itemVariants}
@@ -195,16 +191,13 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
             No notifications yet.
           </motion.div>
         ) : (
-          notifications.map((notif, index) => {
+          notifications.map((notif) => {
             const markRead = (
-              <motion.p
-                className="cursor-pointer py-1 text-xs rounded underline text-[#008cff] hover:text-[#005fa3] transition-colors"
-                onClick={() => markReadMutation.mutate(notif.id)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <div
+                className="py-1 text-xs rounded underline text-[#008cff] hover:text-[#005fa3] transition-colors"
               >
-                Mark as read
-              </motion.p>
+                <p className="cursor-pointer inline" onClick={() => markReadMutation.mutate(notif.id)}>Mark as read</p>
+              </div>
             );
             if (notif.type === 'CHEST_RECEIVED' && notif.chestType) {
               const chestImg = notif.chestType.chestImageUrl;
@@ -214,7 +207,6 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                   variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                   whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   <div className="mr-auto">
                     <div className="text-[#fbbf24] text-xs">
@@ -249,7 +241,6 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                   variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                   whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   <div className="mr-auto">
                     <div className="text-[#fbbf24] text-xs font-bold">
@@ -282,7 +273,6 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                   variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                   whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   <div className="mr-auto">
                     <div className="text-[#fbbf24] text-xs">
@@ -316,7 +306,6 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                   variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                   whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   <div>
                     <div className="text-[#fbbf24] text-xs font-bold">
@@ -327,14 +316,11 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                     </div>
                     <div className="mt-2 mb-2">
                       <Link href={`/trade?id=${notif.trade?.id}`}>
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <FillButton fullWidth className="h-8">
+                        <div>
+                          <FillButton fullWidth className="h-8 hover:scale-100">
                             View Trade
                           </FillButton>
-                        </motion.div>
+                        </div>
                       </Link>
                     </div>
 
@@ -350,7 +336,6 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                   variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                   whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   <div>
                     <div className="text-[#fbbf24] text-xs font-bold">
@@ -383,7 +368,6 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                   variants={itemVariants}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                   whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   <div className="mr-auto">
                     <div className="text-[#fbbf24] text-xs">
@@ -396,7 +380,6 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                   </div>
                   <motion.div
                     whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                   >
                     <Image
                       src={coinIcon}
@@ -416,7 +399,6 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                 variants={itemVariants}
                 className="flex items-center gap-3 px-4 py-3 hover:bg-[#191838] transition-colors"
                 whileHover={{ x: 5, backgroundColor: 'rgba(25, 24, 56, 1)' }}
-                whileTap={{ scale: 0.98 }}
               >
                 <div>
                   <div className="text-[#fbbf24] text-xs font-bold">
@@ -436,15 +418,41 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
         variants={itemVariants}
         className="mt-auto px-4 py-4 text-center"
       >
-        {hasMore && (
-          <motion.button
-            onClick={handleViewMore}
-            className="cursor-pointer text-[#008cff] hover:underline text-base font-medium"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+        {isLoading && page > 1 ? (
+          <motion.div
+            className="flex items-center justify-center gap-1 text-[#008cff] text-xl font-bold"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
           >
-            View More
-          </motion.button>
+            <motion.span
+              animate={{ y: [0, -4, 0] }}
+              transition={{ repeat: Infinity, duration: 0.6, delay: 0 }}
+            >
+              .
+            </motion.span>
+            <motion.span
+              animate={{ y: [0, -4, 0] }}
+              transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }}
+            >
+              .
+            </motion.span>
+            <motion.span
+              animate={{ y: [0, -4, 0] }}
+              transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }}
+            >
+              .
+            </motion.span>
+          </motion.div>
+        ) : (
+          hasMore && (
+            <motion.button
+              onClick={handleViewMore}
+              className="cursor-pointer text-[#008cff] hover:underline text-base font-medium"
+              whileHover={{ scale: 1.05 }}
+            >
+              View More
+            </motion.button>
+          )
         )}
       </motion.div>
     </motion.div>
