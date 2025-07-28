@@ -173,7 +173,7 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
           <X size={24} />
         </motion.button>
       </motion.div>
-      <div className="sm:max-h-80 overflow-y-auto overflow-x-hidden flex flex-col gap-2">
+      <div className="sm:max-h-80 overflow-y-auto overscroll-contain overflow-x-hidden flex flex-col gap-2">
         {isLoading && page === 1 ? (
           <NotificationSkeleton />
         ) : isError ? (
@@ -350,7 +350,7 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
-                          <FillButton fullWidth className="h-8">
+                          <FillButton fullWidth className="h-8 hover:scale-100">
                             View Trade
                           </FillButton>
                         </motion.div>
