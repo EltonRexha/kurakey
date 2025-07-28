@@ -27,7 +27,9 @@ async function collectCdnImages(): Promise<string[]> {
 
   await prisma.$disconnect();
 
+  //The urls to be preloaded include the logo, chest images, coin packages, bundles, and rooms
   const urls = [
+    '/logo.png',
     ...chestTypes.flatMap((c) => [c.chestImageUrl]),
     ...coinPackages.map((c) => c.imageUrl),
     ...bundles.map((b) => b.bundleImageUrl),
