@@ -85,9 +85,6 @@ NEXT_PUBLIC_APP_URL=https://your-app-url.com
 ## ☁️ 7. Set Up Cloudinary for Image Hosting
 
 1. Create a free account at [Cloudinary](https://cloudinary.com/).
-2. In the Media Library:
-   - Create an **upload preset** called `profile_images`
-   - Make it **signed**
 3. Add the credentials to `.env`:
 
 ```env
