@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell } from 'lucide-react';
 import NotificationDropdown from './NotificationDropdown';
-import useMounted from '@/hooks/useMounted';
+
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface NotificationProps {
@@ -13,12 +13,8 @@ const Notification: React.FC<NotificationProps> = ({ hasNew = false }) => {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const mounted = useMounted();
-
   // lock body scroll ONLY on mobile when the dropdown covers the full screen
   useEffect(() => {
-    if (!mounted) return;
-
     // Tailwind's `sm` breakpoint is 640px. We only lock the body scroll
     // below that width, where the dropdown is rendered with `fixed` + `inset-0`.
     const isMobile = window.innerWidth < 640;
@@ -33,7 +29,7 @@ const Notification: React.FC<NotificationProps> = ({ hasNew = false }) => {
     return () => {
       document.body.style.overflow = originalOverflow;
     };
-  }, [open, mounted]);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -49,9 +45,6 @@ const Notification: React.FC<NotificationProps> = ({ hasNew = false }) => {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
 
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <div className="sm:relative flex items-center" ref={containerRef}>
