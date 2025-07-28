@@ -9,7 +9,6 @@ import PreloadProvider from '@/components/PreloadProvider';
 import { PrismaClient } from '../generated/prisma';
 import { Metadata } from 'next';
 
-
 // Server-side helper to collect CDN image URLs for preload
 async function collectCdnImages(): Promise<string[]> {
   const prisma = new PrismaClient();
@@ -65,9 +64,6 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-
-
-
         <UserSessionProvider>
           <ReactQuery>
             <ToastProvider>
