@@ -7,7 +7,6 @@ import ReactCrop, {
   makeAspectCrop,
 } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import Image from 'next/image';
 
 interface CustomUploadWidgetProps {
   onSuccess: (imageUrl: string) => void;
@@ -146,10 +145,10 @@ const CustomUploadWidget: React.FC<CustomUploadWidgetProps> = ({
         const errorData = await response.json();
         throw new Error(errorData.message || 'Upload failed');
       }
-      setIsUploading(false);
       const data = await response.json();
       onSuccess(data.imageUrl);
       handleClose();
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (error) {
       onError(error instanceof Error ? error.message : 'Upload failed');
     } finally {
@@ -164,6 +163,7 @@ const CustomUploadWidget: React.FC<CustomUploadWidgetProps> = ({
     setCrop(undefined);
     setCompletedCrop(undefined);
     setScale(1);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const open = () => {
@@ -178,7 +178,7 @@ const CustomUploadWidget: React.FC<CustomUploadWidgetProps> = ({
     setCrop(undefined);
     setCompletedCrop(undefined);
     setScale(1);
-
+    if (fileInputRef.current) fileInputRef.current.value = '';
     setIsOpen(false);
   };
 
@@ -224,16 +224,17 @@ const CustomUploadWidget: React.FC<CustomUploadWidgetProps> = ({
                   aspect={1}
                   circularCrop
                 >
-                  <Image
+                  {/*In our case we have to use <img> instead of <Image>*/}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     ref={imgRef}
                     alt="Crop me"
                     src={imageSrc}
-                    width={400}
-                    height={400}
                     style={{
                       transform: `scale(${scale})`,
                       maxWidth: '100%',
-                      maxHeight: '300px',
+                      maxHeight: 300,
+                      objectFit: 'contain',
                     }}
                     onLoad={onImageLoad}
                   />
