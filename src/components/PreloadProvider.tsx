@@ -39,14 +39,17 @@ export default function PreloadProvider({ images, children }: Props) {
   return (
     <>
       {!done && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#191838]">
+        <div
+          id="preload-overlay"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#191838] overscroll-none overflow-hidden"
+        >
           <Image
-            src="/logo.png"
+            src="/logo.webp"
             alt="Kurakey Logo"
             width={120}
             height={120}
             sizes="(max-width: 768px) 80px, 120px"
-            quality={30}
+            quality={10}
             priority
           />
           <div className="mt-4 flex items-center justify-center">

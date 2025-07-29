@@ -1,23 +1,23 @@
-import Image from "next/image";
-import Link from "next/link";
-import { FaDiscord } from "react-icons/fa";
-import HorizontalCarousel from "./common/HorizontalCarousel";
-import XLogo from "./common/XLogo";
-import Card from "./common/CarouselCard";
-import NavLinks from "./common/NavLinks";
-import Profile from "./common/Profile";
-import GetServerUser from "../../../libs/GetServerUser";
-import prisma from "../../../prisma/prisma";
-import CoinBalance from "./common/CoinBalance";
-import Notification from "../Notification";
-import hasUnreadNotifications from "../../../libs/hasUnreadNotifications";
+import Image from 'next/image';
+import Link from 'next/link';
+import { FaDiscord } from 'react-icons/fa';
+import HorizontalCarousel from './common/HorizontalCarousel';
+import XLogo from './common/XLogo';
+import Card from './common/CarouselCard';
+import NavLinks from './common/NavLinks';
+import Profile from './common/Profile';
+import GetServerUser from '../../../libs/GetServerUser';
+import prisma from '../../../prisma/prisma';
+import CoinBalance from './common/CoinBalance';
+import Notification from '../Notification';
+import hasUnreadNotifications from '../../../libs/hasUnreadNotifications';
 
 async function getRooms() {
   return prisma.room.findMany({
     where: {
       isSecret: false,
       rarity: {
-        not: "SECRET",
+        not: 'SECRET',
       },
     },
     select: {
@@ -27,7 +27,7 @@ async function getRooms() {
       category: true,
       rarity: true,
     },
-    orderBy: { name: "asc" },
+    orderBy: { name: 'asc' },
   });
 }
 
@@ -35,7 +35,7 @@ const Navbar = async () => {
   const rooms = await getRooms();
   const user = await GetServerUser();
 
-  let profileImage = "/placeholder-avatar.png";
+  let profileImage = '/placeholder-avatar.png';
   let hasNewNotifications = false;
 
   if (user) {
@@ -51,7 +51,7 @@ const Navbar = async () => {
           <div className="flex items-center space-x-6">
             <Link href="/" className="flex-shrink-0">
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="Kurakey"
                 width={100}
                 height={48}

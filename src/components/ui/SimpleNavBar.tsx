@@ -1,18 +1,18 @@
-import Image from "next/image";
-import Link from "next/link";
-import { FaDiscord } from "react-icons/fa";
-import XLogo from "./common/XLogo";
-import NavLinks from "./common/NavLinks";
-import GetServerUser from "../../../libs/GetServerUser";
-import CoinBalance from "./common/CoinBalance";
-import Notification from "../Notification";
-import hasUnreadNotifications from "../../../libs/hasUnreadNotifications";
-import Profile from "./common/Profile";
+import Image from 'next/image';
+import Link from 'next/link';
+import { FaDiscord } from 'react-icons/fa';
+import XLogo from './common/XLogo';
+import NavLinks from './common/NavLinks';
+import GetServerUser from '../../../libs/GetServerUser';
+import CoinBalance from './common/CoinBalance';
+import Notification from '../Notification';
+import hasUnreadNotifications from '../../../libs/hasUnreadNotifications';
+import Profile from './common/Profile';
 
 const SimpleNavBar = async () => {
   const user = await GetServerUser();
 
-  let profileImage = "/placeholder-avatar.png";
+  let profileImage = '/placeholder-avatar.png';
   let hasNewNotifications = false;
 
   if (user) {
@@ -27,9 +27,9 @@ const SimpleNavBar = async () => {
           {/* Logo and Social Links */}
           <div className="flex items-center space-x-6">
             <Link href="/" className="flex-shrink-0">
-              {" "}
+              {' '}
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="Kurakey"
                 width={100}
                 height={48}

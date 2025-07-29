@@ -44,6 +44,12 @@
 }
 
 @layer base {
+  /* Disable body scroll while loading overlays are present */
+  body:has(#loading),
+  body:has(#preload-overlay) {
+    overflow: hidden;
+    height: 100%;
+  }
   /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 8px;

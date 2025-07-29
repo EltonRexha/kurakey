@@ -35,7 +35,7 @@ const Footer = () => {
             <Link href="/" className="flex-shrink-0">
               {' '}
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="Kurakey"
                 className="h-12 w-auto"
                 width={100}

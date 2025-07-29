@@ -25,7 +25,7 @@ const AnimatedLogo: React.FC<AnimatedLogoProps> = ({
       onClick={() => router.push('/')}
     >
       <Image
-        src="/logo.png"
+        src="/logo.webp"
         alt="Kurakey Logo"
         width={width}
         height={height}

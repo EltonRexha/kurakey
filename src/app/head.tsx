@@ -14,7 +14,7 @@ export default function Head() {
         sizes="180x180"
         href="/apple-touch-icon.png"
       />
-      <link rel="preload" href="/logo.png" as="image" type="image/png" />
+      <link rel="preload" href="/logo.webp" as="image" type="image/png" />
     </>
   );
 }
