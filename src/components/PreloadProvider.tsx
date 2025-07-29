@@ -15,19 +15,6 @@ interface Props {
 export default function PreloadProvider({ images, children }: Props) {
   const [done, setDone] = useState(false);
 
-  // Lock scroll while overlay is active
-  useEffect(() => {
-    const original = document.body.style.overflow;
-    if (!done) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = original;
-    }
-    return () => {
-      document.body.style.overflow = original;
-    };
-  }, [done]);
-
   useEffect(() => {
     if (!images.length) {
       setDone(true);
