@@ -1,17 +1,16 @@
 import { Loader2 } from 'lucide-react';
 import Image from "next/image";
-import React from "react";
 
 const Loader = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#191838]">
-      {" "}
       <Image
         src="/logo.png"
         alt="Kurakey Logo"
         width={120}
         height={120}
         sizes="(max-width: 768px) 80px, 120px"
+        quality={30}
         priority
       />
       <div className="mt-4 flex items-center justify-center">

@@ -15,6 +15,19 @@ interface Props {
 export default function PreloadProvider({ images, children }: Props) {
   const [done, setDone] = useState(false);
 
+  // Lock scroll while overlay is active
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    if (!done) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = original;
+    }
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [done]);
+
   useEffect(() => {
     if (!images.length) {
       setDone(true);
@@ -46,6 +59,7 @@ export default function PreloadProvider({ images, children }: Props) {
             width={120}
             height={120}
             sizes="(max-width: 768px) 80px, 120px"
+            quality={30}
             priority
           />
           <div className="mt-4 flex items-center justify-center">
