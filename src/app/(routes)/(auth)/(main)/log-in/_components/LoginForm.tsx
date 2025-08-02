@@ -6,7 +6,6 @@ import LoginSchema from "@/schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,7 +23,6 @@ const LoginForm = () => {
 
   const [invalidCredentials, setInvalidCredentials] = useState(false);
   const [userIsBanned, setUserIsBanned] = useState(false);
-  const router = useRouter();
   const { addToast } = useToastContext();
 
   async function onSubmit(data: FormData) {
@@ -44,7 +42,7 @@ const LoginForm = () => {
     }
 
     addToast("successfully logged in", "success");
-    router.push("/");
+    window.location.href = "/";
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
