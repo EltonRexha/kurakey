@@ -63,7 +63,6 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
       y: -10,
       transition: {
         duration: 0.15,
-        ease: 'easeInOut',
       },
     },
     open: {
@@ -72,7 +71,6 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
       y: 0,
       transition: {
         duration: 0.2,
-        ease: 'easeOut',
         staggerChildren: 0.03,
         delayChildren: 0.05,
       },

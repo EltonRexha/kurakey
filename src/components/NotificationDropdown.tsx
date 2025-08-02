@@ -7,7 +7,7 @@ import FillButton from './ui/common/FillButton';
 import Link from 'next/link';
 import { X } from 'lucide-react';
 import coinIcon from '@/assets/images/icons/coin.png';
-import { motion } from 'framer-motion';
+import { motion, easeInOut, easeOut } from 'framer-motion';
 import NotificationSkeleton from './NotificationSkeleton';
 
 interface Room {
@@ -112,7 +112,7 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
       y: -10,
       transition: {
         duration: 0.15,
-        ease: 'easeInOut',
+        ease: easeInOut,
       },
     },
     open: {
@@ -121,7 +121,7 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
       y: 0,
       transition: {
         duration: 0.2,
-        ease: 'easeOut',
+        ease: easeOut,
         staggerChildren: 0.02,
         delayChildren: 0.03,
       },
@@ -141,7 +141,7 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
       x: 0,
       transition: {
         duration: 0.2,
-        ease: 'easeOut',
+        ease: easeOut,
       },
     },
   };
@@ -193,10 +193,13 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
         ) : (
           notifications.map((notif) => {
             const markRead = (
-              <div
-                className="py-1 text-xs rounded underline text-[#008cff] hover:text-[#005fa3] transition-colors"
-              >
-                <p className="cursor-pointer inline" onClick={() => markReadMutation.mutate(notif.id)}>Mark as read</p>
+              <div className="py-1 text-xs rounded underline text-[#008cff] hover:text-[#005fa3] transition-colors">
+                <p
+                  className="cursor-pointer inline"
+                  onClick={() => markReadMutation.mutate(notif.id)}
+                >
+                  Mark as read
+                </p>
               </div>
             );
             if (notif.type === 'CHEST_RECEIVED' && notif.chestType) {
@@ -378,9 +381,7 @@ const NotificationDropdown: React.FC<Props> = ({ onClose }) => {
                     </div>
                     {!notif.isRead && markRead}
                   </div>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                  >
+                  <motion.div whileHover={{ scale: 1.05 }}>
                     <Image
                       src={coinIcon}
                       alt={''}
