@@ -16,7 +16,7 @@ interface CarouselProps {
  * It duplicates the children once, then translates `-50%` to create an infinite loop.
  * Hovering pauses the animation (uses Tailwind arbitrary `animation-play-state`).
  */
-const HorizontalCarousel = ({ children, speedSeconds = 35 }: CarouselProps) => {
+const HorizontalCarousel = ({ children, speedSeconds = 150 }: CarouselProps) => {
   // Duplicate the list once so we can scroll continuously
   const duplicated = [...children, ...children];
 
