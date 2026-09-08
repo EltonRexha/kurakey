@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ChestCardProps {
   name: string;
@@ -15,6 +16,7 @@ const ChestCard: React.FC<ChestCardProps> = ({
   chestImageUrl,
 }) => {
   return (
+    <Link href={`/chest/${name}`} className="w-full h-full">
     <div className="relative w-full h-full bg-[#0d1024] border border-[#11142d] group rounded-md overflow-hidden flex flex-col items-center justify-center">
       {/* Image */}
       <div className="absolute inset-0 flex items-center group-hover:scale-105 transition-transform duration-200 justify-center p-2 mb-10">
@@ -35,6 +37,7 @@ const ChestCard: React.FC<ChestCardProps> = ({
         {name}
       </div>
     </div>
+    </Link>
   );
 };
 
