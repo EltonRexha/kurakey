@@ -90,7 +90,7 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
   };
 
   return (
-    <div className="sm:relative" ref={menuRef}>
+    <div className="lg:relative" ref={menuRef}>
       <button
         type="button"
         aria-haspopup="true"
@@ -108,11 +108,11 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
             initial="closed"
             animate="open"
             exit="closed"
-            className="fixed sm:absolute left-0 top-0 bottom-0 sm:top-auto sm:bottom-auto sm:left-auto right-0 sm:mt-2 sm:w-40 bg-[#1f1e3f] border border-[#008cff]/50 rounded-md py-1 text-sm shadow-lg z-50"
+            className="fixed lg:absolute left-0 top-0 bottom-0 lg:top-auto lg:bottom-auto lg:left-auto right-0 lg:mt-2 lg:w-40 bg-[#1f1e3f] border border-[#008cff]/50 rounded-md py-1 text-sm shadow-lg z-50"
           >
             {/* Close button (mobile only) */}
             <motion.li
-              className="flex justify-end px-4 py-3 sm:hidden text-neutral-200 text-xl cursor-pointer hover:text-red-400 transition-colors duration-200"
+              className="flex justify-end px-4 py-3 lg:hidden text-neutral-200 text-xl cursor-pointer hover:text-red-400 transition-colors duration-200"
               onClick={() => setOpen(false)}
             >
               <X size={24} />
@@ -131,7 +131,7 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
                       : 'rgba(43, 42, 85, 1)',
                   }}
                   whileTap={{ scale: 0.98 }}
-                  className={`px-4 py-3 text-xl sm:text-base cursor-pointer flex items-center gap-2 transition-all duration-200 sm:hidden ${
+                  className={`px-4 py-3 text-xl lg:text-base cursor-pointer flex items-center gap-2 transition-all duration-200 lg:hidden ${
                     isSelected
                       ? 'bg-[#008cff]/20 text-[#008cff] border-l-2 border-[#008cff]'
                       : 'text-neutral-200 hover:bg-[#2b2a55] hover:text-[#008cff]'
@@ -163,7 +163,7 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
                 x: 5,
               }}
               whileTap={{ scale: 0.98 }}
-              className={`px-4 py-3 text-xl sm:text-base cursor-pointer flex items-center gap-2 transition-all duration-200 sm:hidden ${'text-neutral-200 hover:bg-[#2b2a55] hover:text-[#008cff]'}`}
+              className={`px-4 py-3 text-xl lg:text-base cursor-pointer flex items-center gap-2 transition-all duration-200 lg:hidden text-neutral-200 hover:bg-[#2b2a55] hover:text-[#008cff]`}
             >
               <div
                 onClick={() => {
@@ -180,7 +180,8 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
               </div>
             </motion.div>
 
-            <div className="px-4 py-3 text-xl sm:text-base hover:bg-[#2b2a55] cursor-pointer text-neutral-200 items-center gap-2 hover:text-[#008cff] transition-colors hidden sm:flex">
+            {/* Desktop profile */}
+            <div className="px-4 py-3 text-xl lg:text-base hover:bg-[#2b2a55] cursor-pointer text-neutral-200 items-center gap-2 hover:text-[#008cff] transition-colors hidden lg:flex">
               <Link
                 href="/profile"
                 className="flex items-center gap-2 w-full"
@@ -188,7 +189,7 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
               >
                 <User size={16} />
                 <motion.p
-                  className="hidden sm:block w-full"
+                  className="hidden lg:block w-full"
                   whileHover={{ x: 3 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -199,7 +200,7 @@ const Profile: React.FC<ProfileProps> = ({ imageUrl }) => {
 
             {/* Desktop logout */}
             <div
-              className="px-4 py-3 text-xl sm:text-base hidden sm:flex hover:bg-[#2b2a55] cursor-pointer text-neutral-200 items-center gap-2 hover:text-[#008cff] transition-colors"
+              className="px-4 py-3 text-xl lg:text-base hidden lg:flex hover:bg-[#2b2a55] cursor-pointer text-neutral-200 items-center gap-2 hover:text-[#008cff] transition-colors"
               onClick={() => {
                 setOpen(false);
                 signOut({
